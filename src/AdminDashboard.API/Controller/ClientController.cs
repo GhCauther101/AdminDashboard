@@ -1,5 +1,7 @@
-﻿using AdminDashboard.API.Routes;
+﻿using AdminDashboard.API.Reuqests;
+using AdminDashboard.API.Routes;
 using AdminDashboard.Entity.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminDashboard.API.Controller;
@@ -8,33 +10,65 @@ namespace AdminDashboard.API.Controller;
 [ApiController]
 public class ClientController : ControllerBase
 {
+    private readonly IMediator _mediator;
+
+    public ClientController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
     [HttpPost(ApiRoutes.ClientRoutes.CreateClient)]
     public async Task<IActionResult> Create([FromBody] Client client)
     {
-        return default;
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
+        var clientCreateRequest = new ClientCreateRequest(client);
+
+        return Created();
     }
 
     [HttpPut(ApiRoutes.ClientRoutes.UpdateClient)]
     public async Task<IActionResult> Update([FromBody] Client client)
     {
-        return default;
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
+        var clientUpdateRequest = new ClientUpdateRequest(client);
+
+        return Ok();
     }
 
     [HttpDelete(ApiRoutes.ClientRoutes.DeleteClient)]
-    public async Task<IActionResult> Delete([FromBody] Client client)
+    public async Task<IActionResult> Delete(int clientId)
     {
-        return default;
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var clientDeleteRequest = new ClientDeleteRequest(clientId);
+
+        return Ok();
     }
 
-    [HttpGet(ApiRoutes.ClientRoutes.GetAllClients)]
+    [HttpGet(ApiRoutes.ClientRoutes.GetAll)]
     public async Task<IActionResult> GetAll()
     {
-        return default;
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
+        var clientGetAllRequest = new ClientGetAllRequest();
+
+        return Ok();
     }
 
     [HttpGet(ApiRoutes.ClientRoutes.GetSinge)]
     public async Task<IActionResult> GetSingle(int clientId)
     {
-        return default;
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var clientGetSingleRequest = new ClientGetSingleRequest(clientId);
+
+        return Ok();
     }
 }

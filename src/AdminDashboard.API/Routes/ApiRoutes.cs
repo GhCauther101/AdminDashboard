@@ -23,7 +23,7 @@ public static class ApiRoutes
 
         public const string DeleteClient = controllerBase + "/delete/{clientId}";
 
-        public const string GetAllClients = controllerBase + "/getAll";
+        public const string GetAll = controllerBase + "/getAll";
 
         public const string GetSinge = controllerBase + "/getSingle/{clientId}";
     }
@@ -34,17 +34,16 @@ public static class ApiRoutes
 
         public const string ControllerBase = controllerBase;
 
-        public const string CreateClient = controllerBase + "/create";
+        public const string CreatePayment = controllerBase + "/create";
 
-        public const string UpdateClient = controllerBase + "/update";
+        public const string UpdatePayment = controllerBase + "/update";
 
-        public const string DeleteClient = controllerBase + "/delete/{clientId}";
+        public const string DeletePayment = controllerBase + "/delete/{paymentId}";
 
-        public const string GetAllClient = controllerBase + "/getAll";
+        public const string GetAll = controllerBase + "/getAll";
 
-        public const string GetSinge = controllerBase + "/getSingle/{clientId}";
+        public const string GetSinge = controllerBase + "/getSingle/{paymentId}";
 
         public const string GetLastRange = controllerBase + "/getLastRange";
     }
-
 }

@@ -15,16 +15,16 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
     {
         Create(commandParameters.Data, DbContextDomain.REPOSITORY);
     }
-
-    public void DeletePayment(PaymentCommandParameters commandParameters)
-    {
-        Delete(commandParameters.Data, DbContextDomain.REPOSITORY);
-    }
-
+    
     public void UpdatePayment(PaymentCommandParameters commandParameters)
     {
         Update(commandParameters.Data, DbContextDomain.REPOSITORY);
     }
+
+    public void DeletePayment(PaymentCommandParameters commandParameters)
+    {
+        Delete(commandParameters.Data, DbContextDomain.REPOSITORY);
+    }    
 
     public async Task<PaymentQueryResult> Get(PaymentQueryParameters queryParameters)
     {

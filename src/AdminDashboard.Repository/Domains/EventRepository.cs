@@ -4,7 +4,6 @@ using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
 using AdminDashboard.Entity.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace AdminDashboard.Repository.Domains;
 
@@ -15,22 +14,12 @@ public class EventRepository : RepositoryBase<TriggerEvent>, IEventRepository
 
     public void CreateEvent(TriggerEventCommandParameters commandParameters)
     {
-        Create(commandParameters.Data, DbContextDomain.IDENTITY);
-    }
-
-    public void CreateEvent(object commandParameters)
-    {
-        throw new NotImplementedException();
+        Create(commandParameters.Data, DbContextDomain.EVENT);
     }
 
     public void DeleteEvent(TriggerEventCommandParameters commandParameters)
     {
-        Create(commandParameters.Data, DbContextDomain.IDENTITY);
-    }
-
-    public void DeleteEvent(Guid eventGlobalId)
-    {
-        throw new NotImplementedException();
+        Delete(commandParameters.Data, DbContextDomain.EVENT);
     }
 
     public async Task<TriggerEventQueryResult> Get(TriggerEventQueryParameters queryParameters)
@@ -43,7 +32,7 @@ public class EventRepository : RepositoryBase<TriggerEvent>, IEventRepository
         switch (queryParameters.Functionality)
         {
             case QueryParameterFunctionality.GET_ALL:
-                var allClients = await FindAll(DbContextDomain.IDENTITY, false)
+                var allClients = await FindAll(DbContextDomain.EVENT, false)
                     .OrderBy(x => x.Id)
                     .ToListAsync();
 
@@ -56,7 +45,7 @@ public class EventRepository : RepositoryBase<TriggerEvent>, IEventRepository
                 };
                 break;
             case QueryParameterFunctionality.PAGE:
-                var clientPage = await FindAll(DbContextDomain.IDENTITY, false)
+                var clientPage = await FindAll(DbContextDomain.EVENT, false)
                     .OrderBy(x => x.Id)
                     .Skip((queryParameters.RangeStart - 1) * queryParameters.RangeWidth)
                     .Take(queryParameters.RangeWidth)
@@ -71,7 +60,7 @@ public class EventRepository : RepositoryBase<TriggerEvent>, IEventRepository
                 };
                 break;
             case QueryParameterFunctionality.SINGLE:
-                var entity = await FindByCondition(entity => entity.Id.Equals(queryParameters.EntityId), DbContextDomain.IDENTITY, false)
+                var entity = await FindByCondition(entity => entity.Id.Equals(queryParameters.EntityId), DbContextDomain.EVENT, false)
                     .SingleOrDefaultAsync();
 
                 triggerEventQueryResult = new TriggerEventQueryResult
@@ -85,10 +74,5 @@ public class EventRepository : RepositoryBase<TriggerEvent>, IEventRepository
         }
 
         return triggerEventQueryResult;
-    }
-
-    public Task<object> Get(object queryParameters)
-    {
-        throw new NotImplementedException();
     }
 }
