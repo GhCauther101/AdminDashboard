@@ -6,9 +6,7 @@ namespace AdminDashboard.Repository.Managers;
 
 public class RepositoryManager : IRepositoryManager
 {
-    private IdentityContext _identityContext;
-    private RepositoryContext _repositoryContext;
-    private EventContext _eventContext;
+    private DbContextBus _dbContextBus;
 
     private IClientRepository _clientRepository;
     private IPaymentRepository _paymentRepository;
@@ -16,9 +14,7 @@ public class RepositoryManager : IRepositoryManager
 
     public RepositoryManager(DbContextBus dbContextBus)
     {
-        _identityContext = dbContextBus.IdentityContextInstance;
-        _repositoryContext = dbContextBus.RepositoryContextInstance;
-        _eventContext = dbContextBus.EventContextInstance;
+        _dbContextBus = dbContextBus;
     }
 
     public IClientRepository ClientRepository
@@ -26,7 +22,7 @@ public class RepositoryManager : IRepositoryManager
         get
         {
             if (_clientRepository == null)
-                _clientRepository = new ClientRepository(_identityContext);
+                _clientRepository = new ClientRepository(_dbContextBus);
 
             return _clientRepository;
         }
@@ -37,7 +33,7 @@ public class RepositoryManager : IRepositoryManager
         get
         {
             if (_paymentRepository == null)
-                _paymentRepository = new PaymentRepository(_repositoryContext);
+                _paymentRepository = new PaymentRepository(_dbContextBus);
 
             return _paymentRepository;
         }
@@ -48,7 +44,7 @@ public class RepositoryManager : IRepositoryManager
         get
         {
             if (_eventRepository == null)
-                _eventRepository = new EventRepository(_eventContext);
+                _eventRepository = new EventRepository(_dbContextBus);
 
             return _eventRepository;
         }
@@ -56,7 +52,8 @@ public class RepositoryManager : IRepositoryManager
 
     public async Task SaveChanges()
     {
-        await _identityContext.SaveChangesAsync();
-        await _repositoryContext.SaveChangesAsync();
+        await _dbContextBus.IdentityContextInstance.SaveChangesAsync();
+        await _dbContextBus.RepositoryContextInstance.SaveChangesAsync();
+        await _dbContextBus.EventContextInstance.SaveChangesAsync();
     }
 }
