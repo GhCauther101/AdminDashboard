@@ -28,13 +28,8 @@ public class ClientHandler
         try
         {
             var commandParameters = new ClientCommandParameters(CommandType.CREATE, true, request.client);
-
-            var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.SINGLE, true, request.client.Id);
-
             _repositoryManager.ClientRepository.CreateClient(commandParameters);
             await _repositoryManager.SaveChanges();
-
-
             return new ClientCommandResult(CommandType.CREATE, true);
         }
         catch (Exception ex) 
@@ -43,33 +38,40 @@ public class ClientHandler
         }
     }
 
-    public async Task<ClientQueryResult> Handle(ClientDeleteRequest request, CancellationToken cancellationToken)
+    public async Task<ClientCommandResult> Handle(ClientDeleteRequest request, CancellationToken cancellationToken)
     {
-        var queryParameters = new ClientQueryParameters
+        try
         {
-            Functionality = QueryParameterFunctionality.SINGLE,
-            EntityId = request.clientId
-        };
+            var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.SINGLE, request.clientId);
+            var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
 
-        var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
+            if (!clientQueryResult.IsSuccess || clientQueryResult.Entity is null || clientQueryResult.Range.Count() == 0)
+                return new ClientCommandResult(CommandType.DELETE, true);
 
-        if (!clientQueryResult.IsSuccess)
-            return clientQueryResult;
-
-        var commandParameters = new ClientCommandParameters
+            var commandParameters = new ClientCommandParameters(CommandType.DELETE,true, clientQueryResult.Entity);
+            _repositoryManager.ClientRepository.DeleteClient(commandParameters);
+            await _repositoryManager.SaveChanges();
+            return new ClientCommandResult(CommandType.DELETE, true);
+        }
+        catch (Exception ex)
         {
-            Command = CommandType.DELETE,
-            IsSingle = true,
-            Data = clientQueryResult.Entity
-        };
-
-        _repositoryManager.ClientRepository.DeleteClient(commandParameters);
-        return new ClientQueryResult();
+            return new ClientCommandResult(CommandType.DELETE, false, ex);
+        }
     }
 
-    public Task<Client> Handle(ClientUpdateRequest request, CancellationToken cancellationToken)
+    public async Task<ClientCommandResult> Handle(ClientUpdateRequest request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var commandParameters = new ClientCommandParameters(CommandType.UPDATE, true, request.client);
+            _repositoryManager.ClientRepository.UpdateClient(commandParameters);
+            await _repositoryManager.SaveChanges();
+            return new ClientCommandResult(CommandType.UPDATE, true);
+        }
+        catch (Exception ex)
+        {
+            return new ClientCommandResult(CommandType.UPDATE, false, ex);
+        }
     }
 
     public Task<IEnumerable<Client>> Handle(ClientGetAllRequest request, CancellationToken cancellationToken)

@@ -1,6 +1,7 @@
-﻿using AdminDashboard.Entity.Models;
+﻿using AdminDashboard.Entity.Event.Command;
+using AdminDashboard.Entity.Models;
 using MediatR;
 
 namespace AdminDashboard.API.Reuqests;
 
-public record ClientDeleteRequest(int clientId) : IRequest;
+public record ClientDeleteRequest(int clientId) : IRequest<ClientCommandResult>;
