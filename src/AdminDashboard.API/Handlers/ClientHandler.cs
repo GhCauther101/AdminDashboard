@@ -1,4 +1,4 @@
-﻿using AdminDashboard.API.Reuqests;
+﻿using AdminDashboard.API.Reuqests.Client;
 using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
 using AdminDashboard.Repository.Managers;

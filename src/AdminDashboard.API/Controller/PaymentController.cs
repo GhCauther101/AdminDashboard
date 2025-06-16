@@ -1,5 +1,4 @@
-﻿using AdminDashboard.API.Reuqests;
-using AdminDashboard.API.Routes;
+﻿using AdminDashboard.API.Routes;
 using AdminDashboard.Entity.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
