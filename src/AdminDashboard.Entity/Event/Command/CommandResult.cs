@@ -11,4 +11,8 @@ public class CommandResult<T> : TriggerEvent
 
     [JsonPropertyName("is_success")]
     public bool IsSuccess { get; set; }
+
+    [JsonPropertyName("exception")]
+    public Exception Exception { get; set; }
+
 }

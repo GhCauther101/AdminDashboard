@@ -9,9 +9,9 @@ using MediatR;
 namespace AdminDashboard.API.Handlers;
 
 public class ClientHandler
-    : IRequestHandler<ClientCreateRequest, ClientQueryResult>,
-      IRequestHandler<ClientDeleteRequest>,
-      IRequestHandler<ClientUpdateRequest, Client>,
+    : IRequestHandler<ClientCreateRequest, ClientCommandResult>,
+      IRequestHandler<ClientDeleteRequest, ClientCommandResult>,
+      IRequestHandler<ClientUpdateRequest, ClientCommandResult>,
       IRequestHandler<ClientGetAllRequest, IEnumerable<Client>>,
       IRequestHandler<ClientGetPageRequest, IEnumerable<Client>>,
       IRequestHandler<ClientGetSingleRequest, Client>
@@ -27,34 +27,19 @@ public class ClientHandler
     {
         try
         {
-            var commandParameters = new ClientCommandParameters
-            {
-                Command = CommandType.CREATE,
-                IsSingle = true,
-                Data = request.client
-            };
+            var commandParameters = new ClientCommandParameters(CommandType.CREATE, true, request.client);
 
-            var queryParameters = new ClientQueryParameters
-            {
-                Functionality = QueryParameterFunctionality.SINGLE,
-                EntityId = request.client.Id
-            };
+            var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.SINGLE, true, request.client.Id);
 
             _repositoryManager.ClientRepository.CreateClient(commandParameters);
             await _repositoryManager.SaveChanges();
 
-            return new ClientCommandResult
-            {
-                Command = CommandType.CREATE,
-                IsSuccess = true,
-            };
+
+            return new ClientCommandResult(CommandType.CREATE, true);
         }
-        catch (Exception ex) {
-            return new ClientCommandResult
-            {
-                Command = CommandType.CREATE,
-                IsSuccess = false,
-            };
+        catch (Exception ex) 
+        {
+            return new ClientCommandResult(CommandType.CREATE, false, ex);
         }
     }
 
@@ -79,7 +64,7 @@ public class ClientHandler
         };
 
         _repositoryManager.ClientRepository.DeleteClient(commandParameters);
-        return new ClientQueryResult { IsSuccess}
+        return new ClientQueryResult();
     }
 
     public Task<Client> Handle(ClientUpdateRequest request, CancellationToken cancellationToken)

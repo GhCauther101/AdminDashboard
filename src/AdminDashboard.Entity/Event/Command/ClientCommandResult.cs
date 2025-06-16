@@ -11,12 +11,13 @@ public class ClientCommandResult : CommandResult<Client>
         this.TriggerClusterId = Guid.NewGuid();
     }
 
-    public ClientCommandResult(CommandType command, bool isSuccess)
+    public ClientCommandResult(CommandType command, bool isSuccess, Exception exception = null)
     {
         this.Id = Guid.NewGuid();
         this.TriggerTime = DateTime.Now;
         this.TriggerClusterId = Guid.NewGuid();
         this.Command = command;
         this.IsSuccess = isSuccess;
+        this.Exception = exception;
     }
 }

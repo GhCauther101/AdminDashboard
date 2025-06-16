@@ -13,4 +13,7 @@ public class QueryResult<T> : TriggerEvent
 
     [JsonPropertyName("range")]
     public IEnumerable<T> Range { get; set; }
+
+    [JsonPropertyName("exception")]
+    public Exception Exception { get; set; }
 }
