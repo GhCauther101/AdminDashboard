@@ -3,4 +3,4 @@ using MediatR;
 
 namespace AdminDashboard.API.Reuqests;
 
-public record ClientDeleteRequest(int clientId) : IRequest<ClientCommandResult>;
+public record ClientDeleteRequest(int clientId) : IRequest<PaymentCommandResult>;

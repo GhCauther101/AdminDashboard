@@ -1,5 +1,7 @@
-﻿using AdminDashboard.Entity.Models;
+﻿using AdminDashboard.Entity.Event.Command;
+using AdminDashboard.Entity.Models;
+using MediatR;
 
 namespace AdminDashboard.API.Reuqests;
 
-public record PaymentUpdateRequest(Payment payment);
+public record PaymentUpdateRequest(Payment payment) : IRequest<PaymentCommandResult>;

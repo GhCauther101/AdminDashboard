@@ -1,3 +1,6 @@
-﻿namespace AdminDashboard.API.Reuqests;
+﻿using AdminDashboard.Entity.Event.Querying;
+using MediatR;
 
-public record PaymentGetAllRequest();
+namespace AdminDashboard.API.Reuqests;
+
+public record PaymentGetAllRequest() : IRequest<PaymentQueryResult>;

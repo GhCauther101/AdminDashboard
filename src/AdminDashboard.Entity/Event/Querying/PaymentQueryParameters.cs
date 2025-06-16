@@ -13,6 +13,7 @@ public class PaymentQueryParameters : QueryParameters<int>
         QueryParameterFunctionality functionality,
         int rangeStart = 0,
         int rangeWidth = 0,
+        int lastRange = 0,
         int entityId = 0,
         IEnumerable<int> entitiesGroup = null)
     {
@@ -22,6 +23,7 @@ public class PaymentQueryParameters : QueryParameters<int>
         base.Functionality = functionality;
         base.RangeStart = rangeStart;
         base.RangeWidth = rangeWidth;
+        base.LastRange = lastRange;
         base.EntityId = entityId;
         base.EntitiesGroup = entitiesGroup;
     }

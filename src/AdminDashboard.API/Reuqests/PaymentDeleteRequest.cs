@@ -1,3 +1,6 @@
-﻿namespace AdminDashboard.API.Reuqests;
+﻿using AdminDashboard.Entity.Event.Command;
+using MediatR;
 
-public record PaymentDeleteRequest(int paymentId);
+namespace AdminDashboard.API.Reuqests;
+
+public record PaymentDeleteRequest(int paymentId) : IRequest<PaymentCommandResult>;

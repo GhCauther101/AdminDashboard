@@ -4,4 +4,4 @@ using MediatR;
 
 namespace AdminDashboard.API.Reuqests;
 
-public record ClientUpdateRequest(Client client) : IRequest<ClientCommandResult>;
+public record ClientUpdateRequest(Client client) : IRequest<PaymentCommandResult>;

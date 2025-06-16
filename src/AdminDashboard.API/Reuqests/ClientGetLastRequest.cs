@@ -3,4 +3,4 @@ using MediatR;
 
 namespace AdminDashboard.API.Reuqests;
 
-public record PaymentGetSingleRequest(int paymentId) : IRequest<PaymentQueryResult>;
+public record ClientGetLastRequest(int lastRange) : IRequest<ClientQueryResult>;
