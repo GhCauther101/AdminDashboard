@@ -1,7 +1,10 @@
-﻿using AdminDashboard.Entity.Event.Command;
-using AdminDashboard.Entity.Models;
+﻿using AdminDashboard.Entity.Models;
 using MediatR;
 
 namespace AdminDashboard.API.Reuqests;
 
-public record ClientUpdateRequest(Client client) : IRequest<PaymentCommandResult>;
+<<<<<<< HEAD
+public record ClientUpdateRequest(Client client) : IRequest<Client>;
+=======
+public record ClientUpdateRequest(Client client) : IRequest<ClientCommandResult>;
+>>>>>>> parent of 766d80f ([src] add PaymentHandler, update client and payment requests, add last range querying)

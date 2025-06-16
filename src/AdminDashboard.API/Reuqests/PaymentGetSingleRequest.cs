@@ -1,6 +1,3 @@
-﻿using AdminDashboard.Entity.Event.Querying;
-using MediatR;
+﻿namespace AdminDashboard.API.Reuqests;
 
-namespace AdminDashboard.API.Reuqests;
-
-public record PaymentGetSingleRequest(int paymentId) : IRequest<PaymentQueryResult>;
+public record PaymentGetSingleRequest(int clientId);

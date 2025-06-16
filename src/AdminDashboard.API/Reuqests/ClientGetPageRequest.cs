@@ -1,6 +1,6 @@
-﻿using AdminDashboard.Entity.Event.Querying;
+﻿using AdminDashboard.Entity.Models;
 using MediatR;
 
 namespace AdminDashboard.API.Reuqests;
 
-public record ClientGetPageRequest(int start, int width) : IRequest<ClientQueryResult>;
+public record ClientGetPageRequest(int start, int width) : IRequest<IEnumerable<Client>>;

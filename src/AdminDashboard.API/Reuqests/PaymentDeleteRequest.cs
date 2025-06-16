@@ -1,6 +1,10 @@
-﻿using AdminDashboard.Entity.Event.Command;
-using MediatR;
+<<<<<<< HEAD
+﻿using AdminDashboard.Entity.Models;
 
 namespace AdminDashboard.API.Reuqests;
 
-public record PaymentDeleteRequest(int paymentId) : IRequest<PaymentCommandResult>;
+=======
+﻿namespace AdminDashboard.API.Reuqests;
+
+>>>>>>> parent of 766d80f ([src] add PaymentHandler, update client and payment requests, add last range querying)
+public record PaymentDeleteRequest(int paymentId);

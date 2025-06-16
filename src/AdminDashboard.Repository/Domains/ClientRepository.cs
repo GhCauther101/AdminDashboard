@@ -88,20 +88,6 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
                     Range = clientRange
                 };
                 break;
-            case QueryParameterFunctionality.LAST:
-                var clientLastRange = await FindAll(DbContextDomain.IDENTITY, false)
-                    .OrderBy(entity => entity.Id)
-                    .TakeLast(queryParameters.LastRange)
-                    .ToListAsync();
-
-                clientQueryResult = new ClientQueryResult
-                {
-                    Id = Guid.NewGuid(),
-                    TriggerTime = DateTime.Now,
-                    IsSuccess = clientLastRange.Count > 0,
-                    Range = clientLastRange
-                };
-                break;
         }
 
         return clientQueryResult;
