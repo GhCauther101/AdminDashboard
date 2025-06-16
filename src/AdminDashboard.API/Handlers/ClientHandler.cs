@@ -1,8 +1,6 @@
 ﻿using AdminDashboard.API.Reuqests;
-using AdminDashboard.Contracts.Repository;
 using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
-using AdminDashboard.Entity.Models;
 using AdminDashboard.Repository.Managers;
 using MediatR;
 
@@ -12,9 +10,9 @@ public class ClientHandler
     : IRequestHandler<ClientCreateRequest, ClientCommandResult>,
       IRequestHandler<ClientDeleteRequest, ClientCommandResult>,
       IRequestHandler<ClientUpdateRequest, ClientCommandResult>,
-      IRequestHandler<ClientGetAllRequest, IEnumerable<Client>>,
-      IRequestHandler<ClientGetPageRequest, IEnumerable<Client>>,
-      IRequestHandler<ClientGetSingleRequest, Client>
+      IRequestHandler<ClientGetAllRequest, ClientQueryResult>,
+      IRequestHandler<ClientGetPageRequest, ClientQueryResult>,
+      IRequestHandler<ClientGetSingleRequest, ClientQueryResult>
 {
     private readonly RepositoryManager _repositoryManager;
 
@@ -74,18 +72,49 @@ public class ClientHandler
         }
     }
 
-    public Task<IEnumerable<Client>> Handle(ClientGetAllRequest request, CancellationToken cancellationToken)
+    public async Task<ClientQueryResult> Handle(ClientGetAllRequest request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.GET_ALL);
+            var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
+
+            return clientQueryResult;
+        }
+        catch (Exception ex)
+        {
+            return new ClientQueryResult(false, exception: ex);
+        }
+    }
+    
+
+    public async Task<ClientQueryResult> Handle(ClientGetPageRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.SINGLE, rangeStart: request.start, rangeWidth: request.width);
+            var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
+
+            return clientQueryResult;
+        }
+        catch (Exception ex)
+        {
+            return new ClientQueryResult(false, exception: ex);
+        }
     }
 
-    public Task<IEnumerable<Client>> Handle(ClientGetPageRequest request, CancellationToken cancellationToken)
+    public async Task<ClientQueryResult> Handle(ClientGetSingleRequest request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-    }
+        try
+        {
+            var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.SINGLE, entityId: request.clientId);
+            var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
 
-    public Task<Client> Handle(ClientGetSingleRequest request, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
+            return clientQueryResult;
+        }
+        catch (Exception ex)
+        {
+            return new ClientQueryResult(false, exception: ex);
+        }
     }
 }
