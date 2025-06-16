@@ -1,3 +1,6 @@
-﻿namespace AdminDashboard.API.Reuqests;
+﻿using AdminDashboard.Entity.Models;
+using MediatR;
 
-public record ClientGetPageRequest(int start, int width);
+namespace AdminDashboard.API.Reuqests;
+
+public record ClientGetPageRequest(int start, int width) : IRequest<IEnumerable<Client>>;

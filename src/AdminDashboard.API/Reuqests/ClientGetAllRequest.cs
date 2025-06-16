@@ -1,3 +1,6 @@
-﻿namespace AdminDashboard.API.Reuqests;
+﻿using AdminDashboard.Entity.Models;
+using MediatR;
 
-public record ClientGetAllRequest();
+namespace AdminDashboard.API.Reuqests;
+
+public record ClientGetAllRequest() : IRequest<IEnumerable<Client>>;

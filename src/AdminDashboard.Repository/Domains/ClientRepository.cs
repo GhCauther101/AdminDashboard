@@ -33,7 +33,7 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
         if (queryParameters.IsValid())
             return clientQueryResult;
 
-            switch (queryParameters.Functionality)
+        switch (queryParameters.Functionality)
         {
             case QueryParameterFunctionality.GET_ALL:
                 var allClients = await FindAll(DbContextDomain.IDENTITY, false)

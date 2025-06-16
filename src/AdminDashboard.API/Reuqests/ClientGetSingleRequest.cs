@@ -1,3 +1,6 @@
-﻿namespace AdminDashboard.API.Reuqests;
+﻿using AdminDashboard.Entity.Models;
+using MediatR;
 
-public record ClientGetSingleRequest(int clientId);
+namespace AdminDashboard.API.Reuqests;
+
+public record ClientGetSingleRequest(int clientId) : IRequest<Client>;
