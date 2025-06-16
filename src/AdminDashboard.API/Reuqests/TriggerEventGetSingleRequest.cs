@@ -1,3 +1,3 @@
-﻿namespace AdminDashboard.API.Reuqests.TriggerEvent;
+﻿namespace AdminDashboard.API.Reuqests;
 
 public record TriggerEventGetSingleRequest(int clientId);

@@ -88,20 +88,6 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                     Range = clientRange
                 };
                 break;
-            case QueryParameterFunctionality.LAST:
-                var clientLastRange = await FindAll(DbContextDomain.REPOSITORY, false)
-                    .OrderBy(entity => entity.Id)
-                    .TakeLast(queryParameters.LastRange)
-                    .ToListAsync();
-
-                paymentQueryResult = new PaymentQueryResult
-                {
-                    Id = Guid.NewGuid(),
-                    TriggerTime = DateTime.Now,
-                    IsSuccess = clientLastRange.Count > 0,
-                    Range = clientLastRange
-                };
-                break;
         }
 
         return paymentQueryResult;
