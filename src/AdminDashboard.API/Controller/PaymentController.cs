@@ -1,5 +1,7 @@
-﻿using AdminDashboard.API.Reuqests.Payment;
+﻿using AdminDashboard.API.Reuqests.Client;
+using AdminDashboard.API.Reuqests.Payment;
 using AdminDashboard.API.Routes;
+using AdminDashboard.Entity.Json;
 using AdminDashboard.Entity.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +24,11 @@ namespace AdminDashboard.API.Controller
                 return BadRequest(ModelState);
 
             var paymentCreateRequest = new PaymentCreateRequest(payment);
+            var clientCommandResult = await _mediator.Send(paymentCreateRequest);
 
-            return Created();
+            if (clientCommandResult.IsSuccess)
+                return Created();
+            else return BadRequest(ModelState);
         }
 
         [HttpPut(ApiRoutes.PaymentRoutes.UpdatePayment)]
@@ -33,8 +38,12 @@ namespace AdminDashboard.API.Controller
                 return BadRequest(ModelState);
 
             var paymentUpdateRequest = new PaymentUpdateRequest(payment);
+            var clientCommandResult = await _mediator.Send(paymentUpdateRequest);
+            var jsonResult = clientCommandResult.ToJsonContent();
 
-            return Ok();
+            if (clientCommandResult.IsSuccess)
+                return Ok(jsonResult);
+            else return BadRequest(ModelState);
         }
 
         [HttpDelete(ApiRoutes.PaymentRoutes.DeletePayment)]
@@ -44,8 +53,12 @@ namespace AdminDashboard.API.Controller
                 return BadRequest(ModelState);
 
             var paymentDeleteRequest = new PaymentDeleteRequest(paymentId);
+            var clientCommandResult = await _mediator.Send(paymentDeleteRequest);
+            var jsonResult = clientCommandResult.ToJsonContent();
 
-            return Ok();
+            if (clientCommandResult.IsSuccess)
+                return NoContent();
+            else return BadRequest(ModelState);
         }
 
         [HttpGet(ApiRoutes.PaymentRoutes.GetAll)]
@@ -55,8 +68,12 @@ namespace AdminDashboard.API.Controller
                 return BadRequest(ModelState);
 
             var paymentGetAllRequest = new PaymentGetAllRequest();
+            var clientQueryResult = await _mediator.Send(paymentGetAllRequest);
+            var jsonResult = clientQueryResult.ToJsonContent();
 
-            return Ok();
+            if (clientQueryResult.IsSuccess)
+                return Ok(clientQueryResult.Range);
+            else return BadRequest(ModelState);
         }
 
         [HttpGet(ApiRoutes.PaymentRoutes.GetSinge)]
@@ -66,8 +83,12 @@ namespace AdminDashboard.API.Controller
                 return BadRequest(ModelState);
 
             var paymentGetAllRequest = new PaymentGetSingleRequest(paymentId);
+            var clientQueryResult = await _mediator.Send(paymentGetAllRequest);
+            var jsonResult = clientQueryResult.ToJsonContent();
 
-            return Ok();
+            if (clientQueryResult.IsSuccess)
+                return Ok(clientQueryResult.Entity);
+            else return BadRequest(ModelState);
         }
 
         [HttpGet(ApiRoutes.PaymentRoutes.GetLastRange)]
@@ -76,9 +97,13 @@ namespace AdminDashboard.API.Controller
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var paymentGetAllRequest = new PaymentGetSingleRequest(lastPageWidth);
+            var paymentLastRequest = new PaymentGetLastRequest(lastPageWidth);
+            var clientQueryResult = await _mediator.Send(paymentLastRequest);
+            var jsonResult = clientQueryResult.ToJsonContent();
 
-            return Ok();
+            if (clientQueryResult.IsSuccess)
+                return Ok(clientQueryResult.Entity);
+            else return BadRequest(ModelState);
         }
     }
 }
