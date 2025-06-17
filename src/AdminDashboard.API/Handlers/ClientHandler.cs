@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-﻿using AdminDashboard.API.Reuqests.Client;
-=======
-﻿using AdminDashboard.API.Reuqests;
-using AdminDashboard.Contracts.Repository;
->>>>>>> a548314b977b38af18384394446f2da0199b7612
+using AdminDashboard.API.Reuqests.Client;
 using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
-using AdminDashboard.Entity.Models;
 using AdminDashboard.Repository.Managers;
 using MediatR;
 
@@ -16,15 +10,9 @@ public class ClientHandler
     : IRequestHandler<ClientCreateRequest, ClientCommandResult>,
       IRequestHandler<ClientDeleteRequest, ClientCommandResult>,
       IRequestHandler<ClientUpdateRequest, ClientCommandResult>,
-<<<<<<< HEAD
-      IRequestHandler<ClientGetAllRequest, IEnumerable<Client>>,
-      IRequestHandler<ClientGetPageRequest, IEnumerable<Client>>,
-      IRequestHandler<ClientGetSingleRequest, Client>
-=======
       IRequestHandler<ClientGetAllRequest, ClientQueryResult>,
       IRequestHandler<ClientGetPageRequest, ClientQueryResult>,
       IRequestHandler<ClientGetSingleRequest, ClientQueryResult>
->>>>>>> parent of 766d80f ([src] add PaymentHandler, update client and payment requests, add last range querying)
 {
     private readonly RepositoryManager _repositoryManager;
 
@@ -39,15 +27,10 @@ public class ClientHandler
         {
             var commandParameters = new ClientCommandParameters(CommandType.CREATE, true, request.client);
 
-            var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.SINGLE, true, request.client.Id);
 
             _repositoryManager.ClientRepository.CreateClient(commandParameters);
             await _repositoryManager.SaveChanges();
-<<<<<<< HEAD
 
-
-=======
->>>>>>> parent of 766d80f ([src] add PaymentHandler, update client and payment requests, add last range querying)
             return new ClientCommandResult(CommandType.CREATE, true);
         }
         catch (Exception ex) 
@@ -56,21 +39,18 @@ public class ClientHandler
         }
     }
 
-<<<<<<< HEAD
-    public async Task<ClientQueryResult> Handle(ClientDeleteRequest request, CancellationToken cancellationToken)
-=======
-    public async Task<ClientCommandResult> Handle(ClientDeleteRequest request, CancellationToken cancellationToken)
->>>>>>> parent of 766d80f ([src] add PaymentHandler, update client and payment requests, add last range querying)
-    {
-        var queryParameters = new ClientQueryParameters
-        {
-            Functionality = QueryParameterFunctionality.SINGLE,
-            EntityId = request.clientId
-        };
 
-<<<<<<< HEAD
-        var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
-=======
+    public async Task<ClientCommandResult> Handle(ClientDeleteRequest request, CancellationToken cancellationToken)
+    {
+        try 
+        { 
+            var queryParameters = new ClientQueryParameters
+            {
+                Functionality = QueryParameterFunctionality.SINGLE,
+                EntityId = request.clientId
+            };
+
+            var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
             if (!clientQueryResult.IsSuccess || clientQueryResult.Entity is null || clientQueryResult.Range.Count() == 0)
                 return new ClientCommandResult(CommandType.DELETE, true);
 
@@ -106,42 +86,53 @@ public class ClientHandler
         {
             var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.GET_ALL);
             var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
->>>>>>> parent of 766d80f ([src] add PaymentHandler, update client and payment requests, add last range querying)
 
-        if (!clientQueryResult.IsSuccess)
-            return clientQueryResult;
+            if (!clientQueryResult.IsSuccess)
+                return clientQueryResult;
 
-        var commandParameters = new ClientCommandParameters
+            var commandParameters = new ClientCommandParameters
+            {
+                Command = CommandType.DELETE,
+                IsSingle = true,
+                Data = clientQueryResult.Entity
+            };
+
+            _repositoryManager.ClientRepository.DeleteClient(commandParameters);
+            return new ClientQueryResult();
+        }
+        catch (Exception ex)
         {
-            Command = CommandType.DELETE,
-            IsSingle = true,
-            Data = clientQueryResult.Entity
-        };
-
-        _repositoryManager.ClientRepository.DeleteClient(commandParameters);
-        return new ClientQueryResult();
+            return new ClientQueryResult(false, exception: ex);
+        }
     }
-
-    public Task<Client> Handle(ClientUpdateRequest request, CancellationToken cancellationToken)
+        
+    public async Task<ClientQueryResult> Handle(ClientGetPageRequest request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-    }
-<<<<<<< HEAD
+        try
+        {
+            var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.SINGLE, rangeStart: request.start, rangeWidth: request.width);
+            var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
 
-    public Task<IEnumerable<Client>> Handle(ClientGetAllRequest request, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
+            return clientQueryResult;
+        }
+        catch (Exception ex)
+        {
+            return new ClientQueryResult(false, exception: ex);
+        }
     }
 
-    public Task<IEnumerable<Client>> Handle(ClientGetPageRequest request, CancellationToken cancellationToken)
+    public async Task<ClientQueryResult> Handle(ClientGetSingleRequest request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-    }
+        try
+        {
+            var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.SINGLE, entityId: request.clientId);
+            var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
 
-    public Task<Client> Handle(ClientGetSingleRequest request, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
+            return clientQueryResult;
+        }
+        catch (Exception ex)
+        {
+            return new ClientQueryResult(false, exception: ex);
+        }
     }
-=======
->>>>>>> parent of 766d80f ([src] add PaymentHandler, update client and payment requests, add last range querying)
 }

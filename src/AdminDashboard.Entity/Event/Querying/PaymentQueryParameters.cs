@@ -2,7 +2,7 @@
 
 public class PaymentQueryParameters : QueryParameters<int>
 {
-    public =PaymentQueryParameters()
+    public PaymentQueryParameters()
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;

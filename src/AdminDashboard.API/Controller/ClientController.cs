@@ -1,4 +1,5 @@
 ﻿using AdminDashboard.API.Reuqests.Client;
+using AdminDashboard.Entity.Json;
 using AdminDashboard.API.Routes;
 using AdminDashboard.Entity.Models;
 using MediatR;
@@ -24,8 +25,11 @@ public class ClientController : ControllerBase
             return BadRequest(ModelState);
         
         var clientCreateRequest = new ClientCreateRequest(client);
+        var clientCommandResult = await _mediator.Send(clientCreateRequest);
 
-        return Created();
+        if (clientCommandResult.IsSuccess)
+            return Created();
+        else return BadRequest(ModelState);
     }
 
     [HttpPut(ApiRoutes.ClientRoutes.UpdateClient)]
@@ -35,8 +39,12 @@ public class ClientController : ControllerBase
             return BadRequest(ModelState);
         
         var clientUpdateRequest = new ClientUpdateRequest(client);
+        var clientCommandResult = await _mediator.Send(clientUpdateRequest);
+        var jsonResult = clientCommandResult.ToJsonContent();
 
-        return Ok();
+        if (clientCommandResult.IsSuccess)
+            return Ok(jsonResult);
+        else return BadRequest(ModelState);
     }
 
     [HttpDelete(ApiRoutes.ClientRoutes.DeleteClient)]
@@ -46,8 +54,12 @@ public class ClientController : ControllerBase
             return BadRequest(ModelState);
 
         var clientDeleteRequest = new ClientDeleteRequest(clientId);
+        var clientCommandResult = await _mediator.Send(clientDeleteRequest);
+        var jsonResult = clientCommandResult.ToJsonContent();
 
-        return Ok();
+        if (clientCommandResult.IsSuccess)
+            return NoContent();
+        else return BadRequest(ModelState);
     }
 
     [HttpGet(ApiRoutes.ClientRoutes.GetAll)]
@@ -57,8 +69,12 @@ public class ClientController : ControllerBase
             return BadRequest(ModelState);
         
         var clientGetAllRequest = new ClientGetAllRequest();
+        var clientQueryResult = await _mediator.Send(clientGetAllRequest);
+        var jsonResult = clientQueryResult.ToJsonContent();
 
-        return Ok();
+        if (clientQueryResult.IsSuccess)
+            return Ok(clientQueryResult.Range);
+        else return BadRequest(ModelState);
     }
 
     [HttpGet(ApiRoutes.ClientRoutes.GetSinge)]
@@ -68,7 +84,11 @@ public class ClientController : ControllerBase
             return BadRequest(ModelState);
 
         var clientGetSingleRequest = new ClientGetSingleRequest(clientId);
+        var clientQueryResult = await _mediator.Send(clientGetSingleRequest);
+        var jsonResult = clientQueryResult.ToJsonContent();
 
-        return Ok();
+        if (clientQueryResult.IsSuccess)
+            return Ok(clientQueryResult.Entity);
+        else return BadRequest(ModelState);
     }
 }
