@@ -1,5 +1,9 @@
+<<<<<<< HEAD
+﻿using AdminDashboard.API.Reuqests.Client;
+=======
 ﻿using AdminDashboard.API.Reuqests;
 using AdminDashboard.Contracts.Repository;
+>>>>>>> a548314b977b38af18384394446f2da0199b7612
 using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
 using AdminDashboard.Entity.Models;

@@ -1,6 +1,4 @@
-﻿using AdminDashboard.Entity.Event.Base;
-
-namespace AdminDashboard.Entity.Event.Querying;
+﻿namespace AdminDashboard.Entity.Event.Querying;
 
 public class TriggerEventQueryParameters : QueryParameters<int>
 {
@@ -13,10 +11,10 @@ public class TriggerEventQueryParameters : QueryParameters<int>
 
     public TriggerEventQueryParameters(
         QueryParameterFunctionality functionality,
-        int rangeStart,
-        int rangeWidth,
-        int entityId,
-        IEnumerable<int> entitiesGroup)
+        int rangeStart = 0,
+        int rangeWidth = 0,
+        int entityId = 0,
+        IEnumerable<int> entitiesGroup = null)
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;

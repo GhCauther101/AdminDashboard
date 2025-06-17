@@ -2,21 +2,22 @@
 
 namespace AdminDashboard.Entity.Event.Command;
 
-public class PaymenntCommandResult : CommandResult<Payment>
+public class PaymentCommandResult : CommandResult<Payment>
 {
-    public PaymenntCommandResult()
+    public PaymentCommandResult()
     {
         this.Id = Guid.NewGuid();
         this.TriggerTime = DateTime.Now;
         this.TriggerClusterId = Guid.NewGuid();
     }
 
-    public PaymenntCommandResult(CommandType command, bool isSuccess)
+    public PaymentCommandResult(CommandType command, bool isSuccess, Exception ex = null)
     {
         this.Id = Guid.NewGuid();
         this.TriggerTime = DateTime.Now;
         this.TriggerClusterId = Guid.NewGuid();
         this.Command = command;
         this.IsSuccess = isSuccess;
+        this.Exception = ex;
     }
 }

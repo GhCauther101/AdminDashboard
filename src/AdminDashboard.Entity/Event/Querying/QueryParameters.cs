@@ -14,6 +14,9 @@ public class QueryParameters<T> : TriggerEvent
     [JsonPropertyName("range_width")]
     public int RangeWidth { get; set; }
 
+    [JsonPropertyName("last_width")]
+    public int LastWidth { get; set; }
+
     [JsonPropertyName("entity_id")]
     public T EntityId { get; set; }
 

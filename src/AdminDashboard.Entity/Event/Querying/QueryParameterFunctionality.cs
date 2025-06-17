@@ -2,5 +2,5 @@
 
 public enum QueryParameterFunctionality
 {
-    GET_ALL, PAGE, SINGLE, GROUP
+    GET_ALL, PAGE, SINGLE, GROUP, LAST
 }
