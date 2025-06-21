@@ -14,9 +14,6 @@ public class Client : IdentityUser, IEntity
     [JsonPropertyName("client_name")]
     public string Name { get; set; }
 
-    [Required]
-    [JsonPropertyName("email")]
-    public string Email { get; set; }
 
     [Required]
     [JsonPropertyName("password")]

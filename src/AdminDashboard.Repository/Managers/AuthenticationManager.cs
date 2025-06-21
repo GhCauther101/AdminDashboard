@@ -13,21 +13,41 @@ namespace AdminDashboard.Repository.Managers;
 public class AuthenticationManager : IAuthenticationManager
 {
     private readonly UserManager<Client> _userManger;
+    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
 
     private Client user;
 
-    public AuthenticationManager(UserManager<Client> userManager, IConfiguration configuration)
+    public AuthenticationManager(
+        UserManager<Client> userManager,
+        RoleManager<IdentityRole> roleManager,
+        IConfiguration configuration)
     {
         _userManger = userManager;
+        _roleManager = roleManager;
         _configuration = configuration;
+        SeedRoles().Wait();
     }
 
-    public async Task<bool> ValidateUser(ClientForAuthentication userForAuth)
+    public async Task SeedRoles()
     {
+        var roles = new[] { "admin", "user", "manager" };
+
+        foreach (var role in roles)
+        {
+            if (!await _roleManager.RoleExistsAsync(role))
+                await _roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+
+    public async Task<bool> ValidateUser(ClientForAuthorization userForAuth)
+    {
+
         user = await _userManger.FindByNameAsync(userForAuth.Username);
 
-        return user != null && await _userManger.CheckPasswordAsync(user, userForAuth.Password);
+        return (user != null && await _userManger.CheckPasswordAsync(user, userForAuth.Password));
+        //bool result = await _userManger.CheckPasswordAsync(user, inputPassword);
+        //return result;
     }
 
     public async Task<string> CreateToken()
@@ -36,13 +56,13 @@ public class AuthenticationManager : IAuthenticationManager
         var claims = await GetClaims();
         var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
 
-        string x = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-        return x;
+        return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
     }
 
     private SigningCredentials GetSigningCredentials()
     {
-        var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET1"));
+        var jwtSettingsKey = _configuration.GetSection("JwtSettings").GetSection("Key").Value;
+        var key = Encoding.UTF8.GetBytes(jwtSettingsKey);
         var secret = new SymmetricSecurityKey(key);
 
         return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
@@ -52,7 +72,7 @@ public class AuthenticationManager : IAuthenticationManager
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, user.Name)
+            new Claim(ClaimTypes.Name, user.UserName)
         };
 
         var roles = await _userManger.GetRolesAsync(user);

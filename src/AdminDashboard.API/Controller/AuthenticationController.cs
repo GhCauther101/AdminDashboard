@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using AdminDashboard.Entity.Dto;
-using AdminDashboard.Contracts.Repository;
+using AdminDashboard.Repository.Managers;
 
 namespace AdminDashboard.API.Controller;
 
@@ -11,10 +11,10 @@ namespace AdminDashboard.API.Controller;
 public class AuthenticationController : ControllerBase
 {
     private readonly UserManager<Client> _userManager;
-    private readonly IAuthenticationManager _authManager;
+    private readonly AuthenticationManager _authManager;
 
     public AuthenticationController(
-        IAuthenticationManager authManager,
+        AuthenticationManager authManager,
         UserManager<Client> userManager)
     {
         _authManager = authManager;
@@ -27,8 +27,7 @@ public class AuthenticationController : ControllerBase
     {
         var client = new Client
         {
-            Id = new Random().Next(),
-            Name = clientForregistration.Name,
+            UserName = clientForregistration.Name,
             Email = clientForregistration.Email,
             Password = clientForregistration.Password,
         };
@@ -43,18 +42,15 @@ public class AuthenticationController : ControllerBase
         }
 
         await _userManager.AddToRolesAsync(client, clientForregistration.Roles);
-
+        
         return StatusCode(201);
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Authenticate([FromBody] ClientForAuthentication userAuthentication)
+    public async Task<IActionResult> Authenticate([FromBody] ClientForAuthorization userAuthentication)
     {
         if (!await _authManager.ValidateUser(userAuthentication))
-        {
-            Console.WriteLine("Not authenticated");
             return Unauthorized();
-        }
 
         return Ok(new { Token = await _authManager.CreateToken() });
     }

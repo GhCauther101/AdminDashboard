@@ -46,6 +46,7 @@ public static class ServiceExtenssion
 
         services.AddScoped<DbContextBus>();
         services.AddScoped<RepositoryManager>();
+        services.AddScoped<RoleManager<IdentityRole>>();
         services.AddScoped<AuthenticationManager>();
     }
 
