@@ -62,8 +62,7 @@ public class AuthenticationManager : IAuthenticationManager
         return claims;
     }
 
-    private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials,
-                                                  List<Claim> claims)
+    private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
 

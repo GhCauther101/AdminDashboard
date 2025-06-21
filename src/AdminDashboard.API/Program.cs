@@ -1,37 +1,21 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using AdminDashboard.API.Services;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 var config = builder.Configuration;
 
-builder.Services.AddAuthentication(options => 
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(x => 
-{
-    x.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidIssuer = config["JwtSettings:Issuer"],
-        ValidAudience = config["JwtSettings:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!)),
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-    };    
-});
-
-builder.Services.AddAuthorization();
+builder.Services.ConfigureDatabaseContext(config);
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(config);
+builder.Services.ConfigureApplication();
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.ConfigureCors();
+builder.Services.AddHttpClient();
+builder.Services.AddMvc();
 builder.Services.AddOpenApi();
+builder.Services.ConfigureSwaggerGen();
 
 var app = builder.Build();
 
@@ -46,5 +30,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseSwagger();
+app.UseSwaggerUI();
 app.Run();

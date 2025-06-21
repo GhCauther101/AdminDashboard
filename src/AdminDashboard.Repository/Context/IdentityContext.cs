@@ -6,7 +6,7 @@ namespace AdminDashboard.Repository.Context;
 
 public  class IdentityContext : IdentityDbContext
 {
-    public IdentityContext(DbContextOptions options) : base(options)
+    public IdentityContext(DbContextOptions<IdentityContext> options) : base(options)
     { }
 
     public DbSet<Client> Clients { get; set; }
