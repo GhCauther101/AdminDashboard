@@ -15,9 +15,10 @@ public class AuthenticationManager : IAuthenticationManager
     private readonly UserManager<Client> _userManger;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
+    private readonly JwtSettings _jwtSettings;
 
     private Client user;
-
+    
     public AuthenticationManager(
         UserManager<Client> userManager,
         RoleManager<IdentityRole> roleManager,
@@ -26,6 +27,8 @@ public class AuthenticationManager : IAuthenticationManager
         _userManger = userManager;
         _roleManager = roleManager;
         _configuration = configuration;
+
+        _jwtSettings  = JwtSettingReader.ReadJwtSettingsFromConfiguration(configuration);
         SeedRoles().Wait();
     }
 
@@ -42,12 +45,9 @@ public class AuthenticationManager : IAuthenticationManager
 
     public async Task<bool> ValidateUser(ClientForAuthorization userForAuth)
     {
-
         user = await _userManger.FindByNameAsync(userForAuth.Username);
 
         return (user != null && await _userManger.CheckPasswordAsync(user, userForAuth.Password));
-        //bool result = await _userManger.CheckPasswordAsync(user, inputPassword);
-        //return result;
     }
 
     public async Task<string> CreateToken()
@@ -61,8 +61,7 @@ public class AuthenticationManager : IAuthenticationManager
 
     private SigningCredentials GetSigningCredentials()
     {
-        var jwtSettingsKey = _configuration.GetSection("JwtSettings").GetSection("Key").Value;
-        var key = Encoding.UTF8.GetBytes(jwtSettingsKey);
+        var key = Encoding.UTF8.GetBytes(_jwtSettings.Key);
         var secret = new SymmetricSecurityKey(key);
 
         return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
@@ -88,13 +87,33 @@ public class AuthenticationManager : IAuthenticationManager
 
         var tokenOptions = new JwtSecurityToken
         (
-            issuer: jwtSettings.GetSection("validIssuer").Value,
-            audience: jwtSettings.GetSection("validAudience").Value,
+            issuer: _jwtSettings.Issuer,
+            audience: _jwtSettings.Audience,
             claims: claims,
-            expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings.GetSection("expires").Value)),
             signingCredentials: signingCredentials
         );
 
         return tokenOptions;
     }
+}
+
+public static class JwtSettingReader
+{
+    public static JwtSettings ReadJwtSettingsFromConfiguration(IConfiguration configuration)
+    {
+        return new JwtSettings(configuration);
+    }
+}
+
+public class JwtSettings(IConfiguration configuration)
+{
+    public string Issuer { get; init; } = configuration.GetSection("JwtSettings").GetSection("Issuer").Value ?? string.Empty;
+
+    public string Audience { get; init; } = configuration.GetSection("JwtSettings").GetSection("Audience").Value ?? string.Empty;
+
+    public string? Expires { get; init; } = configuration.GetSection("JwtSettings").GetSection("Expires").Value ?? string.Empty;
+
+    public string Key { get; init; } = configuration.GetSection("JwtSettings").GetSection("Key").Value ?? string.Empty;
+
+    public bool IsActiveKey => Key != null;
 }
