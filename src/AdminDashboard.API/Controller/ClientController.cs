@@ -4,6 +4,8 @@ using AdminDashboard.API.Routes;
 using AdminDashboard.Entity.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using AdminDashboard.API.Scopes;
 
 namespace AdminDashboard.API.Controller;
 
@@ -18,6 +20,7 @@ public class ClientController : ControllerBase
         _mediator = mediator;
     }
 
+    [Authorize(Roles = RoleScopes.ManagerScope)]
     [HttpPost(ApiRoutes.ClientRoutes.CreateClient)]
     public async Task<IActionResult> Create([FromBody] Client client)
     {
@@ -32,6 +35,7 @@ public class ClientController : ControllerBase
         else return BadRequest(ModelState);
     }
 
+    [Authorize(Roles = RoleScopes.UserScope)]
     [HttpPut(ApiRoutes.ClientRoutes.UpdateClient)]
     public async Task<IActionResult> Update([FromBody] Client client)
     {
@@ -47,6 +51,7 @@ public class ClientController : ControllerBase
         else return BadRequest(ModelState);
     }
 
+    [Authorize(Roles = RoleScopes.UserScope)]
     [HttpDelete(ApiRoutes.ClientRoutes.DeleteClient)]
     public async Task<IActionResult> Delete(int clientId)
     {
@@ -62,6 +67,7 @@ public class ClientController : ControllerBase
         else return BadRequest(ModelState);
     }
 
+    [Authorize(Roles = RoleScopes.UserScope)]
     [HttpGet(ApiRoutes.ClientRoutes.GetAll)]
     public async Task<IActionResult> GetAll()
     {
@@ -77,6 +83,7 @@ public class ClientController : ControllerBase
         else return BadRequest(ModelState);
     }
 
+    [Authorize(Roles = RoleScopes.UserScope)]
     [HttpGet(ApiRoutes.ClientRoutes.GetSinge)]
     public async Task<IActionResult> GetSingle(int clientId)
     {
