@@ -30,7 +30,7 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
     {   
         ClientQueryResult clientQueryResult = default;
 
-        if (queryParameters.IsValid())
+        if (!queryParameters.IsValid())
             return clientQueryResult;
 
         switch (queryParameters.Functionality)

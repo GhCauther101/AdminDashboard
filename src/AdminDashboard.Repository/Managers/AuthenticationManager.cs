@@ -18,6 +18,8 @@ public class AuthenticationManager : IAuthenticationManager
     private readonly JwtSettings _jwtSettings;
 
     private Client user;
+
+    private string[] roles = { "admin", "manager", "user" };
     
     public AuthenticationManager(
         UserManager<Client> userManager,
@@ -32,16 +34,18 @@ public class AuthenticationManager : IAuthenticationManager
         SeedRoles().Wait();
     }
 
-    public async Task SeedRoles()
-    {
-        var roles = new[] { "admin", "user", "manager" };
+    public string[] Roles => roles;
 
+    private async Task SeedRoles()
+    {
         foreach (var role in roles)
         {
             if (!await _roleManager.RoleExistsAsync(role))
                 await _roleManager.CreateAsync(new IdentityRole(role));
         }
     }
+
+
 
     public async Task<bool> ValidateUser(ClientForAuthorization userForAuth)
     {

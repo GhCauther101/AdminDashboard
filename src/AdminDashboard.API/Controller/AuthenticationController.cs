@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using AdminDashboard.Entity.Dto;
 using AdminDashboard.Repository.Managers;
+using Microsoft.AspNetCore.Cors;
 
 namespace AdminDashboard.API.Controller;
 
@@ -21,6 +22,11 @@ public class AuthenticationController : ControllerBase
         _userManager = userManager;
     }
 
+    [HttpGet("getRoles")]
+    public async Task<IActionResult> GetRoles()
+    {
+        return Ok(_authManager.Roles);
+    }
 
     [HttpPost("register")]
     public async Task<IActionResult> RegisterUser([FromBody] ClientForRegistration clientForregistration)
@@ -29,7 +35,7 @@ public class AuthenticationController : ControllerBase
         {
             UserName = clientForregistration.Name,
             Email = clientForregistration.Email,
-            Password = clientForregistration.Password,
+            Password = clientForregistration.Password
         };
 
         var result = await _userManager.CreateAsync(client, client.Password);
