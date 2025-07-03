@@ -1,5 +1,8 @@
+using AdminDashboard.API.Middleware;
 using AdminDashboard.API.Services;
 using Microsoft.AspNetCore.Builder;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +28,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+//app.UseMiddleware<ServerIncomeCheckMiddleware>();
+app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

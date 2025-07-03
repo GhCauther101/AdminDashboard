@@ -25,8 +25,8 @@ public static class ServiceExtenssion
                     .AllowAnyMethod()
                     .AllowAnyHeader());
 
-            options.AddPolicy("AllowReactApp", policy =>
-                    policy.WithOrigins("http://localhost:5173") // Replace with the exact origin of your React app
+            options.AddPolicy("AllowWebApp", policy =>
+                    policy.WithOrigins("http://localhost:5173/") // Replace with the exact origin of your React app
                         .AllowAnyHeader()
                         .AllowAnyMethod());
         });
