@@ -1,5 +1,4 @@
 ﻿using AdminDashboard.Entity.Dto;
-using AdminDashboard.Entity.Models;
 
 namespace AdminDashboard.Contracts.Repository;
 

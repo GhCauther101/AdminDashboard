@@ -1,34 +1,67 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { MdAlternateEmail } from "react-icons/md";
-import accountRegister from "../../Api/authApi";
+import AuthApi from "../../Api/authApi.js";
+import plateError from "./FormWrapper.jsx";
+
 import "./DefaultForm.css";
 
 const RegisterForm = () => {
-    const [userName, setUsername] = useState()
-    const [userEmail, setEmail] = useState()
-    const [userPassword, setPassword] = useState()
-    const [userRole, setRole] = useState()
+    const navigate = useNavigate();
 
-    const handlSubmit = async (e) => {
-        debugger
-        await accountRegister(userName, userEmail, userPassword, userRole);
+    const [userName, setUsername] = useState('')
+    const [userEmail, setEmail] = useState('')
+    const [userPassword, setPassword] = useState('')
+    const [userRole, setRole] = useState('')
+    const [errors, setRegisterErrors] = useState()
+    
+    const processErrors = (registerResult) => {
+        var jsonErrors = JSON.parse(registerResult.data);
+        setRegisterErrors(jsonErrors);
     }
 
+    const moveNext = () => {
+        setUsername('');
+        setEmail('');
+        setPassword('');
+        setRole('');
+
+        navigate('/login');
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        var objInstance = { name: userName, email: userEmail, password: userPassword, roles: [userRole] };
+        var api = new AuthApi();
+        var apiResult = await api.register(objInstance);
+        var registerResult = apiResult.get();
+
+        if (!registerResult.isSuccess) {
+            processErrors(registerResult);
+        } 
+        else {
+            moveNext();
+        }
+    };
+ 
     return (
         <div className="wrapper">
-            <form >
+            <form>
                 <h1>Register</h1>
                 <div className="input-box">
                     <input type="text" placeholder="username" required value={userName} onChange={(e) => setUsername(e.target.value)} />
+                    {errors?.username ? plateError(errors.username) : null}
                     <FaUser className="icon"/>
                 </div>
                 <div className="input-box">
                     <input type="text" placeholder="email" required value={userEmail} onChange={(e) => setEmail(e.target.value)}/>
+                    {errors?.email ? plateError(errors.email) : null}
                     <MdAlternateEmail className="icon"/>
                 </div>
                 <div className="input-box">
-                    <input type="password" placeholder="password" required value={userPassword} onChange={(e) => setPassword(e.target.value)}/>
+                    <input type="password" autoComplete="current-password" placeholder="password" required value={userPassword} onChange={(e) => setPassword(e.target.value)}/>
+                    {errors?.password ? plateError(errors.password) : null}
                     <FaLock className="icon"/>
                 </div>
 
@@ -38,16 +71,14 @@ const RegisterForm = () => {
                         <option value="manager">Manager</option>
                         <option value="user">User</option>
                     </select>
+                    {errors?.role ? plateError(errors.role) : null}
                 </div>
 
-                <button type="submit" onClick={(e) => handlSubmit(e)}>Register</button>
-
+                <div>
+                    <button onClick={handleSubmit}>Register</button>
+                </div>
                 <div className="register-link">
                     <p> Already have an account? <a href="/login">Login</a></p>
-                </div>
-
-                <div className="error-line">
-                    <p></p>
                 </div>
             </form>
         </div>

@@ -18,6 +18,7 @@ public class ClientForRegistration
     [JsonProperty("password")]
     public string Password { get; set; }
 
+    [Required(ErrorMessage = "Roles is required")]
     [JsonProperty("roles")]
     public ICollection<string> Roles { get; set; }
 }

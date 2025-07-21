@@ -1,8 +1,6 @@
 using AdminDashboard.API.Middleware;
 using AdminDashboard.API.Services;
-using Microsoft.AspNetCore.Builder;
-using System.Text.Json.Serialization;
-using System.Text.Json;
+using Microsoft.AspNetCore.HttpLogging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +10,6 @@ builder.Services.ConfigureDatabaseContext(config);
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(config);
 builder.Services.ConfigureApplication();
-
 builder.Services.AddControllers();
 builder.Services.ConfigureCors();
 builder.Services.AddHttpClient();
@@ -28,11 +25,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseCors("CorsPolicy");
+app.UseCors("AllowWebApp");
+app.UseRouting();
 app.UseHttpsRedirection();
+app.UseMiddleware<RequestBrokerMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 app.UseSwagger();
 app.UseSwaggerUI();
