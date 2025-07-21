@@ -1,5 +1,4 @@
-﻿using AdminDashboard.API.Reuqests.Client;
-using AdminDashboard.API.Reuqests.Payment;
+﻿using AdminDashboard.API.Reuqests.Payment;
 using AdminDashboard.API.Routes;
 using AdminDashboard.API.Scopes;
 using AdminDashboard.Entity.Json;

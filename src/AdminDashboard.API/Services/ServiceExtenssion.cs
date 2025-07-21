@@ -1,10 +1,7 @@
-﻿using AdminDashboard.Contracts.Repository;
-using AdminDashboard.Repository.Context;
+﻿using AdminDashboard.Repository.Context;
 using AdminDashboard.Repository.Managers;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -22,19 +19,19 @@ public static class ServiceExtenssion
         {
             options.AddPolicy("CorsPolicy", builder =>
                 builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
 
             options.AddPolicy("AllowWebApp", policy =>
-                    policy.WithOrigins("http://localhost:5173/") // Replace with the exact origin of your React app
-                        .AllowAnyHeader()
-                        .AllowAnyMethod());
+                policy
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .WithOrigins("http://localhost:55085"));
         });
     }
 
     public static void ConfigureDatabaseContext(this IServiceCollection services, IConfiguration configuration)
     {
-
         var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
         services.AddDbContext<RepositoryContext>(opts => {
             opts.UseNpgsql(configuration.GetConnectionString("pgConnection"), b => b.MigrationsAssembly(assemblyName));
@@ -74,7 +71,7 @@ public static class ServiceExtenssion
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(x =>
+        }).AddCookie().AddJwtBearer(x =>
         {
             x.TokenValidationParameters = new TokenValidationParameters
             {

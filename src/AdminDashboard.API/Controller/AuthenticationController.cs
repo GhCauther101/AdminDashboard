@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using AdminDashboard.Entity.Dto;
 using AdminDashboard.Repository.Managers;
-using Microsoft.AspNetCore.Cors;
+using AdminDashboard.API.Utils;
 
 namespace AdminDashboard.API.Controller;
 
@@ -41,15 +41,13 @@ public class AuthenticationController : ControllerBase
         var result = await _userManager.CreateAsync(client, client.Password);
         if (!result.Succeeded)
         {
-            foreach (var err in result.Errors)
-                ModelState.TryAddModelError(err.Code, err.Description);
-
-            return BadRequest(ModelState);
+            var errorDictionary = ControllerUtils.DefineIdentityErrors(result.Errors);
+            return BadRequest(errorDictionary);
         }
 
         await _userManager.AddToRolesAsync(client, clientForregistration.Roles);
-        
-        return StatusCode(201);
+
+        return Created();
     }
 
     [HttpPost("login")]

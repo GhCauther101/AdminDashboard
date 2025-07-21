@@ -100,7 +100,6 @@ function App() {
       }
     }
   ];
-  debugger;
 
   return (
     <div>
