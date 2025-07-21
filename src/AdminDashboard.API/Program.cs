@@ -28,7 +28,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-//app.UseMiddleware<ServerIncomeCheckMiddleware>();
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();
