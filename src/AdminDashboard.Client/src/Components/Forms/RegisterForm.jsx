@@ -33,9 +33,9 @@ const RegisterForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         var objInstance = { name: userName, email: userEmail, password: userPassword, roles: [userRole] };
-        var api = new AuthApi();
-        var apiResult = await api.register(objInstance);
-        var registerResult = apiResult.get();
+        var authApi = new AuthApi();
+        var apiResult = await authApi.register(objInstance);
+        var registerResult = apiResult.parse();
 
         if (!registerResult.isSuccess) {
             processErrors(registerResult);
@@ -74,9 +74,8 @@ const RegisterForm = () => {
                     {errors?.role ? plateError(errors.role) : null}
                 </div>
 
-                <div>
-                    <button onClick={handleSubmit}>Register</button>
-                </div>
+                <button onClick={handleSubmit}>Register</button>
+                
                 <div className="register-link">
                     <p> Already have an account? <a href="/login">Login</a></p>
                 </div>

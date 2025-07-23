@@ -31,7 +31,7 @@ public class RequestBrokerMiddleware
         Console.WriteLine($"Request method: {context.Request.Method}");
         Console.WriteLine($"Content length: {body.Length}");
         Console.WriteLine($"Content json: {body}");
-        Console.WriteLine($"Header : {context.Request.Headers.AccessControlAllowOrigin}");
+        Console.WriteLine($"JWT token : {context.Request.Headers["Authorization"]}");
         Console.WriteLine($"Connection id: {context.Connection.Id}");
         Console.WriteLine($"Connection local address: {context.Connection.LocalIpAddress}");
         Console.WriteLine($"Connection local port: {context.Connection.LocalPort}");
