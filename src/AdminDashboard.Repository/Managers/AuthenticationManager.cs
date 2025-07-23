@@ -48,7 +48,9 @@ public class AuthenticationManager : IAuthenticationManager
     public async Task<bool> ValidateUser(ClientForAuthorization userForAuth)
     {
         user = await _userManger.FindByNameAsync(userForAuth.Username);
-        return (user != null && await _userManger.CheckPasswordAsync(user, userForAuth.Password));
+        var passwordChecking = await _userManger.CheckPasswordAsync(user, userForAuth.Password);
+        
+        return (user != null && passwordChecking);
     }
 
     public async Task<string> CreateToken()

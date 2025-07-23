@@ -1,7 +1,6 @@
 class ApiRoutes {
     static base = `/api`
-    static isFullUrl = true
-
+    
     static authenticationRoutes = {
         'register' : `${this.base}/authentication/register`,
         'login' : `${this.base}/authentication/login`,

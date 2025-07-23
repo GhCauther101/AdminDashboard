@@ -9,7 +9,7 @@ class ApiResult {
         this._data = data;
     }
 
-    get = () => {
+    parse = () => {
         return {
             isSuccess: this._isSuccess,
             status: this._status,

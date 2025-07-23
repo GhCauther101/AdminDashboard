@@ -1,14 +1,15 @@
-import apiInstance from "./apiBase";
-import ApiRoutes from "./apiRoutes";
-import ApiResult from "./apiResult";
+// import { apiInstance, defaultHeadersSet } from "./apiBase.js";
+import ApiResolver from './apiBase.js'
+import ApiRoutes from "./apiRoutes.js";
+import ApiResult from "./apiResult.js";
+import axios from 'axios';
 
 class AuthApi {
     register = async (objInstance) => {
-        ApiRoutes.isFullUrl = true;
         var route = ApiRoutes.authenticationRoutes.register;
         var result = new ApiResult();
-
-        const api = apiInstance();
+        
+        const api = ApiResolver.apiInstance();
         await api.post(route, objInstance)
             .then(data => 
             {
@@ -19,25 +20,38 @@ class AuthApi {
             })
             .catch(er => 
             {
-                var status = er.request.status;
                 var success = false;
+                var status = er.request.status;
                 var errorData = er.request.response;
                 result.define(success, status, errorData);
             });
         return result;
     }
 
-    login = async (inputSet) => {
-        ApiRoutes.isFullUrl = true;
+    login = async (objInstance) => {
         var route = ApiRoutes.authenticationRoutes.login;
-        var result = false;
-        const api = apiInstance();
+        var result = new ApiResult();
+
+        const api = ApiResolver.resolveApi();
         await api.post(route, objInstance)
-            .then(data => { result = data.status === 201; })
-            .catch(er => {throw er;});
-        
+            .then(data => 
+            {
+                var status = data.status;
+                var success = status === 200;
+                var data = data.data;
+
+                axios.defaults.headers.common.Authorization = `Bearer  ${data['token']}`;
+                result.define(success, status, data);
+            })
+            .catch(er => 
+            {
+                var success = false;
+                var status = er.request.status;
+                var errorData = er.request.response;
+                result.define(success, status, errorData);
+            });
+
         return result;
-        
     }
 }
 
