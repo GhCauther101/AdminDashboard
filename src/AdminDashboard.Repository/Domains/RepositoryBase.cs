@@ -1,6 +1,8 @@
 ﻿using AdminDashboard.Contracts.Repository;
+using AdminDashboard.Entity.Models;
 using AdminDashboard.Repository.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 
 namespace AdminDashboard.Repository.Domains;
@@ -22,6 +24,18 @@ public class RepositoryBase<T> where T : class
             DbContextDomain.REPOSITORY => (DbContext)_dbContextBus.RepositoryContextInstance,
             DbContextDomain.EVENT => (DbContext)_dbContextBus.EventContextInstance
         };
+    }
+
+    protected QueryPager GetRepositoryPager(DbContextDomain domain)
+    {
+        var context = DetectDomainDbContext(DbContextDomain.IDENTITY);
+        var totalCount = context.Set<T>().Count();
+        var width = DbContextConfigHelper.PagerWidth;
+
+        var process = (double)(totalCount / width);
+        var pageCount = (int)Math.Ceiling(process);
+        
+        return new QueryPager( totalCount, pageCount );
     }
 
     protected IQueryable<T> FindAll(DbContextDomain domain, bool trackChanges)

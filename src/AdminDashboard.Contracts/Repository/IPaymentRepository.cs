@@ -7,6 +7,8 @@ public interface IPaymentRepository : IRepository
 {
     public Task<PaymentQueryResult> Get(PaymentQueryParameters queryParameters);
 
+    public Task<QueryPagerResult> GetPager();
+
     public void CreatePayment(PaymentCommandParameters commandParameters);
 
     public void UpdatePayment(PaymentCommandParameters commandParameters);

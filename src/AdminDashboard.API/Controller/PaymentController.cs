@@ -1,4 +1,5 @@
-﻿using AdminDashboard.API.Reuqests.Payment;
+﻿using AdminDashboard.API.Reuqests.Client;
+using AdminDashboard.API.Reuqests.Payment;
 using AdminDashboard.API.Routes;
 using AdminDashboard.API.Scopes;
 using AdminDashboard.Entity.Json;
@@ -110,6 +111,19 @@ namespace AdminDashboard.API.Controller
 
             if (clientQueryResult.IsSuccess)
                 return Ok(clientQueryResult.Entity);
+            else return BadRequest(ModelState);
+        }
+
+        [Authorize(Roles = RoleScopes.UserScope)]
+        [HttpGet(ApiRoutes.PaymentRoutes.GetPager)]
+        public async Task<IActionResult> GetPager()
+        {
+            var paymentGetPagerRequest = new PaymentGetPagerRequest();
+            var clientPagerResult = await _mediator.Send(paymentGetPagerRequest);
+            var jsonResult = clientPagerResult.ToJsonContent();
+
+            if (clientPagerResult.IsSuccess)
+                return Ok(clientPagerResult.Entity);
             else return BadRequest(ModelState);
         }
     }

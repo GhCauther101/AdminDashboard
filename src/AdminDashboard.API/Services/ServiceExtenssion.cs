@@ -22,9 +22,8 @@ public static class ServiceExtenssion
                     .AllowAnyHeader()
                     .AllowAnyMethod());
 
-            options.AddPolicy("AllowWebApp", policy =>
-                policy
-                    .AllowAnyHeader()
+            options.AddPolicy("AllowWebApp", builder =>
+                builder.AllowAnyHeader()
                     .AllowAnyMethod()
                     .WithOrigins("http://localhost:55085"));
         });
@@ -82,6 +81,7 @@ public static class ServiceExtenssion
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
+                RequireExpirationTime = false,
             };
         });
 

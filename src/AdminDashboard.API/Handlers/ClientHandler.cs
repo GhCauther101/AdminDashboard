@@ -12,7 +12,8 @@ public class ClientHandler
       IRequestHandler<ClientUpdateRequest, ClientCommandResult>,
       IRequestHandler<ClientGetAllRequest, ClientQueryResult>,
       IRequestHandler<ClientGetPageRequest, ClientQueryResult>,
-      IRequestHandler<ClientGetSingleRequest, ClientQueryResult>
+      IRequestHandler<ClientGetSingleRequest, ClientQueryResult>,
+      IRequestHandler<ClientGetPagerRequest, QueryPagerResult>
 {
     private readonly RepositoryManager _repositoryManager;
 
@@ -26,7 +27,6 @@ public class ClientHandler
         try
         {
             var commandParameters = new ClientCommandParameters(CommandType.CREATE, true, request.client);
-
 
             _repositoryManager.ClientRepository.CreateClient(commandParameters);
             await _repositoryManager.SaveChanges();
@@ -133,6 +133,20 @@ public class ClientHandler
         catch (Exception ex)
         {
             return new ClientQueryResult(false, exception: ex);
+        }
+    }
+
+    public async Task<QueryPagerResult> Handle(ClientGetPagerRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var clientQueryPager = await _repositoryManager.ClientRepository.GetPager();
+
+            return clientQueryPager;
+        }
+        catch (Exception ex)
+        {
+            return new QueryPagerResult(false, exception: ex);
         }
     }
 }

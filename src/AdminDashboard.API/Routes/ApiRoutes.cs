@@ -26,6 +26,8 @@ public static class ApiRoutes
         public const string GetAll = controllerBase + "/getAll";
 
         public const string GetSinge = controllerBase + "/getSingle/{clientId}";
+
+        public const string GetPager = controllerBase + "/getPager";
     }
 
     public static class PaymentRoutes
@@ -45,5 +47,7 @@ public static class ApiRoutes
         public const string GetSinge = controllerBase + "/getSingle/{paymentId}";
 
         public const string GetLastRange = controllerBase + "/getLastRange";
+
+        public const string GetPager = controllerBase + "/getPager";
     }
 }

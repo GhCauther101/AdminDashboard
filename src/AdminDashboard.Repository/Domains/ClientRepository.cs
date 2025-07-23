@@ -92,4 +92,10 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
 
         return clientQueryResult;
     }    
+
+    public async Task<QueryPagerResult> GetPager()
+    {
+        var pager = GetRepositoryPager(DbContextDomain.REPOSITORY);
+        return new QueryPagerResult(true, pager:pager);
+    }
 }

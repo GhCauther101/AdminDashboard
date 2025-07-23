@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AdminDashboard.API.Scopes;
+using AdminDashboard.Entity.Event.Querying;
 
 namespace AdminDashboard.API.Controller;
 
@@ -96,6 +97,19 @@ public class ClientController : ControllerBase
 
         if (clientQueryResult.IsSuccess)
             return Ok(clientQueryResult.Entity);
+        else return BadRequest(ModelState);
+    }
+
+    [Authorize(Roles = RoleScopes.UserScope)]
+    [HttpGet(ApiRoutes.ClientRoutes.GetPager)]
+    public async Task<IActionResult> GetPager()
+    {
+        var clientGetPagerRequest = new ClientGetPagerRequest();
+        var clientPagerResult = await _mediator.Send(clientGetPagerRequest);
+        var jsonResult = clientPagerResult.ToJsonContent();
+
+        if (clientPagerResult.IsSuccess)
+            return Ok(clientPagerResult.Entity);
         else return BadRequest(ModelState);
     }
 }
