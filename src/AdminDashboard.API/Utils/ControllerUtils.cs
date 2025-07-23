@@ -4,9 +4,9 @@ namespace AdminDashboard.API.Utils;
 
 public static class ControllerUtils
 {
-    public static IDictionary<string, List<string>> DefineIdentityErrors (this IEnumerable<IdentityError> errors)
+    public static IDictionary<string, IEnumerable<string>> DefineIdentityErrors (this IEnumerable<IdentityError> errors)
     {
-        var resultErrors = new Dictionary<string, List<string>>();
+        var resultErrors = new Dictionary<string, IEnumerable<string>>();
 
         foreach (var error in errors)
         {
@@ -33,11 +33,18 @@ public static class ControllerUtils
         return resultErrors;
     }
 
-    private static void AddError(Dictionary<string, List<string>> errors, string key, string error)
+    public static IDictionary<string, IEnumerable<string>> DefineUnauthorizedErrorDictionary ()
+    {
+        var resultDictionary = new Dictionary<string, IEnumerable<string>>();
+        resultDictionary["general"] = new string[] { "Unauthorized." };
+        return resultDictionary;
+    }
+
+    private static void AddError(Dictionary<string, IEnumerable<string>> errors, string key, string error)
     {
         if (!errors.ContainsKey(key))
             errors[key] = new List<string>();
 
-        errors[key].Add(error);
+        errors[key].ToList().Add(error);
     }
 }

@@ -52,9 +52,23 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost("login")]
     public async Task<IActionResult> Authenticate([FromBody] ClientForAuthorization userAuthentication)
-    {
+     {
+        if (!ModelState.IsValid)
+        {
+            var errorDictionary = ModelState.Where(x => x.Value.Errors.Count > 0).ToDictionary
+            (
+                kvp => kvp.Key,
+                kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
+            );
+
+            return BadRequest(errorDictionary);
+        }
+
         if (!await _authManager.ValidateUser(userAuthentication))
-            return Unauthorized();
+        {
+            var errorDictionary = ControllerUtils.DefineUnauthorizedErrorDictionary();
+            return Unauthorized(errorDictionary);
+        }
 
         return Ok(new { Token = await _authManager.CreateToken() });
     }

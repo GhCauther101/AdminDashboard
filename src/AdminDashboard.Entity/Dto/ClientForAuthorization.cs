@@ -9,9 +9,6 @@ public class ClientForAuthorization
     [JsonProperty("username")]
     public string Username { get; set; }
 
-    //[Required(ErrorMessage = "User email is required")]
-    //public string Email { get; set; }
-
     [Required(ErrorMessage = "User password is required")]
     [JsonProperty("password")]
     public string Password { get; set; }
