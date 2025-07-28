@@ -1,6 +1,6 @@
 ﻿namespace AdminDashboard.Entity.Event.Querying;
 
-public class ClientQueryParameters : QueryParameters<int>
+public class ClientQueryParameters : QueryParameters<Guid>
 {
     public ClientQueryParameters()
     {
@@ -14,8 +14,8 @@ public class ClientQueryParameters : QueryParameters<int>
         int rangeStart = 0,
         int rangeWidth = 0,
         int lastWidth = 0,
-        int entityId = 0,
-        IEnumerable<int> entitiesGroup = null)
+        Guid entityId = default,
+        IEnumerable<Guid> entitiesGroup = null)
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;

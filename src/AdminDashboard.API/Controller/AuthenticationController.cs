@@ -1,9 +1,16 @@
-﻿using AdminDashboard.Entity.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using AdminDashboard.Entity.Dto;
-using AdminDashboard.Repository.Managers;
+﻿using AdminDashboard.API.Reuqests.Client;
+using AdminDashboard.API.Routes;
+using AdminDashboard.API.Scopes;
 using AdminDashboard.API.Utils;
+using AdminDashboard.Entity.Dto;
+using AdminDashboard.Entity.Json;
+using AdminDashboard.Entity.Models;
+using AdminDashboard.Repository.Managers;
+using AutoMapper;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AdminDashboard.API.Controller;
 
@@ -14,21 +21,28 @@ public class AuthenticationController : ControllerBase
     private readonly UserManager<Client> _userManager;
     private readonly AuthenticationManager _authManager;
 
+    private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
+
     public AuthenticationController(
         AuthenticationManager authManager,
-        UserManager<Client> userManager)
+        UserManager<Client> userManager,
+        IMediator mediator,
+        IMapper mapper)
     {
         _authManager = authManager;
         _userManager = userManager;
+        _mediator = mediator;
+        _mapper = mapper;
     }
 
-    [HttpGet("getRoles")]
+    [HttpGet(ApiRoutes.AccountRoutes.GetRoles)]
     public async Task<IActionResult> GetRoles()
     {
         return Ok(_authManager.Roles);
     }
 
-    [HttpPost("register")]
+    [HttpPost(ApiRoutes.AccountRoutes.Register)]
     public async Task<IActionResult> RegisterUser([FromBody] ClientForRegistration clientForregistration)
     {
         var client = new Client
@@ -50,7 +64,7 @@ public class AuthenticationController : ControllerBase
         return Created();
     }
 
-    [HttpPost("login")]
+    [HttpPost(ApiRoutes.AccountRoutes.Login)]
     public async Task<IActionResult> Authenticate([FromBody] ClientForAuthorization userAuthentication)
      {
         if (!ModelState.IsValid)
@@ -70,6 +84,55 @@ public class AuthenticationController : ControllerBase
             return Unauthorized(errorDictionary);
         }
 
-        return Ok(new { Token = await _authManager.CreateToken() });
+        var token = await _authManager.CreateToken();
+
+        Response.Cookies.Append("jwt", token, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict
+        });
+
+        return Ok("Logged in.");
     }
+
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("jwt");
+        return Ok("Logged out.");
+    }
+
+    [Authorize(Roles = RoleScopes.UserScope)]
+    [HttpPut(ApiRoutes.AccountRoutes.UpdateClient)]
+    public async Task<IActionResult> Update([FromBody] Client client)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var clientUpdateRequest = new ClientUpdateRequest(client);
+        var clientCommandResult = await _mediator.Send(clientUpdateRequest);
+        var jsonResult = clientCommandResult.ToJsonContent();
+
+        if (clientCommandResult.IsSuccess)
+            return Ok(jsonResult);
+        else return BadRequest(ModelState);
+    }
+
+    [Authorize(Roles = RoleScopes.UserScope)]
+    [HttpDelete(ApiRoutes.AccountRoutes.DeleteClient)]
+    public async Task<IActionResult> Delete(Guid clientId)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var clientDeleteRequest = new ClientDeleteRequest(clientId);
+        var clientCommandResult = await _mediator.Send(clientDeleteRequest);
+        var jsonResult = clientCommandResult.ToJsonContent();
+
+        if (clientCommandResult.IsSuccess)
+            return NoContent();
+        else return BadRequest(ModelState);
+    }
+
 }

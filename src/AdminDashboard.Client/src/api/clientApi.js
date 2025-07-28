@@ -1,0 +1,34 @@
+import ApiResolver from "./apiBase";
+import ApiResult from "./data/apiResult.js";
+import ApiRoutes from "./data/apiRoutes.js";
+
+class ClientApi {
+    getAll = async () => {
+        var route = ApiRoutes.clientRoute.getAll;
+        var result = new ApiResult();
+        
+        const api = ApiResolver.resolveApi();
+        await api.get(route)
+            .then(data => 
+            {
+                var status = data.status;
+                var success = status === 200;
+                var data = data.data;
+                result.define(success, status, data);
+            })
+            .catch(er => 
+            {
+                var success = false;
+                var status = er.request.status;
+                var errorData = er.request.response;
+                result.define(success, status, errorData);
+            });
+        return result;
+    }
+
+    getSingle = async () => {}
+
+    getRange = async (rangeParameters) => {}
+}
+
+export default ClientApi;

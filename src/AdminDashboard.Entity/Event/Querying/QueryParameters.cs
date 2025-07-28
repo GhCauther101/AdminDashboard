@@ -27,7 +27,7 @@ public class QueryParameters<T> : TriggerEvent
     {
         bool isSingleEnabled()
         {
-            if (EntityId is int id && id > 0)
+            if (EntityId is Guid id && id != null && id != Guid.Empty)
                 return true;
             else return false;
         };

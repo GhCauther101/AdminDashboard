@@ -1,5 +1,5 @@
-import axios from "axios"
-import ApiRoutes from "./apiRoutes";
+import axios from "axios";
+import ApiRoutes from "./data/apiRoutes.js";
 
 class ApiResolver {
     static apiInstance = null;
@@ -11,7 +11,7 @@ class ApiResolver {
     }
 
     static resolveApi (url=ApiRoutes.base, headers=this.defaultHeadersSet) {
-        this.apiInstance = axios.create({ baseURL: url, headers: headers });
+        this.apiInstance = axios.create({ baseURL: url, headers: headers, withCredentials: true});
         this.apiInstance.interceptors.request.use(
             (config) => {
                 console.log(`[Request] ${JSON.stringify(config, null, 2)} ${config.url}`, config.data);

@@ -39,7 +39,6 @@ public class ClientHandler
         }
     }
 
-
     public async Task<ClientCommandResult> Handle(ClientDeleteRequest request, CancellationToken cancellationToken)
     {
         try 
@@ -51,10 +50,10 @@ public class ClientHandler
             };
 
             var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
-            if (!clientQueryResult.IsSuccess || clientQueryResult.Entity is null || clientQueryResult.Range.Count() == 0)
-                return new ClientCommandResult(CommandType.DELETE, true);
+            if (!clientQueryResult.IsSuccess || clientQueryResult.Entity is null)
+                return new ClientCommandResult(CommandType.DELETE, false);
 
-            var commandParameters = new ClientCommandParameters(CommandType.DELETE,true, clientQueryResult.Entity);
+            var commandParameters = new ClientCommandParameters(CommandType.DELETE, true, clientQueryResult.Entity);
             _repositoryManager.ClientRepository.DeleteClient(commandParameters);
             await _repositoryManager.SaveChanges();
             return new ClientCommandResult(CommandType.DELETE, true);
@@ -86,19 +85,7 @@ public class ClientHandler
         {
             var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.GET_ALL);
             var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
-
-            if (!clientQueryResult.IsSuccess)
-                return clientQueryResult;
-
-            var commandParameters = new ClientCommandParameters
-            {
-                Command = CommandType.DELETE,
-                IsSingle = true,
-                Data = clientQueryResult.Entity
-            };
-
-            _repositoryManager.ClientRepository.DeleteClient(commandParameters);
-            return new ClientQueryResult();
+            return clientQueryResult;
         }
         catch (Exception ex)
         {

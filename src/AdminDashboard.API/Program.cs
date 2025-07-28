@@ -1,6 +1,5 @@
 using AdminDashboard.API.Middleware;
 using AdminDashboard.API.Services;
-using Microsoft.AspNetCore.HttpLogging;
 
 var builder = WebApplication.CreateBuilder(args);
 

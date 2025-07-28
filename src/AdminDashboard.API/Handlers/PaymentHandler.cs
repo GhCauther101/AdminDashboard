@@ -1,5 +1,4 @@
-﻿using AdminDashboard.API.Reuqests.Client;
-using AdminDashboard.API.Reuqests.Payment;
+﻿using AdminDashboard.API.Reuqests.Payment;
 using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
 using AdminDashboard.Repository.Managers;

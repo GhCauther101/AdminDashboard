@@ -54,6 +54,5 @@ public class RepositoryManager : IRepositoryManager
     {
         await _dbContextBus.IdentityContextInstance.SaveChangesAsync();
         await _dbContextBus.RepositoryContextInstance.SaveChangesAsync();
-        await _dbContextBus.EventContextInstance.SaveChangesAsync();
     }
 }

@@ -6,7 +6,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AdminDashboard.API.Scopes;
-using AdminDashboard.Entity.Event.Querying;
+using AutoMapper;
+using AdminDashboard.Entity.Dto;
 
 namespace AdminDashboard.API.Controller;
 
@@ -15,57 +16,14 @@ namespace AdminDashboard.API.Controller;
 public class ClientController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public ClientController(IMediator mediator)
+    public ClientController(
+        IMediator mediator,
+        IMapper mapper)
     {
         _mediator = mediator;
-    }
-
-    [Authorize(Roles = RoleScopes.ManagerScope)]
-    [HttpPost(ApiRoutes.ClientRoutes.CreateClient)]
-    public async Task<IActionResult> Create([FromBody] Client client)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-        
-        var clientCreateRequest = new ClientCreateRequest(client);
-        var clientCommandResult = await _mediator.Send(clientCreateRequest);
-
-        if (clientCommandResult.IsSuccess)
-            return Created();
-        else return BadRequest(ModelState);
-    }
-
-    [Authorize(Roles = RoleScopes.UserScope)]
-    [HttpPut(ApiRoutes.ClientRoutes.UpdateClient)]
-    public async Task<IActionResult> Update([FromBody] Client client)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-        
-        var clientUpdateRequest = new ClientUpdateRequest(client);
-        var clientCommandResult = await _mediator.Send(clientUpdateRequest);
-        var jsonResult = clientCommandResult.ToJsonContent();
-
-        if (clientCommandResult.IsSuccess)
-            return Ok(jsonResult);
-        else return BadRequest(ModelState);
-    }
-
-    [Authorize(Roles = RoleScopes.UserScope)]
-    [HttpDelete(ApiRoutes.ClientRoutes.DeleteClient)]
-    public async Task<IActionResult> Delete(int clientId)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var clientDeleteRequest = new ClientDeleteRequest(clientId);
-        var clientCommandResult = await _mediator.Send(clientDeleteRequest);
-        var jsonResult = clientCommandResult.ToJsonContent();
-
-        if (clientCommandResult.IsSuccess)
-            return NoContent();
-        else return BadRequest(ModelState);
+        _mapper = mapper;
     }
 
     [Authorize(Roles = RoleScopes.UserScope)]
@@ -77,16 +35,17 @@ public class ClientController : ControllerBase
         
         var clientGetAllRequest = new ClientGetAllRequest();
         var clientQueryResult = await _mediator.Send(clientGetAllRequest);
-        var jsonResult = clientQueryResult.ToJsonContent();
+        var clientDtoResult = _mapper.Map<IEnumerable<ClientDto>>(clientQueryResult.Range);
+        var jsonResult = clientDtoResult.ToJsonContent();
 
         if (clientQueryResult.IsSuccess)
-            return Ok(clientQueryResult.Range);
+            return Ok(jsonResult);
         else return BadRequest(ModelState);
     }
 
     [Authorize(Roles = RoleScopes.UserScope)]
     [HttpGet(ApiRoutes.ClientRoutes.GetSinge)]
-    public async Task<IActionResult> GetSingle(int clientId)
+    public async Task<IActionResult> GetSingle(Guid clientId)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

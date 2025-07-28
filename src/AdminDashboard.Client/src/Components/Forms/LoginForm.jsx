@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import AuthApi from "../../Api/authApi.js";
+import AuthApi from "../../api/authApi.js";
 import plateError from "./FormWrapper.jsx";
 
 import "./DefaultForm.css";
@@ -21,8 +21,7 @@ const LoginForm = () => {
     const moveNext = () => {
         setUsername('');
         setPassword('');
-
-        navigate('/login');
+        navigate('/clients');
     }
 
     const handleSubmit = async (e) => {
