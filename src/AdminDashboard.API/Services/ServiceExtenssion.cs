@@ -22,9 +22,8 @@ public static class ServiceExtenssion
                     .AllowAnyHeader()
                     .AllowAnyMethod());
 
-            options.AddPolicy("AllowWebApp", policy =>
-                policy
-                    .AllowAnyHeader()
+            options.AddPolicy("AllowWebApp", builder =>
+                builder.AllowAnyHeader()
                     .AllowAnyMethod()
                     .WithOrigins("http://localhost:55085"));
         });
@@ -60,8 +59,7 @@ public static class ServiceExtenssion
         });
 
         builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
-        builder.AddEntityFrameworkStores<IdentityContext>()
-            .AddDefaultTokenProviders();
+        builder.AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
     }
 
     public static void ConfigureJWT(this IServiceCollection services, IConfiguration config) 
@@ -71,9 +69,21 @@ public static class ServiceExtenssion
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddCookie().AddJwtBearer(x =>
+        }).AddCookie().AddJwtBearer(options =>
         {
-            x.TokenValidationParameters = new TokenValidationParameters
+            options.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Cookies["jwt"];
+                    if (!string.IsNullOrEmpty(accessToken))
+                        context.Token = accessToken;
+
+                    return Task.CompletedTask;
+                }
+            };
+
+            options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidIssuer = config["JwtSettings:Issuer"],
                 ValidAudience = config["JwtSettings:Audience"],
@@ -82,6 +92,7 @@ public static class ServiceExtenssion
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
+                RequireExpirationTime = false,
             };
         });
 
@@ -90,6 +101,7 @@ public static class ServiceExtenssion
 
     public static void ConfigureApplication(this IServiceCollection services)
     {
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
     }
 

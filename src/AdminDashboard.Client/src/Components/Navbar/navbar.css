@@ -1,0 +1,32 @@
+.navbar {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content:first baseline;
+    align-items: center;
+    background-color: #787878;
+    padding: 12px 24px;
+    color: white;
+    outline-color: white;
+    top: 0;
+    left: 0;
+}
+
+.sections {
+    margin: 0 20px;
+}
+
+a {
+    margin: 0 10px;
+    font-size: 18px;
+}
+
+a:link {
+    color: white;
+    text-decoration: none;
+}
+
+a:visited {
+    color: white;
+    text-decoration: none;
+}

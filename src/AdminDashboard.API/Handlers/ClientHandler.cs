@@ -1,8 +1,12 @@
 using AdminDashboard.API.Reuqests.Client;
+using AdminDashboard.Entity.Dto;
 using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
+using AdminDashboard.Entity.Models;
 using AdminDashboard.Repository.Managers;
+using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 
 namespace AdminDashboard.API.Handlers;
 
@@ -12,13 +16,24 @@ public class ClientHandler
       IRequestHandler<ClientUpdateRequest, ClientCommandResult>,
       IRequestHandler<ClientGetAllRequest, ClientQueryResult>,
       IRequestHandler<ClientGetPageRequest, ClientQueryResult>,
-      IRequestHandler<ClientGetSingleRequest, ClientQueryResult>
+      IRequestHandler<ClientGetSingleRequest, ClientQueryResult>,
+      IRequestHandler<ClientGetPagerRequest, QueryPagerResult>
 {
+    private readonly IMapper _mapper;
     private readonly RepositoryManager _repositoryManager;
+    private readonly AuthenticationManager _authenticationManager;
+    private readonly UserManager<Client> _userManager;
 
-    public ClientHandler(RepositoryManager repositoryManager)
+    public ClientHandler(
+        IMapper mapper,
+        RepositoryManager repositoryManager,
+        AuthenticationManager authenticationManager,
+        UserManager<Client> userManager)
     {
+        _mapper = mapper;
         _repositoryManager = repositoryManager;
+        _authenticationManager = authenticationManager;
+        _userManager = userManager;
     }
 
     public async Task<ClientCommandResult> Handle(ClientCreateRequest request, CancellationToken cancellationToken)
@@ -26,7 +41,6 @@ public class ClientHandler
         try
         {
             var commandParameters = new ClientCommandParameters(CommandType.CREATE, true, request.client);
-
 
             _repositoryManager.ClientRepository.CreateClient(commandParameters);
             await _repositoryManager.SaveChanges();
@@ -39,7 +53,6 @@ public class ClientHandler
         }
     }
 
-
     public async Task<ClientCommandResult> Handle(ClientDeleteRequest request, CancellationToken cancellationToken)
     {
         try 
@@ -51,10 +64,10 @@ public class ClientHandler
             };
 
             var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
-            if (!clientQueryResult.IsSuccess || clientQueryResult.Entity is null || clientQueryResult.Range.Count() == 0)
-                return new ClientCommandResult(CommandType.DELETE, true);
+            if (!clientQueryResult.IsSuccess || clientQueryResult.Entity is null)
+                return new ClientCommandResult(CommandType.DELETE, false);
 
-            var commandParameters = new ClientCommandParameters(CommandType.DELETE,true, clientQueryResult.Entity);
+            var commandParameters = new ClientCommandParameters(CommandType.DELETE, true, clientQueryResult.Entity);
             _repositoryManager.ClientRepository.DeleteClient(commandParameters);
             await _repositoryManager.SaveChanges();
             return new ClientCommandResult(CommandType.DELETE, true);
@@ -69,7 +82,19 @@ public class ClientHandler
     {
         try
         {
-            var commandParameters = new ClientCommandParameters(CommandType.UPDATE, true, request.client);
+            var clientInstance = await _userManager.FindByIdAsync(request.clientUpdate.ClientId);
+
+            if (!string.IsNullOrEmpty(request.clientUpdate.Role) || !string.IsNullOrWhiteSpace(request.clientUpdate.Role))
+            {
+                var newRoles = new string[] { request.clientUpdate.Role };
+                await _authenticationManager.UpdateClientRoles(clientInstance, newRoles);
+            }
+
+            var updateClientInstance = await _authenticationManager.ApplyClientUpdates(clientInstance, request.clientUpdate);
+
+            var commandParameters = new ClientCommandParameters(CommandType.UPDATE, true, updateClientInstance);
+            await _authenticationManager.UpdateClientPassword(commandParameters.Data);
+
             _repositoryManager.ClientRepository.UpdateClient(commandParameters);
             await _repositoryManager.SaveChanges();
             return new ClientCommandResult(CommandType.UPDATE, true);
@@ -86,19 +111,7 @@ public class ClientHandler
         {
             var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.GET_ALL);
             var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
-
-            if (!clientQueryResult.IsSuccess)
-                return clientQueryResult;
-
-            var commandParameters = new ClientCommandParameters
-            {
-                Command = CommandType.DELETE,
-                IsSingle = true,
-                Data = clientQueryResult.Entity
-            };
-
-            _repositoryManager.ClientRepository.DeleteClient(commandParameters);
-            return new ClientQueryResult();
+            return clientQueryResult;
         }
         catch (Exception ex)
         {
@@ -133,6 +146,20 @@ public class ClientHandler
         catch (Exception ex)
         {
             return new ClientQueryResult(false, exception: ex);
+        }
+    }
+
+    public async Task<QueryPagerResult> Handle(ClientGetPagerRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var clientQueryPager = await _repositoryManager.ClientRepository.GetPager();
+
+            return clientQueryPager;
+        }
+        catch (Exception ex)
+        {
+            return new QueryPagerResult(false, exception: ex);
         }
     }
 }

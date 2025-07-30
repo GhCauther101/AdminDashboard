@@ -7,6 +7,8 @@ public interface IClientRepository : IRepository
 {
     public Task<ClientQueryResult> Get(ClientQueryParameters queryParameters);
 
+    public Task<QueryPagerResult> GetPager();
+
     public void CreateClient(ClientCommandParameters commandParameters);
 
     public void UpdateClient(ClientCommandParameters commandParameters);

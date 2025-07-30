@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { MdAlternateEmail } from "react-icons/md";
-import AuthApi from "../../Api/authApi.js";
+import AuthApi from "../../api/authApi.js";
 import plateError from "./FormWrapper.jsx";
 
 import "./DefaultForm.css";

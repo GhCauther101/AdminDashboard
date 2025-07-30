@@ -75,4 +75,9 @@ public class EventRepository : RepositoryBase<TriggerEvent>, IEventRepository
 
         return triggerEventQueryResult;
     }
+
+    public Task<QueryPagerResult> GetPager()
+    {
+        throw new NotImplementedException();
+    }
 }

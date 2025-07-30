@@ -7,12 +7,13 @@ using AdminDashboard.Entity.Models;
 using AdminDashboard.Contracts.Repository;
 using AdminDashboard.Entity.Dto;
 using System.IdentityModel.Tokens.Jwt;
+using AdminDashboard.Repository.Managers.Utils;
 
 namespace AdminDashboard.Repository.Managers;
 
 public class AuthenticationManager : IAuthenticationManager
 {
-    private readonly UserManager<Client> _userManger;
+    private readonly UserManager<Client> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
     private readonly JwtSettings _jwtSettings;
@@ -26,7 +27,7 @@ public class AuthenticationManager : IAuthenticationManager
         RoleManager<IdentityRole> roleManager,
         IConfiguration configuration)
     {
-        _userManger = userManager;
+        _userManager = userManager;
         _roleManager = roleManager;
         _configuration = configuration;
 
@@ -34,7 +35,10 @@ public class AuthenticationManager : IAuthenticationManager
         SeedRoles().Wait();
     }
 
-    public string[] Roles => roles;
+    public string[] Roles () 
+    {
+        return roles; 
+    }
 
     private async Task SeedRoles()
     {
@@ -47,10 +51,42 @@ public class AuthenticationManager : IAuthenticationManager
 
     public async Task<bool> ValidateUser(ClientForAuthorization userForAuth)
     {
-        user = await _userManger.FindByNameAsync(userForAuth.Username);
-        var passwordChecking = await _userManger.CheckPasswordAsync(user, userForAuth.Password);
+        user = await _userManager.FindByNameAsync(userForAuth.UserName);
+        var passwordChecking = await _userManager.CheckPasswordAsync(user, userForAuth.Password);
         
         return (user != null && passwordChecking);
+    }
+
+    public async Task<Client> ApplyClientUpdates(Client client, ClientForUpdate clientUpdate)
+    {
+        if (clientUpdate.UserName != String.Empty)
+        {
+            client.UserName = clientUpdate.UserName;
+            client.NormalizedUserName = clientUpdate.UserName.ToUpper();
+        }
+        if (clientUpdate.Email != String.Empty)
+        {
+            client.Email = clientUpdate.Email;
+            client.NormalizedEmail = clientUpdate.Email.ToUpper();
+        }
+        if (clientUpdate.Password != String.Empty)
+        {
+            client.Password = clientUpdate.Password;
+        }
+        return client;
+    }
+
+    public async Task<IdentityResult> UpdateClientPassword(Client client)
+    {
+        var token = await _userManager.GeneratePasswordResetTokenAsync(client);
+        return await _userManager.ResetPasswordAsync(client, token, client.Password);
+    }
+
+    public async Task UpdateClientRoles(Client client, string[] newRoles)
+    {
+        var roles = await _userManager.GetRolesAsync(client);
+        await _userManager.RemoveFromRolesAsync(client, roles);
+        await _userManager.AddToRolesAsync(client, newRoles);
     }
 
     public async Task<string> CreateToken()
@@ -77,7 +113,7 @@ public class AuthenticationManager : IAuthenticationManager
             new Claim(ClaimTypes.Name, user.UserName)
         };
 
-        var roles = await _userManger.GetRolesAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
         foreach (var role in roles)
             claims.Add(new Claim(ClaimTypes.Role, role));
 
@@ -98,25 +134,4 @@ public class AuthenticationManager : IAuthenticationManager
 
         return tokenOptions;
     }
-}
-
-public static class JwtSettingReader
-{
-    public static JwtSettings ReadJwtSettingsFromConfiguration(IConfiguration configuration)
-    {
-        return new JwtSettings(configuration);
-    }
-}
-
-public class JwtSettings(IConfiguration configuration)
-{
-    public string Issuer { get; init; } = configuration.GetSection("JwtSettings").GetSection("Issuer").Value ?? string.Empty;
-
-    public string Audience { get; init; } = configuration.GetSection("JwtSettings").GetSection("Audience").Value ?? string.Empty;
-
-    public string? Expires { get; init; } = configuration.GetSection("JwtSettings").GetSection("Expires").Value ?? string.Empty;
-
-    public string Key { get; init; } = configuration.GetSection("JwtSettings").GetSection("Key").Value ?? string.Empty;
-
-    public bool IsActiveKey => Key != null;
 }

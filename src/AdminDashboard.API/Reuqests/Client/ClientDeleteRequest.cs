@@ -3,4 +3,4 @@ using MediatR;
 
 namespace AdminDashboard.API.Reuqests.Client;
 
-public record ClientUpdateRequest(Entity.Models.Client client) : IRequest<ClientCommandResult>;
+public record ClientDeleteRequest(Guid clientId) : IRequest<ClientCommandResult>;

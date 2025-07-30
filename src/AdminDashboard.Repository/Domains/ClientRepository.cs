@@ -37,13 +37,11 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
         {
             case QueryParameterFunctionality.GET_ALL:
                 var allClients = await FindAll(DbContextDomain.IDENTITY, false)
-                    .OrderBy(x => x.Id)
+                    .OrderBy(x => x.UserName)
                     .ToListAsync();
 
                 clientQueryResult = new ClientQueryResult
                 {
-                    Id = Guid.NewGuid(),
-                    TriggerTime = DateTime.Now,
                     IsSuccess = allClients.Count > 0,
                     Range = allClients
                 };
@@ -57,39 +55,39 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
 
                 clientQueryResult = new ClientQueryResult
                 {
-                    Id = Guid.NewGuid(),
-                    TriggerTime = DateTime.Now,
                     IsSuccess = clientPage.Count > 0,
                     Range = clientPage
                 };
                 break;
             case QueryParameterFunctionality.SINGLE:
-                var entity = await FindByCondition(entity => entity.Id.Equals(queryParameters.EntityId), DbContextDomain.IDENTITY, false)
+                var entity = await FindByCondition(entity => entity.Id.Equals(queryParameters.EntityId.ToString()), DbContextDomain.IDENTITY, false)
                     .SingleOrDefaultAsync();
-
+                
                 clientQueryResult = new ClientQueryResult
                 {
-                    Id = Guid.NewGuid(),
-                    TriggerTime = DateTime.Now,
                     IsSuccess = entity is Client,
                     Entity = entity
                 };
                 break;
             case QueryParameterFunctionality.GROUP:
-                var clientRange = await FindByCondition(entity => queryParameters.EntitiesGroup.Contains(entity.Id), DbContextDomain.IDENTITY, false)
-                    .OrderBy(entity => entity.Id)
-                    .ToListAsync();
+                //var clientRange = await FindByCondition(entity => queryParameters.EntitiesGroup.Contains(entity.Id), DbContextDomain.IDENTITY, false)
+                //    .OrderBy(entity => entity.Id)
+                //    .ToListAsync();
 
-                clientQueryResult = new ClientQueryResult
-                {
-                    Id = Guid.NewGuid(),
-                    TriggerTime = DateTime.Now,
-                    IsSuccess = clientRange.Count > 0,
-                    Range = clientRange
-                };
+                //clientQueryResult = new ClientQueryResult
+                //{
+                //    IsSuccess = clientRange.Count > 0,
+                //    Range = clientRange
+                //};
                 break;
         }
 
         return clientQueryResult;
     }    
+
+    public async Task<QueryPagerResult> GetPager()
+    {
+        var pager = GetRepositoryPager(DbContextDomain.REPOSITORY);
+        return new QueryPagerResult(true, pager:pager);
+    }
 }

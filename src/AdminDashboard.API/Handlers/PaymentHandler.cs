@@ -13,7 +13,8 @@ public class PaymentHandler
       IRequestHandler<PaymentGetAllRequest, PaymentQueryResult>,
       IRequestHandler<PaymentGetLastRequest, PaymentQueryResult>,
       IRequestHandler<PaymentGetSingleRequest, PaymentQueryResult>,
-      IRequestHandler<PaymentGetPageRequest, PaymentQueryResult>
+      IRequestHandler<PaymentGetPageRequest, PaymentQueryResult>,
+      IRequestHandler<PaymentGetPagerRequest, QueryPagerResult>
 {
     private readonly RepositoryManager _repositoryManager;
 
@@ -130,6 +131,20 @@ public class PaymentHandler
         catch (Exception ex)
         {
             return new PaymentQueryResult(false, exception: ex);
+        }
+    }
+
+    public async Task<QueryPagerResult> Handle(PaymentGetPagerRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var clientQueryPager = await _repositoryManager.PaymentRepository.GetPager();
+
+            return clientQueryPager;
+        }
+        catch (Exception ex)
+        {
+            return new QueryPagerResult(false, exception: ex);
         }
     }
 }

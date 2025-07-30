@@ -92,4 +92,10 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
 
         return paymentQueryResult;
     }
+
+    public async Task<QueryPagerResult> GetPager()
+    {
+        var pager = GetRepositoryPager(DbContextDomain.REPOSITORY);
+        return new QueryPagerResult(true, pager);
+    }
 }

@@ -3,6 +3,7 @@ using AdminDashboard.API.Routes;
 using AdminDashboard.API.Scopes;
 using AdminDashboard.Entity.Json;
 using AdminDashboard.Entity.Models;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,14 @@ namespace AdminDashboard.API.Controller
     public class PaymentController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public PaymentController(IMediator mediator)
+        public PaymentController(
+            IMediator mediator, 
+            IMapper mapper)
         {
-            _mediator = mediator;    
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
         [Authorize(Roles = RoleScopes.UserScope)]
@@ -110,6 +115,19 @@ namespace AdminDashboard.API.Controller
 
             if (clientQueryResult.IsSuccess)
                 return Ok(clientQueryResult.Entity);
+            else return BadRequest(ModelState);
+        }
+
+        [Authorize(Roles = RoleScopes.UserScope)]
+        [HttpGet(ApiRoutes.PaymentRoutes.GetPager)]
+        public async Task<IActionResult> GetPager()
+        {
+            var paymentGetPagerRequest = new PaymentGetPagerRequest();
+            var clientPagerResult = await _mediator.Send(paymentGetPagerRequest);
+            var jsonResult = clientPagerResult.ToJsonContent();
+
+            if (clientPagerResult.IsSuccess)
+                return Ok(clientPagerResult.Entity);
             else return BadRequest(ModelState);
         }
     }
