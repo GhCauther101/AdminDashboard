@@ -59,8 +59,7 @@ public static class ServiceExtenssion
         });
 
         builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
-        builder.AddEntityFrameworkStores<IdentityContext>()
-            .AddDefaultTokenProviders();
+        builder.AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
     }
 
     public static void ConfigureJWT(this IServiceCollection services, IConfiguration config) 

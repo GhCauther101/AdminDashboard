@@ -1,8 +1,12 @@
 using AdminDashboard.API.Reuqests.Client;
+using AdminDashboard.Entity.Dto;
 using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
+using AdminDashboard.Entity.Models;
 using AdminDashboard.Repository.Managers;
+using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 
 namespace AdminDashboard.API.Handlers;
 
@@ -15,11 +19,21 @@ public class ClientHandler
       IRequestHandler<ClientGetSingleRequest, ClientQueryResult>,
       IRequestHandler<ClientGetPagerRequest, QueryPagerResult>
 {
+    private readonly IMapper _mapper;
     private readonly RepositoryManager _repositoryManager;
+    private readonly AuthenticationManager _authenticationManager;
+    private readonly UserManager<Client> _userManager;
 
-    public ClientHandler(RepositoryManager repositoryManager)
+    public ClientHandler(
+        IMapper mapper,
+        RepositoryManager repositoryManager,
+        AuthenticationManager authenticationManager,
+        UserManager<Client> userManager)
     {
+        _mapper = mapper;
         _repositoryManager = repositoryManager;
+        _authenticationManager = authenticationManager;
+        _userManager = userManager;
     }
 
     public async Task<ClientCommandResult> Handle(ClientCreateRequest request, CancellationToken cancellationToken)
@@ -68,7 +82,14 @@ public class ClientHandler
     {
         try
         {
-            var commandParameters = new ClientCommandParameters(CommandType.UPDATE, true, request.client);
+            var clientInstance = await _userManager.FindByIdAsync(request.clientUpdate.ClientId);
+            var newRoles = new string[] { request.clientUpdate.Role };
+            await _authenticationManager.UpdateClientRoles(clientInstance, newRoles);
+            var updateClientInstance = await _authenticationManager.ApplyClientUpdates(clientInstance, request.clientUpdate);
+
+            var commandParameters = new ClientCommandParameters(CommandType.UPDATE, true, updateClientInstance);
+            await _authenticationManager.UpdateClientPassword(commandParameters.Data);
+
             _repositoryManager.ClientRepository.UpdateClient(commandParameters);
             await _repositoryManager.SaveChanges();
             return new ClientCommandResult(CommandType.UPDATE, true);

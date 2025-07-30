@@ -25,10 +25,10 @@ public class AuthenticationController : ControllerBase
     private readonly IMapper _mapper;
 
     public AuthenticationController(
-        AuthenticationManager authManager,
-        UserManager<Client> userManager,
         IMediator mediator,
-        IMapper mapper)
+        IMapper mapper,
+        AuthenticationManager authManager,
+        UserManager<Client> userManager)
     {
         _authManager = authManager;
         _userManager = userManager;
@@ -60,13 +60,12 @@ public class AuthenticationController : ControllerBase
         }
 
         await _userManager.AddToRolesAsync(client, clientForregistration.Roles);
-
         return Created();
     }
 
     [HttpPost(ApiRoutes.AccountRoutes.Login)]
     public async Task<IActionResult> Authenticate([FromBody] ClientForAuthorization userAuthentication)
-     {
+    {
         if (!ModelState.IsValid)
         {
             var errorDictionary = ModelState.Where(x => x.Value.Errors.Count > 0).ToDictionary
@@ -105,12 +104,12 @@ public class AuthenticationController : ControllerBase
 
     [Authorize(Roles = RoleScopes.UserScope)]
     [HttpPut(ApiRoutes.AccountRoutes.UpdateClient)]
-    public async Task<IActionResult> Update([FromBody] Client client)
+    public async Task<IActionResult> Update([FromBody] ClientForUpdate clientForUpdate)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var clientUpdateRequest = new ClientUpdateRequest(client);
+        var clientUpdateRequest = new ClientUpdateRequest(clientForUpdate);
         var clientCommandResult = await _mediator.Send(clientUpdateRequest);
         var jsonResult = clientCommandResult.ToJsonContent();
 
@@ -134,5 +133,4 @@ public class AuthenticationController : ControllerBase
             return NoContent();
         else return BadRequest(ModelState);
     }
-
 }

@@ -2,7 +2,7 @@
 
 public class ClientDto
 {   
-    public Guid CientId { get; set; }
+    public Guid ClientId { get; set; }
 
     public string UserName { get; set; }
 

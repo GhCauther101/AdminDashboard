@@ -7,7 +7,7 @@ public class ClientForAuthorization
 {
     [Required(ErrorMessage = "User name is required")]
     [JsonProperty("username")]
-    public string Username { get; set; }
+    public string UserName { get; set; }
 
     [Required(ErrorMessage = "User password is required")]
     [JsonProperty("password")]

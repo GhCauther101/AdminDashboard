@@ -12,9 +12,12 @@ public class RepositoryManager : IRepositoryManager
     private IPaymentRepository _paymentRepository;
     private IEventRepository _eventRepository;
 
-    public RepositoryManager(DbContextBus dbContextBus)
+    private AuthenticationManager _authenticationManager;
+
+    public RepositoryManager(DbContextBus dbContextBus, AuthenticationManager authenticationManager)
     {
         _dbContextBus = dbContextBus;
+        _authenticationManager = authenticationManager;
     }
 
     public IClientRepository ClientRepository
