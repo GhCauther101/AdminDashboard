@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { MdAlternateEmail } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 import AuthApi from "../../api/authApi.js";
 import plateError from "./FormWrapper.jsx";
 
 import "./DefaultForm.css"
 
 const CreateClientForm = () => {
+    const navigate = useNavigate();
     const [userName, setUsername] = useState('')
     const [userEmail, setEmail] = useState('')
     const [userPassword, setPassword] = useState('')
@@ -23,6 +25,8 @@ const CreateClientForm = () => {
         setEmail('');
         setPassword('');
         setRole('');
+
+        navigate('/clients');
     }
 
     const handleSubmit = async (e) => {
@@ -69,7 +73,10 @@ const CreateClientForm = () => {
                     {errors?.role ? plateError(errors.role) : null}
                 </div>
 
-                <button onClick={handleSubmit}>Create</button>
+                <div className="formButtonArea">
+                    <button onClick={moveNext}>Close</button>
+                    <button onClick={handleSubmit}>Create</button>
+                </div>
             </form>
         </div>
     );

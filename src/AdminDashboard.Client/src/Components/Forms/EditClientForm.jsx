@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
 import { FaUser, FaLock, FaCalendar } from "react-icons/fa";
 import { MdAlternateEmail } from "react-icons/md";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import ClientApi from "../../api/clientApi";
 
 import "./DefaultForm.css"
 
@@ -9,59 +10,54 @@ const EditClientForm = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const data = location.state;
-    
-    const [role, setRole] = useState('')
-    const [errors, setErrors] = useState()
 
+    const [username, setUsername] = useState(data.user_name);
+    const [email, setEmail] = useState(data.email);
+    const [password, setPassword] = useState(data.password);
+    const [role, setRole] = useState(data.role);
+    const [errors, setErrors] = useState(null);
     
     const processErrors = (registerResult) => {
         var jsonErrors = JSON.parse(registerResult.data);
         setErrors(jsonErrors);
     }
 
-    const moveNext = () => {
-        setUsername('');
-        setEmail('');
-        setPassword('');
-        setRole('');
-
-        navigate(-1);
+    const moveBack = () => {
+        navigate('/clients');
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (role != '' )
-            data['roles'] = [ role ];
-
+        
         var clientApi = new ClientApi();
-        var clientEditResult = await clientApi.edit(data);
+        var updateCLientData = { client_id: data.client_id, user_name: username ?? '', email: email ?? '', password: password ?? '', role: role ?? '' };
+        var clientEditResult = await clientApi.updateClient(updateCLientData);
         var editResult = clientEditResult.parse();
 
         if (!editResult.isSuccess) {
             processErrors(editResult);
         } 
         else {
-            moveNext();
+            moveBack();
         }
     };
 
     return (
         <div className="wrapper">
-            <form action="handleSubmit">
+            <form>
                 <h1>Edit client</h1>
                 <div className="input-box">
-                    <input type="text" placeholder="username" required value={data.user_name} onChange={(e) => setUsername(e.target.value)} />
-                    {errors?.username ? plateError(errors.username) : null}
+                    <input type="text" placeholder="username" value={username || ''} onChange={(e) => setUsername(e.target.value)} />
+                    {errors?.user_name ? plateError(errors.user_name) : null}
                     <FaUser className="icon"/>
                 </div>
                 <div className="input-box">
-                    <input type="text" placeholder="email" required value={data.email} onChange={(e) => setEmail(e.target.value)}/>
+                    <input type="text" placeholder="email" value={email || ''} onChange={(e) => setEmail(e.target.value)}/>
                     {errors?.email ? plateError(errors.email) : null}
                     <MdAlternateEmail className="icon"/>
                 </div>
                 <div className="input-box">
-                    <input type="password" autoComplete="current-password" placeholder="new password" required onChange={(e) => setPassword(e.target.value)}/>
+                    <input type="password" autoComplete="current-password" placeholder="new password" value={password || ''} onChange={(e) => setPassword(e.target.value)}/>
                     {errors?.password ? plateError(errors.password) : null}
                     <FaLock className="icon"/>
                 </div>
@@ -75,7 +71,10 @@ const EditClientForm = () => {
                     {errors?.role ? plateError(errors.role) : null}
                 </div>
 
-                <button onClick={handleSubmit}>Edit</button>
+                <div className="formButtonArea">
+                    <button onClick={moveBack}>Close</button>
+                    <button onClick={handleSubmit}>Edit</button>
+                </div>
 
                 <div className="error-line">
                     <p></p>

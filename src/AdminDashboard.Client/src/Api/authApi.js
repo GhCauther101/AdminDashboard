@@ -5,7 +5,7 @@ import axios from 'axios';
 
 class AuthApi {
     register = async (objInstance) => {
-        var route = ApiRoutes.authenticationRoutes.register;
+        var route = ApiRoutes.accountRoutes.register;
         var result = new ApiResult();
         
         const api = ApiResolver.resolveApi();
@@ -28,7 +28,7 @@ class AuthApi {
     }
 
     login = async (objInstance) => {
-        var route = ApiRoutes.authenticationRoutes.login;
+        var route = ApiRoutes.accountRoutes.login;
         var result = new ApiResult();
 
         const api = ApiResolver.resolveApi();

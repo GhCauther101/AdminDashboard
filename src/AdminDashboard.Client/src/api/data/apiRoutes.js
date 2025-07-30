@@ -6,16 +6,15 @@ class ApiRoutes {
         'payment' : `/structure/paymentDisplay`
     }
 
-    static authenticationRoutes = {
+    static accountRoutes = {
         'register' : `/authentication/register`,
         'login' : `/authentication/login`,
-        'getRoles' : `/authentication/getRoles`
+        'getRoles' : `/authentication/getRoles`,
+        'update' : `/authentication/update`,
+        'delete' : `/authentication/delete/{clientId}`
     }
 
     static clientRoute = {
-        'create' : `/clients/create`,
-        'update' : `/clients/update`,
-        'delete' : `/clients/delete/{clientId}`,
         'getAll' : `/clients/getAll`,
         'getSingle' : `/clients/getSingle/{clientId}`
     }
