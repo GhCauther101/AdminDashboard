@@ -83,8 +83,13 @@ public class ClientHandler
         try
         {
             var clientInstance = await _userManager.FindByIdAsync(request.clientUpdate.ClientId);
-            var newRoles = new string[] { request.clientUpdate.Role };
-            await _authenticationManager.UpdateClientRoles(clientInstance, newRoles);
+
+            if (!string.IsNullOrEmpty(request.clientUpdate.Role) || !string.IsNullOrWhiteSpace(request.clientUpdate.Role))
+            {
+                var newRoles = new string[] { request.clientUpdate.Role };
+                await _authenticationManager.UpdateClientRoles(clientInstance, newRoles);
+            }
+
             var updateClientInstance = await _authenticationManager.ApplyClientUpdates(clientInstance, request.clientUpdate);
 
             var commandParameters = new ClientCommandParameters(CommandType.UPDATE, true, updateClientInstance);
