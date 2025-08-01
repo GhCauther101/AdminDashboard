@@ -2,10 +2,10 @@ import { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { MdAlternateEmail } from "react-icons/md";
-import AuthApi from "../../api/authApi.js";
-import plateError from "./FormWrapper.jsx";
+import AuthApi from "../../../api/authApi.js";
+import plateError from "../FormWrapper.jsx";
 
-import "./DefaultForm.css";
+import "../DefaultForm.css";
 
 const RegisterForm = () => {
     const navigate = useNavigate();
@@ -66,6 +66,7 @@ const RegisterForm = () => {
 
                 <div className="input-box">
                     <select value={userRole ?? ''} onChange={(e) => setRole(e.target.value)}>
+                        <option>Select user role.</option>
                         <option value="admin">Administrator</option>
                         <option value="manager">Manager</option>
                         <option value="user">User</option>

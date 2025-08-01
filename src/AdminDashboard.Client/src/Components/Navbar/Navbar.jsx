@@ -9,7 +9,13 @@ const Navbar = () => {
             <div className='sections'>
                 <a href="/clients">Clients</a>
                 <a href="/payments">Payments</a>
-                <a href="/currency">Currency</a>
+                <a href="/currency">Currency</a>                
+            </div>
+
+            <div className='authSection'>
+              
+              <a href="/register">Sign up</a>
+              <a href="/login">Sign in</a>
             </div>
         </nav>
     </div>

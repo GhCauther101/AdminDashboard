@@ -2,10 +2,10 @@ import { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { MdAlternateEmail } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import AuthApi from "../../api/authApi.js";
-import plateError from "./FormWrapper.jsx";
+import AuthApi from "../../../api/authApi.js";
+import plateError from "../FormWrapper.jsx";
 
-import "./DefaultForm.css"
+import "../DefaultForm.css"
 
 const CreateClientForm = () => {
     const navigate = useNavigate();

@@ -4,7 +4,7 @@ import ModelStructureApi from "../../api/modelStructureApi.js";
 import ClientApi from "../../api/clientApi.js";
 import Popup from "../Popups/Popup.jsx";
 
-import "./ClientTable.css";
+import "./table.css";
 
 const ClientTable = () => {
     const navigate = useNavigate();
@@ -69,7 +69,7 @@ const ClientTable = () => {
         }) : null
     }
 
-    function refreshClientTable(clientId) {
+    function refreshTable(clientId) {
         setData(prevData => prevData.filter(item => item.client_id !== clientId));
     }
 
@@ -78,14 +78,14 @@ const ClientTable = () => {
         setShowDeletePopup(true);
     }
 
-    function processRow(route, inputClientRow = null) {
-        navigate(route, { state: inputClientRow });
+    function processRow(route, inputRow = null) {
+        navigate(route, { state: inputRow });
     };
 
     const deletePopup = () => {
         const clientApi = new ClientApi();
         const bannerObj = { title: 'Remove client: ', object: currentClient.user_name };
-        const action = () => { clientApi.deleteClient(currentClient.client_id); refreshClientTable(currentClient.client_id); setShowDeletePopup(false); };
+        const action = () => { clientApi.deleteClient(currentClient.client_id); refreshTable(currentClient.client_id); setShowDeletePopup(false); };
         const closeBtn = { onTrigger: () => setShowDeletePopup(false), header: "Close" };
         const actionBtn = { onTrigger: () => action(), header: "Delete" };
         return Popup(bannerObj, closeBtn, actionBtn);

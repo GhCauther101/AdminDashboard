@@ -2,9 +2,9 @@ import { useEffect, useState} from "react";
 import { FaUser, FaLock, FaCalendar } from "react-icons/fa";
 import { MdAlternateEmail } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
-import ClientApi from "../../api/clientApi";
+import ClientApi from "../../../api/clientApi";
 
-import "./DefaultForm.css"
+import "../DefaultForm.css"
 
 const EditClientForm = () => {
     const navigate = useNavigate();

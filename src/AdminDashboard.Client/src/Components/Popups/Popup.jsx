@@ -1,5 +1,4 @@
-import "./index.css"
-
+import "./popup.css"
 
 const Popup = (inputObj, onClose, action) => {
     const setButton = (btnObject) => {

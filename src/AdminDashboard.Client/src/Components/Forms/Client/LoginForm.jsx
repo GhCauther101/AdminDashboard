@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import AuthApi from "../../api/authApi.js";
-import plateError from "./FormWrapper.jsx";
+import AuthApi from "../../../api/authApi.js";
+import plateError from "../FormWrapper.jsx";
 
-import "./DefaultForm.css";
+import "../DefaultForm.css";
 
 const LoginForm = () => {
     const navigate = useNavigate();
@@ -21,6 +21,7 @@ const LoginForm = () => {
     const moveNext = () => {
         setUsername('');
         setPassword('');
+        localStorage.setItem('loggedIn', true);
         navigate('/clients');
     }
 
