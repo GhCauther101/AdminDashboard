@@ -14,7 +14,9 @@ public class RepositoryManager : IRepositoryManager
 
     private AuthenticationManager _authenticationManager;
 
-    public RepositoryManager(DbContextBus dbContextBus, AuthenticationManager authenticationManager)
+    public RepositoryManager(
+        DbContextBus dbContextBus,
+        AuthenticationManager authenticationManager)
     {
         _dbContextBus = dbContextBus;
         _authenticationManager = authenticationManager;

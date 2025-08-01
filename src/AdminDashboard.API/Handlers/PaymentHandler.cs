@@ -1,13 +1,15 @@
 ﻿using AdminDashboard.API.Reuqests.Payment;
 using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
+using AdminDashboard.Entity.Models;
 using AdminDashboard.Repository.Managers;
+using AutoMapper;
 using MediatR;
 
 namespace AdminDashboard.API.Handlers;
 
-public class PaymentHandler
-    : IRequestHandler<PaymentCreateRequest, PaymentCommandResult>,
+public class PaymentHandler :
+      IRequestHandler<PaymentCreateRequest, PaymentCommandResult>,
       IRequestHandler<PaymentUpdateRequest, PaymentCommandResult>,
       IRequestHandler<PaymentDeleteRequest, PaymentCommandResult>,
       IRequestHandler<PaymentGetAllRequest, PaymentQueryResult>,
@@ -16,10 +18,12 @@ public class PaymentHandler
       IRequestHandler<PaymentGetPageRequest, PaymentQueryResult>,
       IRequestHandler<PaymentGetPagerRequest, QueryPagerResult>
 {
+    private readonly IMapper _mapper;
     private readonly RepositoryManager _repositoryManager;
 
-    public PaymentHandler(RepositoryManager repositoryManager)
+    public PaymentHandler(IMapper mapper, RepositoryManager repositoryManager)
     {
+        _mapper = mapper;
         _repositoryManager = repositoryManager;
     }
 
@@ -27,7 +31,19 @@ public class PaymentHandler
     {
         try
         {
-            var commandParameters = new PaymentCommandParameters(CommandType.CREATE, true, request.payment);
+            var paymentInstance = _mapper.Map<Payment>(request.payment);
+            if (!paymentInstance.SourceClientId.Equals(Guid.Empty)  && !paymentInstance.DestinationClientId.Equals(Guid.Empty))
+            {
+                var sourceQueryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.SINGLE, entityId: paymentInstance.SourceClientId);
+                var sourceClient = await _repositoryManager.ClientRepository.Get(sourceQueryParameters);
+                var destinationQueryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.SINGLE, entityId: paymentInstance.DestinationClientId);
+                var destinationClient = await _repositoryManager.ClientRepository.Get(destinationQueryParameters);
+                
+                paymentInstance.SourceClient = sourceClient.Entity;
+                paymentInstance.DestinationClient = destinationClient.Entity;
+            }
+
+            var commandParameters = new PaymentCommandParameters(CommandType.CREATE, true, paymentInstance);
             _repositoryManager.PaymentRepository.CreatePayment(commandParameters);
             await _repositoryManager.SaveChanges();
             return new PaymentCommandResult(CommandType.CREATE, true);
@@ -42,7 +58,19 @@ public class PaymentHandler
     {
         try
         {
-            var commandParameters = new PaymentCommandParameters(CommandType.UPDATE, true, request.payment);
+            var paymentInstance = _mapper.Map<Payment>(request.payment);
+            if (!paymentInstance.SourceClientId.Equals(Guid.Empty) && !paymentInstance.DestinationClientId.Equals(Guid.Empty))
+            {
+                var sourceQueryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.SINGLE, entityId: paymentInstance.SourceClientId);
+                var sourceClient = await _repositoryManager.ClientRepository.Get(sourceQueryParameters);
+                var destinationQueryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.SINGLE, entityId: paymentInstance.DestinationClientId);
+                var destinationClient = await _repositoryManager.ClientRepository.Get(destinationQueryParameters);
+
+                paymentInstance.SourceClient = sourceClient.Entity;
+                paymentInstance.DestinationClient = destinationClient.Entity;
+            }
+
+            var commandParameters = new PaymentCommandParameters(CommandType.UPDATE, true, paymentInstance);
             _repositoryManager.PaymentRepository.UpdatePayment(commandParameters);
             await _repositoryManager.SaveChanges();
             return new PaymentCommandResult(CommandType.UPDATE, true);

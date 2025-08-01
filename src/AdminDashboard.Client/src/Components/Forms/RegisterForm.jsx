@@ -17,8 +17,8 @@ const RegisterForm = () => {
     const [errors, setRegisterErrors] = useState()
     
     const processErrors = (registerResult) => {
-        var jsonErrors = JSON.parse(registerResult.data);
-        setRegisterErrors(jsonErrors);
+        var json = JSON.parse(registerResult.data);
+        setRegisterErrors(json);
     }
 
     const moveNext = () => {
@@ -26,13 +26,12 @@ const RegisterForm = () => {
         setEmail('');
         setPassword('');
         setRole('');
-
         navigate('/login');
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        var objInstance = { name: userName, email: userEmail, password: userPassword, roles: [userRole] };
+        var objInstance = { username: userName, email: userEmail, password: userPassword, roles: [userRole] };
         var authApi = new AuthApi();
         var apiResult = await authApi.register(objInstance);
         var registerResult = apiResult.parse();
@@ -66,7 +65,7 @@ const RegisterForm = () => {
                 </div>
 
                 <div className="input-box">
-                    <select value={userRole} onChange={(e) => setRole(e.target.value)}>
+                    <select value={userRole ?? ''} onChange={(e) => setRole(e.target.value)}>
                         <option value="admin">Administrator</option>
                         <option value="manager">Manager</option>
                         <option value="user">User</option>

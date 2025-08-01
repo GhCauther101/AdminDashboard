@@ -29,6 +29,8 @@ public class QueryParameters<T> : TriggerEvent
         {
             if (EntityId is Guid id && id != null && id != Guid.Empty)
                 return true;
+            else if (EntityId is string idStr && !string.IsNullOrEmpty(idStr))
+                return true;
             else return false;
         };
 

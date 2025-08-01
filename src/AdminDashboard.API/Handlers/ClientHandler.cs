@@ -10,13 +10,13 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AdminDashboard.API.Handlers;
 
-public class ClientHandler
-    : IRequestHandler<ClientCreateRequest, ClientCommandResult>,
+public class ClientHandler :
+      IRequestHandler<ClientCreateRequest, ClientCommandResult>,
       IRequestHandler<ClientDeleteRequest, ClientCommandResult>,
       IRequestHandler<ClientUpdateRequest, ClientCommandResult>,
-      IRequestHandler<ClientGetAllRequest, ClientQueryResult>,
-      IRequestHandler<ClientGetPageRequest, ClientQueryResult>,
-      IRequestHandler<ClientGetSingleRequest, ClientQueryResult>,
+      IRequestHandler<ClientGetAllRequest, ClientWebReply<IEnumerable<ClientDto>>>,
+      IRequestHandler<ClientGetPageRequest, ClientWebReply<IEnumerable<ClientDto>>>,
+      IRequestHandler<ClientGetSingleRequest, ClientWebReply<ClientDto>>,
       IRequestHandler<ClientGetPagerRequest, QueryPagerResult>
 {
     private readonly IMapper _mapper;
@@ -57,10 +57,10 @@ public class ClientHandler
     {
         try 
         { 
-            var queryParameters = new ClientQueryParameters
+            var queryParameters = new ClientQueryParameters<string>
             {
                 Functionality = QueryParameterFunctionality.SINGLE,
-                EntityId = request.clientId
+                EntityId = request.clientId.ToString(),
             };
 
             var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
@@ -105,47 +105,49 @@ public class ClientHandler
         }
     }
 
-    public async Task<ClientQueryResult> Handle(ClientGetAllRequest request, CancellationToken cancellationToken)
+    public async Task<ClientWebReply<IEnumerable<ClientDto>>> Handle(ClientGetAllRequest request, CancellationToken cancellationToken)
     {
         try
         {
-            var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.GET_ALL);
+            var queryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.GET_ALL);
             var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
-            return clientQueryResult;
+            var webReply = _mapper.Map<IEnumerable<ClientDto>>(clientQueryResult.Range);
+            var reply = new ClientWebReply<IEnumerable<ClientDto>>(true, webReply);
+            return reply;
         }
         catch (Exception ex)
         {
-            return new ClientQueryResult(false, exception: ex);
+            return new ClientWebReply<IEnumerable<ClientDto>>(false, ex);
         }
     }
         
-    public async Task<ClientQueryResult> Handle(ClientGetPageRequest request, CancellationToken cancellationToken)
+    public async Task<ClientWebReply<IEnumerable<ClientDto>>> Handle(ClientGetPageRequest request, CancellationToken cancellationToken)
     {
         try
         {
-            var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.SINGLE, rangeStart: request.start, rangeWidth: request.width);
+            var queryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.SINGLE, rangeStart: request.start, rangeWidth: request.width);
             var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
-
-            return clientQueryResult;
+            var webReply = _mapper.Map<ClientWebReply<IEnumerable<ClientDto>>>(clientQueryResult);
+            return webReply;
         }
         catch (Exception ex)
         {
-            return new ClientQueryResult(false, exception: ex);
+            return new ClientWebReply<IEnumerable<ClientDto>>(false, ex);
         }
     }
 
-    public async Task<ClientQueryResult> Handle(ClientGetSingleRequest request, CancellationToken cancellationToken)
+    public async Task<ClientWebReply<ClientDto>> Handle(ClientGetSingleRequest request, CancellationToken cancellationToken)
     {
         try
         {
-            var queryParameters = new ClientQueryParameters(QueryParameterFunctionality.SINGLE, entityId: request.clientId);
+            var queryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.SINGLE, entityId: request.clientId.ToString());
             var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
-
-            return clientQueryResult;
+            var webReply = _mapper.Map<ClientWebReply<ClientDto>>(clientQueryResult);
+            return webReply;
         }
         catch (Exception ex)
         {
-            return new ClientQueryResult(false, exception: ex);
+            return new ClientWebReply<ClientDto>(false, ex);
         }
     }
 
@@ -154,7 +156,6 @@ public class ClientHandler
         try
         {
             var clientQueryPager = await _repositoryManager.ClientRepository.GetPager();
-
             return clientQueryPager;
         }
         catch (Exception ex)

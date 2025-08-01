@@ -1,15 +1,23 @@
 using AdminDashboard.API.Middleware;
 using AdminDashboard.API.Services;
+using AdminDashboard.API.Validation;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
-
 builder.Services.ConfigureDatabaseContext(config);
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(config);
 builder.Services.ConfigureApplication();
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidateModelAttribute>();
+});
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 builder.Services.ConfigureCors();
 builder.Services.AddHttpClient();
 builder.Services.AddMvc();

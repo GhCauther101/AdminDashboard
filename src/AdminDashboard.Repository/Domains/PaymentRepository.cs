@@ -37,7 +37,7 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
         {
             case QueryParameterFunctionality.GET_ALL:
                 var allClients = await FindAll(DbContextDomain.REPOSITORY, false)
-                    .OrderBy(x => x.Id)
+                    .OrderBy(x => x.PaymentId)
                     .ToListAsync();
 
                 paymentQueryResult = new PaymentQueryResult
@@ -50,7 +50,7 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                 break;
             case QueryParameterFunctionality.PAGE:
                 var clientPage = await FindAll(DbContextDomain.REPOSITORY, false)
-                    .OrderBy(x => x.Id)
+                    .OrderBy(x => x.PaymentId)
                     .Skip((queryParameters.RangeStart - 1) * queryParameters.RangeWidth)
                     .Take(queryParameters.RangeWidth)
                     .ToListAsync();
@@ -64,7 +64,7 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                 };
                 break;
             case QueryParameterFunctionality.SINGLE:
-                var entity = await FindByCondition(entity => entity.Id.Equals(queryParameters.EntityId), DbContextDomain.REPOSITORY, false)
+                var entity = await FindByCondition(entity => entity.PaymentId.Equals(queryParameters.EntityId), DbContextDomain.REPOSITORY, false)
                     .SingleOrDefaultAsync();
 
                 paymentQueryResult = new PaymentQueryResult
@@ -73,19 +73,6 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                     TriggerTime = DateTime.Now,
                     IsSuccess = entity is Client,
                     Entity = entity
-                };
-                break;
-            case QueryParameterFunctionality.GROUP:
-                var clientRange = await FindByCondition(entity => queryParameters.EntitiesGroup.Contains(entity.Id), DbContextDomain.REPOSITORY, false)
-                    .OrderBy(entity => entity.Id)
-                    .ToListAsync();
-
-                paymentQueryResult = new PaymentQueryResult
-                {
-                    Id = Guid.NewGuid(),
-                    TriggerTime = DateTime.Now,
-                    IsSuccess = clientRange.Count > 0,
-                    Range = clientRange
                 };
                 break;
         }

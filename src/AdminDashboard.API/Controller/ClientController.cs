@@ -1,7 +1,6 @@
 ﻿using AdminDashboard.API.Reuqests.Client;
 using AdminDashboard.Entity.Json;
 using AdminDashboard.API.Routes;
-using AdminDashboard.Entity.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -35,7 +34,7 @@ public class ClientController : ControllerBase
         
         var clientGetAllRequest = new ClientGetAllRequest();
         var clientQueryResult = await _mediator.Send(clientGetAllRequest);
-        var clientDtoResult = _mapper.Map<IEnumerable<ClientDto>>(clientQueryResult.Range);
+        var clientDtoResult = _mapper.Map<IEnumerable<ClientDto>>(clientQueryResult.Data);
         var jsonResult = clientDtoResult.ToJsonContent();
 
         if (clientQueryResult.IsSuccess)
@@ -52,10 +51,11 @@ public class ClientController : ControllerBase
 
         var clientGetSingleRequest = new ClientGetSingleRequest(clientId);
         var clientQueryResult = await _mediator.Send(clientGetSingleRequest);
-        var jsonResult = clientQueryResult.ToJsonContent();
+        var clientDtoResult = _mapper.Map<ClientDto>(clientQueryResult.Data);
+        var jsonResult = clientDtoResult.ToJsonContent();
 
         if (clientQueryResult.IsSuccess)
-            return Ok(clientQueryResult.Entity);
+            return Ok(clientQueryResult.Data);
         else return BadRequest(ModelState);
     }
 

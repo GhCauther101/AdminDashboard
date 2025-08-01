@@ -7,23 +7,27 @@ public class Payment : IEntity
 {
     [Key]
     [JsonPropertyName("payment_id")]
-    public int Id { get; set; }
+    public Guid PaymentId { get; set; }
 
     [Required]
     [JsonPropertyName("source_client_id")]
-    public int SourceClientId { get; set; }
+    public string SourceClientId { get; set; }
+
+    [Required]
+    [JsonPropertyName("source_client_id")]
+    public string DestinationClientId { get; set; }
 
     [Required]
     [JsonPropertyName("source_client")]
     public Client SourceClient { get; set; }
 
     [Required]
-    [JsonPropertyName("destination_client_id")]
-    public int DestinationClientId { get; set; }
-
-    [Required]
     [JsonPropertyName("destination_client")]
     public Client DestinationClient { get; set; }
+
+    [Required]
+    [JsonPropertyName("biil")]
+    public decimal Bill { get; set; }
 
     [Required]
     [JsonPropertyName("process_time")]

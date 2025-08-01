@@ -2,6 +2,7 @@
 using AdminDashboard.API.Routes;
 using AdminDashboard.API.Scopes;
 using AdminDashboard.API.Utils;
+using AdminDashboard.API.Validation;
 using AdminDashboard.Entity.Dto;
 using AdminDashboard.Entity.Json;
 using AdminDashboard.Entity.Models;
@@ -42,12 +43,19 @@ public class AuthenticationController : ControllerBase
         return Ok(_authManager.Roles);
     }
 
+    [ValidateModel]
     [HttpPost(ApiRoutes.AccountRoutes.Register)]
     public async Task<IActionResult> RegisterUser([FromBody] ClientForRegistration clientForregistration)
     {
+        if (!ModelState.IsValid && clientForregistration.Roles.Count == 0)
+        {
+            var errorDictionary = ControllerUtils.DefineModelStateErrorDictionary(ModelState);
+            return BadRequest(errorDictionary);
+        }
+
         var client = new Client
         {
-            UserName = clientForregistration.Name,
+            UserName = clientForregistration.UserName,
             Email = clientForregistration.Email,
             Password = clientForregistration.Password
         };
@@ -63,17 +71,13 @@ public class AuthenticationController : ControllerBase
         return Created();
     }
 
+    [ValidateModel]
     [HttpPost(ApiRoutes.AccountRoutes.Login)]
     public async Task<IActionResult> Authenticate([FromBody] ClientForAuthorization userAuthentication)
     {
         if (!ModelState.IsValid)
         {
-            var errorDictionary = ModelState.Where(x => x.Value.Errors.Count > 0).ToDictionary
-            (
-                kvp => kvp.Key,
-                kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToList()
-            );
-
+            var errorDictionary = ControllerUtils.DefineModelStateErrorDictionary(ModelState);
             return BadRequest(errorDictionary);
         }
 
@@ -102,6 +106,7 @@ public class AuthenticationController : ControllerBase
         return Ok("Logged out.");
     }
 
+    [ValidateModel]
     [Authorize(Roles = RoleScopes.UserScope)]
     [HttpPut(ApiRoutes.AccountRoutes.UpdateClient)]
     public async Task<IActionResult> Update([FromBody] ClientForUpdate clientForUpdate)
@@ -118,6 +123,7 @@ public class AuthenticationController : ControllerBase
         else return BadRequest(ModelState);
     }
 
+    [ValidateModel]
     [Authorize(Roles = RoleScopes.UserScope)]
     [HttpDelete(ApiRoutes.AccountRoutes.DeleteClient)]
     public async Task<IActionResult> Delete(Guid clientId)

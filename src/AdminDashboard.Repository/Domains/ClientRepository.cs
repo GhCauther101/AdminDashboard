@@ -26,7 +26,7 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
         Delete(commandParameters.Data, DbContextDomain.IDENTITY);
     }
 
-    public async Task<ClientQueryResult> Get(ClientQueryParameters queryParameters)
+    public async Task<ClientQueryResult> Get(ClientQueryParameters<string> queryParameters)
     {   
         ClientQueryResult clientQueryResult = default;
 
@@ -68,17 +68,6 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
                     IsSuccess = entity is Client,
                     Entity = entity
                 };
-                break;
-            case QueryParameterFunctionality.GROUP:
-                //var clientRange = await FindByCondition(entity => queryParameters.EntitiesGroup.Contains(entity.Id), DbContextDomain.IDENTITY, false)
-                //    .OrderBy(entity => entity.Id)
-                //    .ToListAsync();
-
-                //clientQueryResult = new ClientQueryResult
-                //{
-                //    IsSuccess = clientRange.Count > 0,
-                //    Range = clientRange
-                //};
                 break;
         }
 

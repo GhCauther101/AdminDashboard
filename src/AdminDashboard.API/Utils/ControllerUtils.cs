@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AdminDashboard.API.Utils;
 
@@ -38,6 +39,31 @@ public static class ControllerUtils
         var resultDictionary = new Dictionary<string, IEnumerable<string>>();
         resultDictionary["general"] = new string[] { "Unauthorized." };
         return resultDictionary;
+    }
+
+    public static IDictionary<string, IList<string>> DefineModelStateErrorDictionary(this ModelStateDictionary modelState)
+    {
+        var result = new Dictionary<string, IList<string>>();
+
+        foreach (var modelStateEntry in modelState)
+        {
+            var key = modelStateEntry.Key.ToLower();
+            var errors = modelStateEntry.Value.Errors;
+
+            if (errors != null && errors.Count > 0)
+            {
+                foreach (var error in errors)
+                {
+                    var errorMessage = error.ErrorMessage;
+
+                    if (!result.ContainsKey(key))
+                        result[key] = new List<string>();
+
+                    result[key].Add(errorMessage);
+                }
+            }
+        }
+        return result;
     }
 
     private static void AddError(Dictionary<string, IEnumerable<string>> errors, string key, string error)

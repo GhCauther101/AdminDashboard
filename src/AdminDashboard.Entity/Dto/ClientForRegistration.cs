@@ -6,8 +6,8 @@ namespace AdminDashboard.Entity.Dto;
 public class ClientForRegistration
 {
     [Required(ErrorMessage = "Name is required")]
-    [JsonProperty("name")]
-    public string Name { get; set; }
+    [JsonProperty("username")]
+    public string UserName { get; set; }
 
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Invalid Email Address")]

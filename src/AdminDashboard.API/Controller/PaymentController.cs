@@ -1,8 +1,9 @@
 ﻿using AdminDashboard.API.Reuqests.Payment;
 using AdminDashboard.API.Routes;
 using AdminDashboard.API.Scopes;
+using AdminDashboard.API.Validation;
+using AdminDashboard.Entity.Dto;
 using AdminDashboard.Entity.Json;
-using AdminDashboard.Entity.Models;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -23,9 +24,10 @@ namespace AdminDashboard.API.Controller
             _mapper = mapper;
         }
 
+        [ValidateModel]
         [Authorize(Roles = RoleScopes.UserScope)]
         [HttpPost(ApiRoutes.PaymentRoutes.CreatePayment)]
-        public async Task<IActionResult> Create([FromBody] Payment payment)
+        public async Task<IActionResult> Create([FromBody] PaymentDto payment)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -38,9 +40,10 @@ namespace AdminDashboard.API.Controller
             else return BadRequest(ModelState);
         }
 
+        [ValidateModel]
         [Authorize(Roles = RoleScopes.UserScope)]
         [HttpPut(ApiRoutes.PaymentRoutes.UpdatePayment)]
-        public async Task<IActionResult> Update([FromBody] Payment payment)
+        public async Task<IActionResult> Update([FromBody] PaymentDto payment)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
