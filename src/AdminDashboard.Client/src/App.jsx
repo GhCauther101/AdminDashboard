@@ -8,26 +8,23 @@ import EditClientForm from './Components/Forms/Client/EditClientForm';
 import Navbar from './Components/Navbar/Navbar';
 import PaymentTable from './Components/Tables/PaymentTable';
 import PaymentForm from './Components/Forms/Payment/PaymentForm';
+import PaymentDisplay from './Components/Displays/Payment/PaymentDisplay';
 
 import './App.css';
 
 function App() {
-
-  {
-    const cookies = document.cookie.split(';').map(cookie => console.log(cookie));    
-  }
-
   return (
     <div className='container'>
       <BrowserRouter>
           <Navbar/>
           <Routes>
             <Route path="/" element={null}>
-              <Route path="clients" element={<ClientTable />}/>
+              <Route path="clients" element={<ClientTable />} />
               <Route path="clientEdit" element={<EditClientForm />} />
               <Route path="clientCreate" element={<CreateClientForm />} />
-              <Route path="payments" element={<PaymentTable />}/>
-              <Route path="newPayment" element={<PaymentForm />}/>
+              <Route path="payments" element={<PaymentTable />} />
+              <Route path="payment" element={<PaymentDisplay />} />
+              <Route path="newPayment" element={<PaymentForm />} />
             
               <Route path="login" element={<LoginForm />} />
               <Route path="logout" element={<LogoutForm />} />

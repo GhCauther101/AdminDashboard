@@ -8,12 +8,11 @@ import PaymentApi from "../../../api/paymentApi";
 import '../DefaultForm.css'
 
 const PaymentForm = () => {
-    const navigation = useNavigate();
+    const navigate = useNavigate();
 
     const [clientList, setClientList] = useState([]);
     const [sender, setSender] = useState();
-    const [reciever, setReciever] = useState();
-    
+    const [reciever, setReciever] = useState();    
     const [sourceId, setSourceId] = useState();
     const [destinationId, setDestinationId] = useState();
     const [bill, setBill] = useState();
@@ -26,12 +25,12 @@ const PaymentForm = () => {
     }
 
     const moveNext = () => {
-        setUsername('');
-        setEmail('');
-        setPassword('');
-        setRole('');
-
-        navigate('/clients');
+        setSourceId('');
+        setDestinationId('');
+        setBill('');
+        setDate('');
+        setErrors('');
+        navigate('/payments');
     }
 
     async function retrieveClientsData () {
@@ -67,10 +66,8 @@ const PaymentForm = () => {
             processtime: currentDateTime
         };
 
-        // debugger
         var paymentApi = new PaymentApi();
         var apiResult = await paymentApi.pay(objInstance);
-        // debugger
         var paymentResult = apiResult.parse();
 
         if (!paymentResult.isSuccess) {
@@ -82,7 +79,6 @@ const PaymentForm = () => {
 
     useEffect(() => {
         retrieveClientsData();
-        return;
     }, []);
 
     return (
@@ -103,11 +99,11 @@ const PaymentForm = () => {
                 <div className="input-box">
                     <input type="text" placeholder="reciever" list="sourceClients" value={destinationId} onChange={e => setReciever(e.target.value)} required/>
                     <datalist id="sourceClients">
-                        {
-                            clientList.map(client => {
-                                return (<option value={client.user_name}/>)
-                            })
-                        }
+                    {
+                        clientList.map(client => {
+                            return (<option value={client.user_name}/>)
+                        })
+                    }
                     </datalist>
                     <FaUser className="icon"/>
                 </div>

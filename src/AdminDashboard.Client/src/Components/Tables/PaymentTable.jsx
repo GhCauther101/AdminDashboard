@@ -44,7 +44,6 @@ const PaymentTable = () => {
                 }
             });
         
-        // debugger
         setData(paymentData);
     }
 
@@ -55,7 +54,7 @@ const PaymentTable = () => {
     function displayRows() {
         return (data) ? data.map(row =>
         {
-            return (<tr key={row.payment_id} onDoubleClick={() => processRow("/paymentView", row.clientItem)}>
+            return (<tr className="tableRow" key={row.payment_id} onDoubleClick={() => processRow("/payment", row.clientItem)}>
                 <td className="cell">{row.payment_id}</td>
                 <td className="cell">{row.source_client.userName}</td>
                 <td className="cell">{row.destination_client.userName}</td>

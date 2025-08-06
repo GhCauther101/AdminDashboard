@@ -57,10 +57,10 @@ const ClientTable = () => {
     function displayRows() {
         return (data) ? data.map(row =>
         {
-            return (<tr key={row.client_id} onDoubleClick={() => processRow("/clientView", row.clientItem)}>
+            return (
+            <tr className="tableRow" key={row.client_id} onDoubleClick={() => processRow("/clientView", row.clientItem)}>
                 <td className="cell">{row.user_name}</td>
                 <td className="cell">{row.email}</td>
-                
                 <td>
                     <button className="tableServiceButton tableEditButton" onClick={() => processRow("/clientEdit", row)}>Edit</button>
                     <button className="tableServiceButton tableDeleteButton" onClick={() => defineClient(row)}>Delete</button>

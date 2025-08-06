@@ -59,7 +59,7 @@ class PaymentApi {
             .then(data => 
             {
                 var status = data.status;
-                var success = status === 200;
+                var success = status === 201;
                 var data = data.data;
                 result.define(success, status, data);
             })

@@ -88,3 +88,7 @@ tr:hover {
 .tableDeleteButton:active {
     background-color: #ff4319;
 }
+
+.tableRow:hover {
+    cursor:pointer;
+}
