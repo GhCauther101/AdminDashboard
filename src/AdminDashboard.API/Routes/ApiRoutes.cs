@@ -23,6 +23,8 @@ public static class ApiRoutes
 
         public const string Login = controllerBase + "/login";
 
+        public const string Logout = controllerBase + "/logout";
+
         public const string UpdateClient = controllerBase + "/update";
 
         public const string DeleteClient = controllerBase + "/delete/{clientId}";

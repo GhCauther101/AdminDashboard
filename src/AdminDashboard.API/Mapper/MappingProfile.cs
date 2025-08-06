@@ -25,14 +25,14 @@ public class MappingProfile : Profile
             .ForMember(d => d.SourceClientId, opt => opt.MapFrom(src => src.SourceClient.Id))
             .ForMember(d => d.DestinationClientId, opt => opt.MapFrom(src => src.DestinationClient.Id))
             .ForMember(d => d.Bill, opt => opt.MapFrom(src => src.Bill))
-            .ForMember(d => d.ProcessTime, opt => opt.MapFrom(src => src.ProcessTime));
+            .ForMember(d => d.ProcessTime, opt => opt.MapFrom(src => src.ProcessTime.ToString()));
 
         CreateMap<PaymentDto, Payment>()
             .ForMember(d => d.PaymentId, opt => opt.MapFrom(src => src.Id))
             .ForMember(d => d.SourceClientId, opt => opt.MapFrom(src => src.SourceClientId))
             .ForMember(d => d.DestinationClientId, opt => opt.MapFrom(src => src.DestinationClientId))
             .ForMember(d => d.Bill, opt => opt.MapFrom(src => src.Bill))
-            .ForMember(d => d.Bill, opt => opt.MapFrom(src => src.ProcessTime));
+            .ForMember(d => d.ProcessTime, opt => opt.MapFrom(src => DateTime.Parse(src.ProcessTime)));
 
         CreateMap<ClientQueryResult, ClientWebReply<ClientDto>>()
             .ForMember(d => d.IsSuccess, opt => opt.MapFrom(src => src.IsSuccess))

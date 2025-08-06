@@ -21,7 +21,7 @@ public class RepositoryBase<T> where T : class
         return domain switch
         {
             DbContextDomain.IDENTITY => (DbContext)_dbContextBus.IdentityContextInstance,
-            DbContextDomain.REPOSITORY => (DbContext)_dbContextBus.RepositoryContextInstance,
+            DbContextDomain.REPOSITORY => (DbContext)_dbContextBus.IdentityContextInstance,
             DbContextDomain.EVENT => (DbContext)_dbContextBus.EventContextInstance
         };
     }

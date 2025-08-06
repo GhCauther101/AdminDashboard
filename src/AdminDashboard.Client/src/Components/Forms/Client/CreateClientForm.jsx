@@ -25,13 +25,12 @@ const CreateClientForm = () => {
         setEmail('');
         setPassword('');
         setRole('');
-
         navigate('/clients');
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        var objInstance = { name: userName, email: userEmail, password: userPassword, roles: [userRole] };
+        var objInstance = { username: userName, email: userEmail, password: userPassword, roles: [userRole] };
         var authApi = new AuthApi();
         var apiResult = await authApi.register(objInstance);
         var registerResult = apiResult.parse();
@@ -65,7 +64,8 @@ const CreateClientForm = () => {
                 </div>
 
                 <div className="input-box">
-                    <select value={userRole} onChange={(e) => setRole(e.target.value)}>
+                    <select value={userRole ?? ''} onChange={(e) => setRole(e.target.value)}>
+                        <option>Select user role.</option>
                         <option value="admin">Administrator</option>
                         <option value="manager">Manager</option>
                         <option value="user">User</option>

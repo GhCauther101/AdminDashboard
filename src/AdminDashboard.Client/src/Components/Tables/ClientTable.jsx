@@ -80,7 +80,7 @@ const ClientTable = () => {
 
     function processRow(route, inputRow = null) {
         navigate(route, { state: inputRow });
-    };
+    }
 
     const deletePopup = () => {
         const clientApi = new ClientApi();
@@ -89,20 +89,20 @@ const ClientTable = () => {
         const closeBtn = { onTrigger: () => setShowDeletePopup(false), header: "Close" };
         const actionBtn = { onTrigger: () => action(), header: "Delete" };
         return Popup(bannerObj, closeBtn, actionBtn);
-    };
+    }
 
     useEffect(()=> {
         retrieveColumns();
         retrieveClientsData();
-    }, []);
+    }, [])
 
     return (
         <div>
             {showDeletePopup && deletePopup()}
             <div className="companentContainer">
                 <header>
-                    <div className="clientCreateArea">
-                        <a className="clientTableLabel">Available clients</a>
+                    <div className="headerArea">
+                        <a className="headerLabel">Available clients</a>
                         <button className="tableServiceButton tableCreateButton" onClick={() => processRow("/clientCreate", currentClient)}>Add</button>
                     </div>
                 </header>
@@ -118,7 +118,7 @@ const ClientTable = () => {
                 </div>
             </div>
         </div>
-    );
+    )
 };
 
 export default ClientTable;

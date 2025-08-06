@@ -26,13 +26,31 @@ class ClientApi {
         return result;
     }
 
-    getSingle = async () => {}
-
-    getRange = async (rangeParameters) => {}
-
-    updateClient = async (updateClient) => {
-        console.log(updateClient);
+    getSingle = async (clientId) => {
+        var route = ApiRoutes.paymentRoute.getSingle;
+        route = route.replace('{clientId}', clientId)
+        var result = new ApiResult();
         
+        const api = ApiResolver.resolveApi();
+        await api.get(route)
+            .then(data => 
+            {
+                var status = data.status;
+                var success = status === 200;
+                var data = data.data;
+                result.define(success, status, data);
+            })
+            .catch(er => 
+            {
+                var success = false;
+                var status = er.request.status;
+                var errorData = er.request.response;
+                result.define(success, status, errorData);
+            });
+        return result;
+    }
+
+    updateClient = async (updateClient) => {        
         var route = ApiRoutes.accountRoutes.update;
         var result = new ApiResult();
 

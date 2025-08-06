@@ -4,7 +4,6 @@ using AdminDashboard.API.Scopes;
 using AdminDashboard.API.Validation;
 using AdminDashboard.Entity.Dto;
 using AdminDashboard.Entity.Json;
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,14 +13,10 @@ namespace AdminDashboard.API.Controller
     public class PaymentController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
 
-        public PaymentController(
-            IMediator mediator, 
-            IMapper mapper)
+        public PaymentController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
         }
 
         [ValidateModel]

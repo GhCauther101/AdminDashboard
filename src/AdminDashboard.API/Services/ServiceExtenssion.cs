@@ -40,6 +40,7 @@ public static class ServiceExtenssion
             opts.UseNpgsql(configuration.GetConnectionString("pgConnection"), b => b.MigrationsAssembly(assemblyName));
         });
 
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         services.AddScoped<DbContextBus>();
         services.AddScoped<RepositoryManager>();
         services.AddScoped<RoleManager<IdentityRole>>();

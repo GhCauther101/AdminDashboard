@@ -30,7 +30,7 @@ class ModelStructureApi {
         var route = ApiRoutes.modelStructureRoute.payment;
         var result = new ApiResult();
         
-        const api = ApiResolver.apiInstance();
+        const api = ApiResolver.resolveApi();
         await api.get(route)
             .then(data => 
             {

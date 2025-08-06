@@ -21,7 +21,8 @@ const LoginForm = () => {
     const moveNext = () => {
         setUsername('');
         setPassword('');
-        localStorage.setItem('loggedIn', true);
+        sessionStorage.setItem('loggedIn', true);
+        window.dispatchEvent(new Event("storage"));
         navigate('/clients');
     }
 
@@ -56,7 +57,7 @@ const LoginForm = () => {
                     <FaLock className="icon"/>
                 </div>
 
-                <div>
+                <div className="formButtonArea">
                     <button onClick={handleSubmit}>Login</button>
                     {errors?.general ? plateError(errors.general) : null}
                 </div>

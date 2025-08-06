@@ -6,15 +6,18 @@ namespace AdminDashboard.Entity.Models;
 
 public class Client : IdentityUser, IEntity
 {
+    [Key]
+    public override string Id { get => base.Id; set => base.Id = value; }
+    
     [Required]
     [JsonPropertyName("password")]
     public string Password { get; set; }
 
     [Required]
     [JsonPropertyName("sent_payments")]
-    public IEnumerable<Payment> SentPayments { get; set; }
+    public ICollection<Payment> SentPayments { get; set; } = new List<Payment>();
 
     [Required]
     [JsonPropertyName("recieved_payments")]
-    public IEnumerable<Payment> RecievedPayments { get; set; }
+    public ICollection<Payment> RecievedPayments { get; set; } = new List<Payment>();
 }

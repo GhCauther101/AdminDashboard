@@ -37,7 +37,8 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
         {
             case QueryParameterFunctionality.GET_ALL:
                 var allClients = await FindAll(DbContextDomain.IDENTITY, false)
-                    .OrderBy(x => x.UserName)
+                    .OrderBy(c => c.UserName)
+                    .AsNoTracking()
                     .ToListAsync();
 
                 clientQueryResult = new ClientQueryResult
@@ -48,9 +49,10 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
                 break;
             case QueryParameterFunctionality.PAGE:
                 var clientPage = await FindAll(DbContextDomain.IDENTITY, false)
-                    .OrderBy(x => x.Id)
+                    .OrderBy(c => c.Id)
                     .Skip((queryParameters.RangeStart - 1) * queryParameters.RangeWidth)
                     .Take(queryParameters.RangeWidth)
+                    .AsNoTracking()
                     .ToListAsync();
 
                 clientQueryResult = new ClientQueryResult
@@ -61,6 +63,9 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
                 break;
             case QueryParameterFunctionality.SINGLE:
                 var entity = await FindByCondition(entity => entity.Id.Equals(queryParameters.EntityId.ToString()), DbContextDomain.IDENTITY, false)
+                    .Include(c => c.SentPayments)
+                    .Include(c => c.RecievedPayments)
+                    .AsNoTracking()
                     .SingleOrDefaultAsync();
                 
                 clientQueryResult = new ClientQueryResult

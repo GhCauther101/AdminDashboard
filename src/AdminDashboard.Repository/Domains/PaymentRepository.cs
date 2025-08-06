@@ -3,6 +3,7 @@ using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
 using AdminDashboard.Entity.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace AdminDashboard.Repository.Domains;
 
@@ -30,14 +31,15 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
     {
         PaymentQueryResult paymentQueryResult = default;
 
-        if (queryParameters.IsValid())
+        if (!queryParameters.IsValid())
             return paymentQueryResult;
 
         switch (queryParameters.Functionality)
         {
             case QueryParameterFunctionality.GET_ALL:
                 var allClients = await FindAll(DbContextDomain.REPOSITORY, false)
-                    .OrderBy(x => x.PaymentId)
+                    .OrderByDescending(x => x.ProcessTime)
+                    .SelectPayments()
                     .ToListAsync();
 
                 paymentQueryResult = new PaymentQueryResult
@@ -50,9 +52,10 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                 break;
             case QueryParameterFunctionality.PAGE:
                 var clientPage = await FindAll(DbContextDomain.REPOSITORY, false)
-                    .OrderBy(x => x.PaymentId)
+                    .OrderByDescending(x => x.ProcessTime)
                     .Skip((queryParameters.RangeStart - 1) * queryParameters.RangeWidth)
                     .Take(queryParameters.RangeWidth)
+                    .SelectPayments()
                     .ToListAsync();
 
                 paymentQueryResult = new PaymentQueryResult
@@ -65,6 +68,7 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                 break;
             case QueryParameterFunctionality.SINGLE:
                 var entity = await FindByCondition(entity => entity.PaymentId.Equals(queryParameters.EntityId), DbContextDomain.REPOSITORY, false)
+                    .SelectPayments()
                     .SingleOrDefaultAsync();
 
                 paymentQueryResult = new PaymentQueryResult
@@ -84,5 +88,20 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
     {
         var pager = GetRepositoryPager(DbContextDomain.REPOSITORY);
         return new QueryPagerResult(true, pager);
+    }
+}
+
+public static class RepositoryHelper
+{
+    public static IQueryable<Payment> SelectPayments(this IQueryable<Payment> payments)
+    {
+        return payments.Select(p => new Payment
+        {
+            PaymentId = p.PaymentId,
+            Bill = p.Bill,
+            ProcessTime = p.ProcessTime,
+            SourceClient = new Client { Id = p.SourceClient.Id, UserName = p.SourceClient.UserName },
+            DestinationClient = new Client { Id = p.DestinationClient.Id, UserName = p.DestinationClient.UserName }
+        });
     }
 }

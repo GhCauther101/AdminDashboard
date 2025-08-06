@@ -12,14 +12,9 @@ public class RepositoryManager : IRepositoryManager
     private IPaymentRepository _paymentRepository;
     private IEventRepository _eventRepository;
 
-    private AuthenticationManager _authenticationManager;
-
-    public RepositoryManager(
-        DbContextBus dbContextBus,
-        AuthenticationManager authenticationManager)
+    public RepositoryManager(DbContextBus dbContextBus)
     {
         _dbContextBus = dbContextBus;
-        _authenticationManager = authenticationManager;
     }
 
     public IClientRepository ClientRepository
@@ -58,6 +53,5 @@ public class RepositoryManager : IRepositoryManager
     public async Task SaveChanges()
     {
         await _dbContextBus.IdentityContextInstance.SaveChangesAsync();
-        await _dbContextBus.RepositoryContextInstance.SaveChangesAsync();
     }
 }

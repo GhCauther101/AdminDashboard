@@ -65,7 +65,7 @@ const RegisterForm = () => {
                 </div>
 
                 <div className="input-box">
-                    <select value={userRole ?? ''} onChange={(e) => setRole(e.target.value)}>
+                    <select value={userRole ?? ''} required onChange={(e) => setRole(e.target.value)}>
                         <option>Select user role.</option>
                         <option value="admin">Administrator</option>
                         <option value="manager">Manager</option>

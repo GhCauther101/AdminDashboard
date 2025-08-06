@@ -32,15 +32,21 @@ public class PaymentHandler :
         try
         {
             var paymentInstance = _mapper.Map<Payment>(request.payment);
-            if (!paymentInstance.SourceClientId.Equals(Guid.Empty)  && !paymentInstance.DestinationClientId.Equals(Guid.Empty))
+            paymentInstance.PaymentId = Guid.NewGuid();
+            if (!paymentInstance.SourceClientId.Equals(Guid.Empty))
             {
                 var sourceQueryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.SINGLE, entityId: paymentInstance.SourceClientId);
                 var sourceClient = await _repositoryManager.ClientRepository.Get(sourceQueryParameters);
+                paymentInstance.SourceClientId = sourceClient.Entity.Id;
+                sourceClient.Entity.SentPayments.Add(paymentInstance);
+            }
+
+            if (!paymentInstance.DestinationClientId.Equals(Guid.Empty)) 
+            {
                 var destinationQueryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.SINGLE, entityId: paymentInstance.DestinationClientId);
                 var destinationClient = await _repositoryManager.ClientRepository.Get(destinationQueryParameters);
-                
-                paymentInstance.SourceClient = sourceClient.Entity;
-                paymentInstance.DestinationClient = destinationClient.Entity;
+                paymentInstance.DestinationClientId = destinationClient.Entity.Id;
+                destinationClient.Entity.RecievedPayments.Add(paymentInstance);
             }
 
             var commandParameters = new PaymentCommandParameters(CommandType.CREATE, true, paymentInstance);
@@ -59,15 +65,19 @@ public class PaymentHandler :
         try
         {
             var paymentInstance = _mapper.Map<Payment>(request.payment);
-            if (!paymentInstance.SourceClientId.Equals(Guid.Empty) && !paymentInstance.DestinationClientId.Equals(Guid.Empty))
-            {
-                var sourceQueryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.SINGLE, entityId: paymentInstance.SourceClientId);
-                var sourceClient = await _repositoryManager.ClientRepository.Get(sourceQueryParameters);
-                var destinationQueryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.SINGLE, entityId: paymentInstance.DestinationClientId);
-                var destinationClient = await _repositoryManager.ClientRepository.Get(destinationQueryParameters);
 
-                paymentInstance.SourceClient = sourceClient.Entity;
-                paymentInstance.DestinationClient = destinationClient.Entity;
+            if (!paymentInstance.SourceClient.Id.Equals(Guid.Empty))
+            {
+                var sourceQueryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.SINGLE, entityId: paymentInstance.SourceClient.Id);
+                var sourceClient = await _repositoryManager.ClientRepository.Get(sourceQueryParameters);
+                paymentInstance.SourceClientId = sourceClient.Entity.Id;
+            }
+
+            if (!paymentInstance.DestinationClient.Id.Equals(Guid.Empty))
+            {
+                var destinationQueryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.SINGLE, entityId: paymentInstance.DestinationClient.Id);
+                var destinationClient = await _repositoryManager.ClientRepository.Get(destinationQueryParameters);
+                paymentInstance.DestinationClientId = destinationClient.Entity.Id;
             }
 
             var commandParameters = new PaymentCommandParameters(CommandType.UPDATE, true, paymentInstance);
@@ -108,7 +118,7 @@ public class PaymentHandler :
         {
             var queryParameters = new PaymentQueryParameters(QueryParameterFunctionality.GET_ALL);
             var clientQueryResult = await _repositoryManager.PaymentRepository.Get(queryParameters);
-
+            
             return clientQueryResult;
         }
         catch (Exception ex)

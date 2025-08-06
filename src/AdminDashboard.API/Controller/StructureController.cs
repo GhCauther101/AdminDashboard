@@ -28,7 +28,7 @@ public class StructureController : ControllerBase
     {
         var paymentDisplayProps = new string[]
         {
-            "sourceClientId", "sourceClientUsername", "destinationClientId", "destinationClientUsername"
+            "id", "sender", "reciever", "bill", "date"
         };
 
         return Ok(paymentDisplayProps);

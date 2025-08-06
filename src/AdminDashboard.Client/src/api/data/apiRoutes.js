@@ -9,6 +9,7 @@ class ApiRoutes {
     static accountRoutes = {
         'register' : `/authentication/register`,
         'login' : `/authentication/login`,
+        'logout' : `/authentication/logout`,
         'getRoles' : `/authentication/getRoles`,
         'update' : `/authentication/update`,
         'delete' : `/authentication/delete/{clientId}`

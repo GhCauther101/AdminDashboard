@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ModelStructureApi from "../../api/modelStructureApi.js";
+import PaymentApi from "../../api/paymentApi.js";
 
 import "./table.css"
 
@@ -16,11 +17,35 @@ const PaymentTable = () => {
     async function retrieveColumns() {
         var modelStructureExplorer = new ModelStructureApi();
         var paymentColumns = null;
-        paymentColumns = ["id", "sender", "reciever", "bill", "actions"]
+        await modelStructureExplorer.getPaymentStructure()
+            .then(resp => 
+            {
+                var result = resp.parse();
+                if (result.isSuccess && result.status === 200) {
+                    paymentColumns = result.data;
+                } else if (!result.isSuccess) {
+                    setErrors(result.data);
+                }
+            });
         setColumns(paymentColumns);
     }
 
     async function retrievePaymentsData () {
+        var clientApi = new PaymentApi();
+        var paymentData = null;
+        await clientApi.getAll()
+            .then(resp => 
+            {
+                var result = resp.parse();
+                if (result.isSuccess && result.status === 200) {
+                    paymentData = result.data;
+                } else if (!result.isSuccess) {
+                    setErrors(result.data);
+                }
+            });
+        
+        // debugger
+        setData(paymentData);
     }
 
     function displayColumns() {
@@ -28,9 +53,16 @@ const PaymentTable = () => {
     }
 
     function displayRows() {
-    }
-
-    function refreshTable(paymentId) {
+        return (data) ? data.map(row =>
+        {
+            return (<tr key={row.payment_id} onDoubleClick={() => processRow("/paymentView", row.clientItem)}>
+                <td className="cell">{row.payment_id}</td>
+                <td className="cell">{row.source_client.userName}</td>
+                <td className="cell">{row.destination_client.userName}</td>
+                <td className="cell">{row.bill}</td>
+                <td className="cell">{row.process_time}</td>
+            </tr>)
+        }) : null
     }
 
     function definePayment(payment) {
@@ -40,25 +72,20 @@ const PaymentTable = () => {
 
     function processRow(route, inputRow = null) {
         navigate(route, { state: inputRow });
-    };
-
-    const deletePopup = () => {
-        return null;
-    };
+    }
 
     useEffect(()=> {
         retrieveColumns();
         retrievePaymentsData();
-    }, []);
+    }, [])
 
     return (
         <div>
-            {showDeletePopup && deletePopup()}
             <div className="companentContainer">
                 <header>
-                    <div className="clientCreateArea">
-                        <a className="clientTableLabel">Available clients</a>
-                        <button className="tableServiceButton tableCreateButton" onClick={() => processRow("/clientCreate", currentPayment)}>Add</button>
+                    <div className="headerArea">
+                        <a className="headerLabel">Available payments</a>
+                        <button className="tableServiceButton tableCreateButton" onClick={() => processRow("/newPayment", currentPayment)}>Pay</button>
                     </div>
                 </header>
                 <div className="tableWrapper">
@@ -73,7 +100,7 @@ const PaymentTable = () => {
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
 export default PaymentTable;

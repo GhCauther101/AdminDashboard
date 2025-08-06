@@ -1,4 +1,4 @@
-.clientCreateArea {
+.headerArea {
     display:flex;
     width: 90vw;
     left: 0;
@@ -59,7 +59,7 @@ tr:hover {
     outline: none;
 }
 
-.clientTableLabel {
+.headerLabel {
     justify-content: space-between;
     font-size: 20px;
     font-weight: 800em;

@@ -11,20 +11,22 @@ public class IdentityContext : IdentityDbContext<Client>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(builder);
-
         builder.Entity<Payment>()
             .HasOne(p => p.SourceClient)
             .WithMany(c => c.SentPayments)
             .HasForeignKey(p => p.SourceClientId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .IsRequired();
 
         builder.Entity<Payment>()
             .HasOne(p => p.DestinationClient)
             .WithMany(c => c.RecievedPayments)
             .HasForeignKey(p => p.DestinationClientId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .IsRequired();
+
+        base.OnModelCreating(builder);
     }
 
     public DbSet<Client> Clients { get; set; }
+
+    public DbSet<Payment> Payments { get; set; }
 }

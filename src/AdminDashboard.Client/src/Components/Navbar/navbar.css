@@ -1,9 +1,9 @@
 .navbar {
     position: absolute;
     width: 100%;
-    display: flex;
-    justify-content:first baseline;
-    align-items: center;
+    display:flex;
+    justify-content:space-between;
+    align-items: left baseline;
     background-color: #787878;
     padding: 12px 24px;
     color: white;
@@ -13,7 +13,11 @@
 }
 
 .sections {
+    position: relative;
+    display: flex;
     margin: 0 20px;
+    justify-content: space-between;
+    align-items: left baseline;
 }
 
 .authSection {

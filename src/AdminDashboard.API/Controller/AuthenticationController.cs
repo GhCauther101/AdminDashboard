@@ -7,7 +7,6 @@ using AdminDashboard.Entity.Dto;
 using AdminDashboard.Entity.Json;
 using AdminDashboard.Entity.Models;
 using AdminDashboard.Repository.Managers;
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,20 +20,16 @@ public class AuthenticationController : ControllerBase
 {
     private readonly UserManager<Client> _userManager;
     private readonly AuthenticationManager _authManager;
-
     private readonly IMediator _mediator;
-    private readonly IMapper _mapper;
 
     public AuthenticationController(
-        IMediator mediator,
-        IMapper mapper,
         AuthenticationManager authManager,
-        UserManager<Client> userManager)
+        UserManager<Client> userManager,
+        IMediator mediator)
     {
         _authManager = authManager;
         _userManager = userManager;
         _mediator = mediator;
-        _mapper = mapper;
     }
 
     [HttpGet(ApiRoutes.AccountRoutes.GetRoles)]
@@ -99,8 +94,9 @@ public class AuthenticationController : ControllerBase
         return Ok("Logged in.");
     }
 
-    [HttpPost("logout")]
-    public IActionResult Logout()
+    [ValidateModel]
+    [HttpPost(ApiRoutes.AccountRoutes.Logout)]
+    public async Task<IActionResult> Logout()
     {
         Response.Cookies.Delete("jwt");
         return Ok("Logged out.");
