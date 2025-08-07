@@ -8,7 +8,7 @@ using AdminDashboard.API.Scopes;
 using AutoMapper;
 using AdminDashboard.Entity.Dto;
 
-namespace AdminDashboard.API.Controller;
+namespace AdminDashboard.API.Controllers;
 
 [Route(ApiRoutes.ClientRoutes.ControllerBase)]
 [ApiController]

@@ -16,7 +16,8 @@ public class PaymentHandler :
       IRequestHandler<PaymentGetLastRequest, PaymentQueryResult>,
       IRequestHandler<PaymentGetSingleRequest, PaymentQueryResult>,
       IRequestHandler<PaymentGetPageRequest, PaymentQueryResult>,
-      IRequestHandler<PaymentGetPagerRequest, QueryPagerResult>
+      IRequestHandler<PaymentGetPagerRequest, QueryPagerResult>,
+      IRequestHandler<PaymentGetClientHistory, PaymentQueryResult>
 {
     private readonly IMapper _mapper;
     private readonly RepositoryManager _repositoryManager;
@@ -95,7 +96,7 @@ public class PaymentHandler :
     {
         try
         {
-            var queryParameters = new PaymentQueryParameters(QueryParameterFunctionality.SINGLE, request.paymentId);
+            var queryParameters = new PaymentQueryParameters<Guid>(QueryParameterFunctionality.SINGLE, request.paymentId);
             var paymentQueryResult = await _repositoryManager.PaymentRepository.Get(queryParameters);
 
             if (!paymentQueryResult.IsSuccess || paymentQueryResult.Entity is null || paymentQueryResult.Range.Count() == 0)
@@ -116,7 +117,7 @@ public class PaymentHandler :
     {
         try
         {
-            var queryParameters = new PaymentQueryParameters(QueryParameterFunctionality.GET_ALL);
+            var queryParameters = new PaymentQueryParameters<Guid>(QueryParameterFunctionality.GET_ALL);
             var clientQueryResult = await _repositoryManager.PaymentRepository.Get(queryParameters);
             
             return clientQueryResult;
@@ -131,9 +132,8 @@ public class PaymentHandler :
     {
         try
         {
-            var queryParameters = new PaymentQueryParameters(QueryParameterFunctionality.LAST, lastWidth: request.width);
+            var queryParameters = new PaymentQueryParameters<Guid>(QueryParameterFunctionality.LAST, lastWidth: request.width);
             var clientQueryResult = await _repositoryManager.PaymentRepository.Get(queryParameters);
-
             return clientQueryResult;
         }
         catch (Exception ex)
@@ -146,9 +146,8 @@ public class PaymentHandler :
     {
         try
         {
-            var queryParameters = new PaymentQueryParameters(QueryParameterFunctionality.SINGLE, entityId: request.paymentId);
+            var queryParameters = new PaymentQueryParameters<Guid>(QueryParameterFunctionality.SINGLE, entityId: request.paymentId);
             var clientQueryResult = await _repositoryManager.PaymentRepository.Get(queryParameters);
-
             return clientQueryResult;
         }
         catch (Exception ex)
@@ -161,9 +160,8 @@ public class PaymentHandler :
     {
         try
         {
-            var queryParameters = new PaymentQueryParameters(QueryParameterFunctionality.SINGLE, rangeStart: request.start, rangeWidth: request.width);
+            var queryParameters = new PaymentQueryParameters<Guid>(QueryParameterFunctionality.SINGLE, rangeStart: request.start, rangeWidth: request.width);
             var clientQueryResult = await _repositoryManager.PaymentRepository.Get(queryParameters);
-
             return clientQueryResult;
         }
         catch (Exception ex)
@@ -177,12 +175,26 @@ public class PaymentHandler :
         try
         {
             var clientQueryPager = await _repositoryManager.PaymentRepository.GetPager();
-
             return clientQueryPager;
         }
         catch (Exception ex)
         {
             return new QueryPagerResult(false, exception: ex);
+        }
+    }
+
+    public async Task<PaymentQueryResult> Handle(PaymentGetClientHistory request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var queryParameters = new PaymentQueryParameters<Guid>(QueryParameterFunctionality.CLIENT, entityId: request.clientId);
+            var clientQueryResult = await _repositoryManager.PaymentRepository.Get(queryParameters);
+
+            return clientQueryResult;
+        }
+        catch (Exception ex)
+        {
+            return new PaymentQueryResult(false, exception: ex);
         }
     }
 }

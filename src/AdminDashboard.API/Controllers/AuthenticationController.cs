@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdminDashboard.API.Controller;
+namespace AdminDashboard.API.Controllers;
 
 [ApiController]
 [Route("api/authentication")]

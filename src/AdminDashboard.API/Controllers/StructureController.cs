@@ -3,7 +3,7 @@ using AdminDashboard.API.Scopes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdminDashboard.API.Controller;
+namespace AdminDashboard.API.Controllers;
 
 public class StructureController : ControllerBase
 {

@@ -1,6 +1,6 @@
 ﻿namespace AdminDashboard.Entity.Event.Querying;
 
-public class PaymentQueryParameters : QueryParameters<int>
+public class PaymentQueryParameters<T> : QueryParameters<T>
 {
     public PaymentQueryParameters()
     {
@@ -14,8 +14,8 @@ public class PaymentQueryParameters : QueryParameters<int>
         int rangeStart = 0,
         int rangeWidth = 0,
         int lastWidth = 0,
-        int entityId = 0,
-        IEnumerable<int> entitiesGroup = null)
+        T entityId = default,
+        IEnumerable<T> entitiesGroup = null)
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;

@@ -50,6 +50,32 @@ class PaymentApi {
         return result;
     }
 
+    getHistory = async (clientId) => {
+        var route = ApiRoutes.paymentRoute.getHistory;
+        route = route.replace('{clientId}', clientId)
+        console.log(route);
+        
+        var result = new ApiResult();
+        
+        const api = ApiResolver.resolveApi();
+        await api.get(route)
+            .then(data => 
+            {
+                var status = data.status;
+                var success = status === 200;
+                var data = data.data;
+                result.define(success, status, data);
+            })
+            .catch(er => 
+            {
+                var success = false;
+                var status = er.request.status;
+                var errorData = er.request.response;
+                result.define(success, status, errorData);
+            });
+        return result;
+    }
+
     pay = async (paymentInstace) => {
         var route = ApiRoutes.paymentRoute.create;
         var result = new ApiResult();

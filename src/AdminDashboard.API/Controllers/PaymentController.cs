@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdminDashboard.API.Controller
+namespace AdminDashboard.API.Controllers
 {
     public class PaymentController : ControllerBase
     {
@@ -86,7 +86,7 @@ namespace AdminDashboard.API.Controller
 
         [Authorize(Roles = RoleScopes.UserScope)]
         [HttpGet(ApiRoutes.PaymentRoutes.GetSinge)]
-        public async Task<IActionResult> GetSingle(int paymentId)
+        public async Task<IActionResult> GetSingle(Guid paymentId)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -113,6 +113,22 @@ namespace AdminDashboard.API.Controller
 
             if (clientQueryResult.IsSuccess)
                 return Ok(clientQueryResult.Entity);
+            else return BadRequest(ModelState);
+        }
+
+        [Authorize(Roles = RoleScopes.UserScope)]
+        [HttpGet(ApiRoutes.PaymentRoutes.GetHistory)]
+        public async Task<IActionResult> GetHistory(Guid clientId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var paymentLastRequest = new PaymentGetClientHistory(clientId);
+            var clientQueryResult = await _mediator.Send(paymentLastRequest);
+            var jsonResult = clientQueryResult.ToJsonContent();
+
+            if (clientQueryResult.IsSuccess)
+                return Ok(clientQueryResult.Range);
             else return BadRequest(ModelState);
         }
 

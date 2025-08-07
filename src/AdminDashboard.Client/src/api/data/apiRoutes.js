@@ -26,7 +26,8 @@ class ApiRoutes {
         'delete' : `/payments/delete/{paymentId}`,
         'getAll' : `/payments/getAll`,
         'getSingle' : `/payments/getSingle/{paymentId}`,
-        'getSingle' : `/payments/getlastRange`
+        'getLast' : `/payments/getLast`,
+        'getHistory': "/payments/getHistory/{clientId}"
     }
 }
 

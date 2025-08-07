@@ -2,6 +2,13 @@
 
 public static class ApiRoutes
 {
+    public static class HomeRoutes
+    {
+        private const string controllerBase = "/home";
+
+        public const string GetCurrentSnapshot = controllerBase + "/snapshot";
+    }
+
     public static class ServiceRoutes
     {
         private const string controllerBase = "/structure";
@@ -59,7 +66,9 @@ public static class ApiRoutes
 
         public const string GetSinge = controllerBase + "/getSingle/{paymentId}";
 
-        public const string GetLastRange = controllerBase + "/getLastRange";
+        public const string GetLastRange = controllerBase + "/getLast";
+
+        public const string GetHistory = controllerBase + "/getHistory/{clientId}";
 
         public const string GetPager = controllerBase + "/getPager";
     }

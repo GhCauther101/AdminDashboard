@@ -11,21 +11,14 @@ const PaymentDisplay = () => {
     const location = useLocation();
     const paymentData = location.state;
 
-    const [sourceName, setSourceName] = useState();
-    const [destinationName, setDestinationName] = useState();
-    const [bill, setBill] = useState();
+    const [paymentId, setPaymentId] = useState(paymentData.payment_id);
+    const [sourceName, setSourceName] = useState(paymentData.source_client.userName);
+    const [destinationName, setDestinationName] = useState(paymentData.destination_client.userName);
+    const [bill, setBill] = useState(paymentData.bill);
     
     const moveBack = () => {
         navigate(-1);
     }
-
-    useEffect(() => {
-        if (paymentData !== null) {
-            setSourceName(paymentData.source_client.userName);
-            setDestinationName(paymentData.destination_client.userName);
-            setBill(paymentData.bill);
-        }        
-    })
 
     return (<div className="wrapper">
         <div className="headerBox">
@@ -37,13 +30,15 @@ const PaymentDisplay = () => {
             </div>
         </div>
         <div className="displayBox">
+            <div className="idBox">
+                <p className="val">Id: {paymentId}</p>                
+            </div>
             <div className="inputBox">
                 <div className="hdrPrgContainer">
                     <FaUser className="icon"/>
                     <p className="hdrPrg">Source client:</p>
                 </div>
-                <p className="val">{sourceName}</p>
-                
+                <p className="val">{sourceName}</p>                
             </div>
             <div className="inputBox">
                 <div className="hdrPrgContainer">

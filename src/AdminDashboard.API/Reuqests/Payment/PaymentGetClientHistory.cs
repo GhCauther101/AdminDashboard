@@ -3,4 +3,4 @@ using MediatR;
 
 namespace AdminDashboard.API.Reuqests.Payment;
 
-public record PaymentGetSingleRequest(Guid paymentId) : IRequest<PaymentQueryResult>;
+public record PaymentGetClientHistory(Guid clientId) : IRequest<PaymentQueryResult>;

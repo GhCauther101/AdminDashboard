@@ -46,7 +46,8 @@ public class QueryParameters<T> : TriggerEvent
             QueryParameterFunctionality.GET_ALL => true,
             QueryParameterFunctionality.PAGE => (RangeStart > 0) && (RangeWidth > 0),
             QueryParameterFunctionality.SINGLE => isSingleEnabled(),
-            QueryParameterFunctionality.GROUP => isGroupEnabled()
+            QueryParameterFunctionality.GROUP => isGroupEnabled(),
+            QueryParameterFunctionality.CLIENT => true
         };
 
         return result;

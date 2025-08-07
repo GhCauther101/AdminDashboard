@@ -27,7 +27,7 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
         Delete(commandParameters.Data, DbContextDomain.REPOSITORY);
     }    
 
-    public async Task<PaymentQueryResult> Get(PaymentQueryParameters queryParameters)
+    public async Task<PaymentQueryResult> Get(PaymentQueryParameters<Guid> queryParameters)
     {
         PaymentQueryResult paymentQueryResult = default;
 
@@ -77,6 +77,20 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                     TriggerTime = DateTime.Now,
                     IsSuccess = entity is Client,
                     Entity = entity
+                };
+                break;
+            case QueryParameterFunctionality.CLIENT:
+                var historyList = await FindByCondition(entity => entity.SourceClientId.Equals(queryParameters.EntityId.ToString()) || entity.DestinationClientId.Equals(queryParameters.EntityId.ToString()), DbContextDomain.REPOSITORY, false)
+                    .OrderByDescending(e =>e.ProcessTime)
+                    .SelectPayments()
+                    .ToListAsync();
+
+                paymentQueryResult = new PaymentQueryResult
+                {
+                    Id = Guid.NewGuid(),
+                    TriggerTime = DateTime.Now,
+                    IsSuccess = historyList.Count > 0,
+                    Range = historyList
                 };
                 break;
         }
