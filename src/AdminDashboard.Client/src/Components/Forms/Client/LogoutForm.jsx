@@ -48,11 +48,10 @@ const LogoutForm = () => {
                 <div className="content">
                     <p>Would yoou like tou log out ?</p>
                 </div>
-
                 <div className="formButtonArea">
                     <button onClick={moveBack}>Close</button>
-                    {errors?.general ? plateError(errors.general) : null}
                     <button onClick={handleSubmit}>Logout</button>
+                    {errors?.general ? plateError(errors.general) : null}
                 </div>
             </form>
         </div>

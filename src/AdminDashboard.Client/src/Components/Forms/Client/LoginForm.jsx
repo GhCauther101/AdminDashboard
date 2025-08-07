@@ -45,7 +45,7 @@ const LoginForm = () => {
     return (
         <div className="wrapper">
             <form>
-                <h1>Login</h1>
+                <h1>LogIn</h1>
                 <div className="input-box">
                     <input type="text" placeholder="username" required value={userName} onChange={(e) => setUsername(e.target.value)}/>
                     {errors?.username ? plateError(errors.username) : null}

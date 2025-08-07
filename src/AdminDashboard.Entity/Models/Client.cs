@@ -7,7 +7,13 @@ namespace AdminDashboard.Entity.Models;
 public class Client : IdentityUser, IEntity
 {
     [Key]
+    [Required]
+    [JsonPropertyName("client_id")]
     public override string Id { get => base.Id; set => base.Id = value; }
+
+    [Required]
+    [JsonPropertyName("user_name")]
+    public override string? UserName { get => base.UserName; set => base.UserName = value; }
     
     [Required]
     [JsonPropertyName("password")]

@@ -54,10 +54,10 @@ const PaymentTable = () => {
     function displayRows() {
         return (data) ? data.map(row =>
         {
-            return (<tr className="tableRow" key={row.payment_id} onDoubleClick={() => processRow("/payment", row.clientItem)}>
+            return (<tr className="tableRow" key={row.payment_id} onDoubleClick={() => processRow("/payment", row)}>
                 <td className="cell">{row.payment_id}</td>
-                <td className="cell">{row.source_client.userName}</td>
-                <td className="cell">{row.destination_client.userName}</td>
+                <td className="cell">{row.source_client.user_name}</td>
+                <td className="cell">{row.destination_client.user_name}</td>
                 <td className="cell">{row.bill}</td>
                 <td className="cell">{row.process_time}</td>
             </tr>)

@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
-import ClientTable from './Components/Tables/ClientTable';
 import LoginForm from './Components/Forms/Client/LoginForm';
 import LogoutForm from './Components/Forms/Client/LogoutForm';
 import RegisterForm from './Components/Forms/Client/RegisterForm';
+import ClientTable from './Components/Tables/ClientTable';
+import ClientDisplay from './Components/Displays/Client/ClientDisplay';
 import CreateClientForm from './Components/Forms/Client/CreateClientForm';
 import EditClientForm from './Components/Forms/Client/EditClientForm';
 import Navbar from './Components/Navbar/Navbar';
@@ -20,6 +21,7 @@ function App() {
           <Routes>
             <Route path="/" element={null}>
               <Route path="clients" element={<ClientTable />} />
+              <Route path="client" element={ <ClientDisplay />} />
               <Route path="clientEdit" element={<EditClientForm />} />
               <Route path="clientCreate" element={<CreateClientForm />} />
               <Route path="payments" element={<PaymentTable />} />
