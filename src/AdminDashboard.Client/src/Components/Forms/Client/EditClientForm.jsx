@@ -1,4 +1,4 @@
-import { useEffect, useState} from "react";
+import { useState} from "react";
 import { FaUser, FaLock, FaCalendar } from "react-icons/fa";
 import { MdAlternateEmail } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -23,7 +23,7 @@ const EditClientForm = () => {
     }
 
     const moveBack = () => {
-        navigate('/clients');
+        navigate(-1);
     }
 
     const handleSubmit = async (e) => {

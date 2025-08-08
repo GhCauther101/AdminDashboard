@@ -6,11 +6,11 @@ const Navbar = () => {
   const [logged, setLoggedStatus] = useState(false);
 
   useEffect(() => {
-    var status = sessionStorage.getItem('loggedIn');
+    var status = localStorage.getItem('loggedIn');
     setLoggedStatus(status);
 
     const checkLoginStatus = () => {
-       setLoggedStatus(sessionStorage.getItem('loggedIn') === true);
+       setLoggedStatus(localStorage.getItem('loggedIn') === true);
     };
 
     window.addEventListener('storage', checkLoginStatus);
@@ -30,17 +30,16 @@ const Navbar = () => {
                 </div>
             </div>
             <div className='authSection'>
-                {logged ? (
-                    <>
-                      <a href="/logout">Sign out</a>
-                    </>
-                  ) : (
-                    <>
-                      <a href="/register">Sign up</a>
-                      <a href="/login">Sign in</a>
-                    </>
-                  )
-                }       
+              {logged ? (
+                  <>
+                    <a href="/logout">Sign out</a>
+                  </>
+                ) : (
+                  <>
+                    <a href="/register">Sign up</a>
+                    <a href="/login">Sign in</a>
+                  </>
+              )}       
             </div>
         </nav>
     </div>

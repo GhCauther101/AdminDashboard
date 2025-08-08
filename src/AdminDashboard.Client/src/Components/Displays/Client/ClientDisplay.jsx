@@ -40,17 +40,13 @@ const ClientDisplay = () => {
         }
     }
 
-    const getPaymentIcon = (payment) => {
-        {
-            return (payment.source_client.client_id === clientId) ? <ImArrowRight/> : <ImArrowLeft/>;
-        }
-    }
+    const getPaymentIcon = (payment) => {{
+        return (payment.source_client.client_id === clientId) ? <ImArrowRight/> : <ImArrowLeft/>;
+    }}
 
-    const getPaymentUserName = (payment) => {
-        {
-            return (payment.source_client.client_id === clientId) ? payment.destination_client.user_name : payment.source_client.user_name;
-        }
-    }
+    const getPaymentUserName = (payment) => {{
+        return (payment.source_client.client_id === clientId) ? payment.destination_client.user_name : payment.source_client.user_name;
+    }}
 
     useEffect(() => {
         setClientData();
@@ -89,15 +85,13 @@ const ClientDisplay = () => {
                     <p className="hdrPrg">Payments:</p>
                 </div>
                 <div className="paymentsList">
-                {
-                    userPayment.map(payment => {
-                        return (<div className="paymentRow">
-                            <span className="paymentRowIcon">{getPaymentIcon(payment)}</span>
-                            <span className="paymentRowUserName">{getPaymentUserName(payment)}</span>
-                            <span className="paymentRowBill">{payment.bill}</span>
-                        </div>);
-                    })
-                }
+                {userPayment.map(payment => {
+                    return (<div className="paymentRow">
+                        <span className="paymentRowIcon">{getPaymentIcon(payment)}</span>
+                        <span className="paymentRowUserName">{getPaymentUserName(payment)}</span>
+                        <span className="paymentRowBill">{payment.bill}</span>
+                    </div>);
+                })}
                 </div>
             </div>
         </div>

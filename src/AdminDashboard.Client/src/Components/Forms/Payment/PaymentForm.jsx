@@ -24,13 +24,13 @@ const PaymentForm = () => {
         setErrors(jsonErrors);
     }
 
-    const moveNext = () => {
+    const moveBack = () => {
         setSourceId('');
         setDestinationId('');
         setBill('');
         setDate('');
         setErrors('');
-        navigate('/payments');
+        navigate(-1);
     }
 
     async function retrieveClientsData () {
@@ -73,7 +73,7 @@ const PaymentForm = () => {
         if (!paymentResult.isSuccess) {
             processErrors(paymentResult);
         } else {
-            moveNext();
+            moveBack();
         }
     };
 
@@ -88,22 +88,18 @@ const PaymentForm = () => {
                 <div className="input-box">
                     <input type="text" placeholder="sender" list="sourceClients" value={sourceId} required onChange={e => setSender(e.target.value)}/>
                     <datalist id="sourceClients">
-                    {
-                        clientList.map(client => {
-                            return (<option value={client.user_name}/>)
-                        })
-                    }
+                    {clientList.map(client => {
+                        return (<option value={client.user_name}/>)
+                    })}
                     </datalist>
                     <FaUser className="icon"/>
                 </div>
                 <div className="input-box">
                     <input type="text" placeholder="reciever" list="sourceClients" value={destinationId} onChange={e => setReciever(e.target.value)} required/>
                     <datalist id="sourceClients">
-                    {
-                        clientList.map(client => {
+                    {clientList.map(client => {
                             return (<option value={client.user_name}/>)
-                        })
-                    }
+                    })}
                     </datalist>
                     <FaUser className="icon"/>
                 </div>
@@ -113,7 +109,7 @@ const PaymentForm = () => {
                 </div>
 
                 <div className="formButtonArea">
-                    <button onClick={moveNext}>Close</button>
+                    <button onClick={moveBack}>Close</button>
                     <button onClick={handleSubmit}>Pay</button>
                 </div>
             </form>

@@ -52,7 +52,7 @@ tr:hover {
 }
 
 .tableServiceButton:hover {
-    box-shadow:  0 12px 16px 0 rgba(0,0,0,0.34);
+    box-shadow:  0 12px 16px 0 #00000057;
 }
 
 .tableServiceButton:focus {

@@ -21,9 +21,11 @@ const LoginForm = () => {
     const moveNext = () => {
         setUsername('');
         setPassword('');
-        sessionStorage.setItem('loggedIn', true);
+        localStorage.setItem('loggedIn', true);
         window.dispatchEvent(new Event("storage"));
-        navigate('/clients');
+        var route = localStorage.getItem("cachedPath");
+        localStorage.removeItem("cachedPath");
+        navigate(route ?? "/");
     }
 
     const handleSubmit = async (e) => {

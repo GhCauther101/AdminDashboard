@@ -64,11 +64,6 @@ const PaymentTable = () => {
         }) : null
     }
 
-    function definePayment(payment) {
-        setCurrentPayment(payment);
-        setShowDeletePopup(true);
-    }
-
     function processRow(route, inputRow = null) {
         navigate(route, { state: inputRow });
     }

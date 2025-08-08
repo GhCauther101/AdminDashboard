@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { FaUser, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import AuthApi from "../../../api/authApi.js";
 import plateError from "../FormWrapper.jsx";
@@ -21,7 +20,7 @@ const LogoutForm = () => {
     }
 
     const moveNext = () => {
-        sessionStorage.clear('loggedIn', false);
+        localStorage.setItem('loggedIn', false);
         window.dispatchEvent(new Event("storage"));
         navigate('/login');
     }

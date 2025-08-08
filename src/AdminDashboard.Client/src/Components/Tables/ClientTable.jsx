@@ -102,7 +102,7 @@ const ClientTable = () => {
                 <header>
                     <div className="headerArea">
                         <a className="headerLabel">Available clients</a>
-                        <button className="tableServiceButton tableCreateButton" onClick={() => processRow("/clientCreate", currentClient)}>Add</button>
+                        <button className="tableServiceButton tableCreateButton" onClick={() => processRow("/newClient", currentClient)}>Add</button>
                     </div>
                 </header>
                 <div className="tableWrapper">

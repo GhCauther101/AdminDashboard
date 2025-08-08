@@ -20,12 +20,12 @@ const CreateClientForm = () => {
         setErrors(jsonErrors);
     }
 
-    const moveNext = () => {
+    const moveBack = () => {
         setUsername('');
         setEmail('');
         setPassword('');
         setRole('');
-        navigate('/clients');
+        navigate(-1);
     }
 
     const handleSubmit = async (e) => {
@@ -39,7 +39,7 @@ const CreateClientForm = () => {
             processErrors(registerResult);
         } 
         else {
-            moveNext();
+            moveBack();
         }
     };
 
@@ -74,7 +74,7 @@ const CreateClientForm = () => {
                 </div>
 
                 <div className="formButtonArea">
-                    <button onClick={moveNext}>Close</button>
+                    <button onClick={moveBack}>Close</button>
                     <button onClick={handleSubmit}>Create</button>
                 </div>
             </form>
