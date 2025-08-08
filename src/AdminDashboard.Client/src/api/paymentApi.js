@@ -5,8 +5,8 @@ import ApiRoutes from "./data/apiRoutes.js";
 class PaymentApi {
     getAll = async () => {
         var route = ApiRoutes.paymentRoute.getAll;
-        var result = new ApiResult();
-        
+
+        var result = new ApiResult();        
         const api = ApiResolver.resolveApi();
         await api.get(route)
             .then(data => 
@@ -28,9 +28,9 @@ class PaymentApi {
 
     getSingle = async (paymentId) => {
         var route = ApiRoutes.paymentRoute.getSingle;
-        route = route.replace('{paymentId}', paymentId)
+        route = route.replace('{paymentId}', paymentId);
+
         var result = new ApiResult();
-        
         const api = ApiResolver.resolveApi();
         await api.get(route)
             .then(data => 
@@ -52,11 +52,33 @@ class PaymentApi {
 
     getHistory = async (clientId) => {
         var route = ApiRoutes.paymentRoute.getHistory;
-        route = route.replace('{clientId}', clientId)
-        console.log(route);
-        
+        route = route.replace('{clientId}', clientId);
+
         var result = new ApiResult();
-        
+        const api = ApiResolver.resolveApi();
+        await api.get(route)
+            .then(data => 
+            {
+                var status = data.status;
+                var success = status === 200;
+                var data = data.data;
+                result.define(success, status, data);
+            })
+            .catch(er => 
+            {
+                var success = false;
+                var status = er.request.status;
+                var errorData = er.request.response;
+                result.define(success, status, errorData);
+            });
+        return result;
+    }
+
+    getLast = async (width) => {
+        var route = ApiRoutes.paymentRoute.getLast;
+        route = route.replace('{width}', width);
+
+        var result = new ApiResult();
         const api = ApiResolver.resolveApi();
         await api.get(route)
             .then(data => 

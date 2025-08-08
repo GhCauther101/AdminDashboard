@@ -2,8 +2,8 @@
 using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
 using AdminDashboard.Entity.Models;
+using AdminDashboard.Repository.Helpers;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace AdminDashboard.Repository.Domains;
 
@@ -79,7 +79,7 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                     Entity = entity
                 };
                 break;
-            case QueryParameterFunctionality.CLIENT:
+            case QueryParameterFunctionality.CLIENT_HISTORY:
                 var historyList = await FindByCondition(entity => entity.SourceClientId.Equals(queryParameters.EntityId.ToString()) || entity.DestinationClientId.Equals(queryParameters.EntityId.ToString()), DbContextDomain.REPOSITORY, false)
                     .OrderByDescending(e =>e.ProcessTime)
                     .SelectPayments()
@@ -93,6 +93,21 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                     Range = historyList
                 };
                 break;
+            case QueryParameterFunctionality.LAST:
+                var lastPayment = await FindAll(DbContextDomain.REPOSITORY, false)
+                    .OrderByDescending(e => e.ProcessTime)
+                    .Take(queryParameters.LastWidth)
+                    .SelectPayments()
+                    .ToListAsync();
+
+                paymentQueryResult = new PaymentQueryResult
+                {
+                    Id = Guid.NewGuid(),
+                    TriggerTime = DateTime.Now,
+                    IsSuccess = lastPayment.Count > 0,
+                    Range = lastPayment
+                };
+                break;
         }
 
         return paymentQueryResult;
@@ -102,20 +117,5 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
     {
         var pager = GetRepositoryPager(DbContextDomain.REPOSITORY);
         return new QueryPagerResult(true, pager);
-    }
-}
-
-public static class RepositoryHelper
-{
-    public static IQueryable<Payment> SelectPayments(this IQueryable<Payment> payments)
-    {
-        return payments.Select(p => new Payment
-        {
-            PaymentId = p.PaymentId,
-            Bill = p.Bill,
-            ProcessTime = p.ProcessTime,
-            SourceClient = new Client { Id = p.SourceClient.Id, UserName = p.SourceClient.UserName },
-            DestinationClient = new Client { Id = p.DestinationClient.Id, UserName = p.DestinationClient.UserName }
-        });
     }
 }

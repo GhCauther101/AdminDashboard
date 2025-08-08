@@ -2,7 +2,9 @@
 using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
 using AdminDashboard.Entity.Models;
+using AdminDashboard.Repository.Helpers;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace AdminDashboard.Repository.Domains;
 
@@ -31,7 +33,9 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
         ClientQueryResult clientQueryResult = default;
 
         if (!queryParameters.IsValid())
+        {
             return clientQueryResult;
+        }
 
         switch (queryParameters.Functionality)
         {
@@ -72,6 +76,19 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
                 {
                     IsSuccess = entity is Client,
                     Entity = entity
+                };
+                break;
+            case QueryParameterFunctionality.GET_VOLUMED:
+                var volumedClients = await FindAll(DbContextDomain.IDENTITY, false)
+                    .Include(c => c.SentPayments)
+                    .Include(c => c.RecievedPayments)
+                    .Select(c => new { PaymentSum = c.SumPayments(), ClientEntity = c })
+                    .ToListAsync();
+                volumedClients.OrderByDescending(x => x.PaymentSum);
+                clientQueryResult = new ClientQueryResult
+                {
+                    IsSuccess = volumedClients.Count > 0,
+                    Range = volumedClients.Select(x => x.ClientEntity).ToList()
                 };
                 break;
         }

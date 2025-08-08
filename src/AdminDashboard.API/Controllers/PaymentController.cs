@@ -102,17 +102,17 @@ namespace AdminDashboard.API.Controllers
 
         [Authorize(Roles = RoleScopes.UserScope)]
         [HttpGet(ApiRoutes.PaymentRoutes.GetLastRange)]
-        public async Task<IActionResult> GetLast(int lastPageWidth)
+        public async Task<IActionResult> GetLast(int width)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var paymentLastRequest = new PaymentGetLastRequest(lastPageWidth);
+            var paymentLastRequest = new PaymentGetLastRequest(width);
             var clientQueryResult = await _mediator.Send(paymentLastRequest);
             var jsonResult = clientQueryResult.ToJsonContent();
 
             if (clientQueryResult.IsSuccess)
-                return Ok(clientQueryResult.Entity);
+                return Ok(clientQueryResult.Range);
             else return BadRequest(ModelState);
         }
 

@@ -17,7 +17,8 @@ class ApiRoutes {
 
     static clientRoute = {
         'getAll' : `/clients/getAll`,
-        'getSingle' : `/clients/getSingle/{clientId}`
+        'getSingle' : `/clients/getSingle/{clientId}`,
+        'getVolumed' : `/clients/getVolumed/{width}`
     }
 
     static paymentRoute = {
@@ -26,8 +27,8 @@ class ApiRoutes {
         'delete' : `/payments/delete/{paymentId}`,
         'getAll' : `/payments/getAll`,
         'getSingle' : `/payments/getSingle/{paymentId}`,
-        'getLast' : `/payments/getLast`,
-        'getHistory': "/payments/getHistory/{clientId}"
+        'getLast' : `/payments/getLast/{width}`,
+        'getHistory': `/payments/getHistory/{clientId}`
     }
 }
 

@@ -17,6 +17,7 @@ public class ClientHandler :
       IRequestHandler<ClientGetAllRequest, ClientWebReply<IEnumerable<ClientDto>>>,
       IRequestHandler<ClientGetPageRequest, ClientWebReply<IEnumerable<ClientDto>>>,
       IRequestHandler<ClientGetSingleRequest, ClientWebReply<ClientDto>>,
+      IRequestHandler<ClientGetVolumedRequest, ClientWebReply<IEnumerable<ClientDto>>>,
       IRequestHandler<ClientGetPagerRequest, QueryPagerResult>
 {
     private readonly IMapper _mapper;
@@ -161,6 +162,22 @@ public class ClientHandler :
         catch (Exception ex)
         {
             return new QueryPagerResult(false, exception: ex);
+        }
+    }
+
+    public async Task<ClientWebReply<IEnumerable<ClientDto>>> Handle(ClientGetVolumedRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var queryParameters = new ClientQueryParameters<string>(QueryParameterFunctionality.GET_VOLUMED, lastWidth: request.width);
+            var clientQueryResult = await _repositoryManager.ClientRepository.Get(queryParameters);
+            var webReply = _mapper.Map<IEnumerable<ClientDto>>(clientQueryResult.Range);
+
+            return new ClientWebReply<IEnumerable<ClientDto>>(true, data: webReply);
+        }
+        catch (Exception ex)
+        {
+            return new ClientWebReply<IEnumerable<ClientDto>>(false, ex);
         }
     }
 }

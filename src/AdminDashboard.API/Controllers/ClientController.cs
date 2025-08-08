@@ -60,6 +60,19 @@ public class ClientController : ControllerBase
     }
 
     [Authorize(Roles = RoleScopes.UserScope)]
+    [HttpGet(ApiRoutes.ClientRoutes.GetVolumed)]
+    public async Task<IActionResult> GetVolumedClients(int width)
+    {
+        var clientGetPagerRequest = new ClientGetVolumedRequest(width);
+        var clientPagerResult = await _mediator.Send(clientGetPagerRequest);
+        var jsonResult = clientPagerResult.ToJsonContent();
+
+        if (clientPagerResult.IsSuccess)
+            return Ok(clientPagerResult.Data);
+        else return BadRequest(ModelState);
+    }
+
+    [Authorize(Roles = RoleScopes.UserScope)]
     [HttpGet(ApiRoutes.ClientRoutes.GetPager)]
     public async Task<IActionResult> GetPager()
     {

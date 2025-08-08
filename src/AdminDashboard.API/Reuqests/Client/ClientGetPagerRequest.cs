@@ -3,4 +3,4 @@ using MediatR;
 
 namespace AdminDashboard.API.Reuqests.Client;
 
-public class ClientGetPagerRequest : IRequest<QueryPagerResult>;
+public record ClientGetPagerRequest : IRequest<QueryPagerResult>;

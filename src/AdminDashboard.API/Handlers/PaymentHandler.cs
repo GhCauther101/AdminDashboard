@@ -187,7 +187,7 @@ public class PaymentHandler :
     {
         try
         {
-            var queryParameters = new PaymentQueryParameters<Guid>(QueryParameterFunctionality.CLIENT, entityId: request.clientId);
+            var queryParameters = new PaymentQueryParameters<Guid>(QueryParameterFunctionality.CLIENT_HISTORY, entityId: request.clientId);
             var clientQueryResult = await _repositoryManager.PaymentRepository.Get(queryParameters);
 
             return clientQueryResult;
