@@ -13,6 +13,8 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
     public ClientRepository(IDbContextBus dbContextBus) : base(dbContextBus)
     {}
 
+    public int ClientsCount => base.GetDbContext(DbContextDomain.IDENTITY).Set<Client>().Count();
+
     public void CreateClient(ClientCommandParameters commandParameters)
     {
         Create(commandParameters.Data, DbContextDomain.IDENTITY);
@@ -98,7 +100,7 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
 
     public async Task<QueryPagerResult> GetPager()
     {
-        var pager = GetRepositoryPager(DbContextDomain.REPOSITORY);
+        var pager = GetRepositoryPager(DbContextDomain.IDENTITY);
         return new QueryPagerResult(true, pager:pager);
     }
 }

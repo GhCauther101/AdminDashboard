@@ -16,19 +16,17 @@ public class RepositoryBase<T> where T : class
         _dbContextBus = dbContextBus as DbContextBus;
     }
 
-    private DbContext DetectDomainDbContext(DbContextDomain domain)
+    public DbContext GetDbContext(DbContextDomain domain)
     {
         return domain switch
         {
-            DbContextDomain.IDENTITY => (DbContext)_dbContextBus.IdentityContextInstance,
-            DbContextDomain.REPOSITORY => (DbContext)_dbContextBus.IdentityContextInstance,
-            DbContextDomain.EVENT => (DbContext)_dbContextBus.EventContextInstance
+            DbContextDomain.IDENTITY => (DbContext)_dbContextBus.IdentityContextInstance
         };
     }
 
     protected QueryPager GetRepositoryPager(DbContextDomain domain)
     {
-        var context = DetectDomainDbContext(DbContextDomain.IDENTITY);
+        var context = GetDbContext(DbContextDomain.IDENTITY);
         var totalCount = context.Set<T>().Count();
         var width = DbContextConfigHelper.PagerWidth;
 
@@ -40,31 +38,31 @@ public class RepositoryBase<T> where T : class
 
     protected IQueryable<T> FindAll(DbContextDomain domain, bool trackChanges)
     {
-        var repository = DetectDomainDbContext(domain);
+        var repository = GetDbContext(domain);
         return !trackChanges ? repository.Set<T>().AsNoTracking() : repository.Set<T>();
     }
 
     public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, DbContextDomain domain, bool trackChanges)
     {
-        var repository = DetectDomainDbContext(domain);
+        var repository = GetDbContext(domain);
         return !trackChanges ? repository.Set<T>().Where(expression).AsNoTracking() : repository.Set<T>().Where(expression);
     }
 
     public void Create(T entity, DbContextDomain domain)
     {
-        var repository = DetectDomainDbContext(domain);
+        var repository = GetDbContext(domain);
         repository.Set<T>().Add(entity);
     }
 
     public void Update(T entity, DbContextDomain domain)
     {
-        var repository = DetectDomainDbContext(domain);
+        var repository = GetDbContext(domain);
         repository.Set<T>().Update(entity);
     }
 
     public void Delete(T entity, DbContextDomain domain)
     {
-        var repository = DetectDomainDbContext(domain);
+        var repository = GetDbContext(domain);
         repository.Set<T>().Remove(entity);
     }
 }

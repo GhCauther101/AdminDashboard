@@ -9,6 +9,8 @@ public static class ApiRoutes
         public const string GetClientStructure = controllerBase + "/clientDisplay";
 
         public const string GetPaymentStructure = controllerBase + "/paymentDisplay";
+
+        public const string GetSnap = controllerBase + "/snap";
     }
 
     public static class AccountRoutes
@@ -24,6 +26,8 @@ public static class ApiRoutes
         public const string Login = controllerBase + "/login";
 
         public const string Logout = controllerBase + "/logout";
+
+        public const string GetStatus = controllerBase + "/getStatus";
 
         public const string UpdateClient = controllerBase + "/update";
 

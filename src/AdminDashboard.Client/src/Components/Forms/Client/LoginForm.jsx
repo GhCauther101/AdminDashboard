@@ -21,11 +21,10 @@ const LoginForm = () => {
     const moveNext = () => {
         setUsername('');
         setPassword('');
-        localStorage.setItem('loggedIn', true);
+        sessionStorage.setItem('loggedIn', true);
         window.dispatchEvent(new Event("storage"));
-        var route = localStorage.getItem("cachedPath");
-        localStorage.removeItem("cachedPath");
-        navigate(route ?? "/");
+        var route = sessionStorage.getItem('locRoute');
+        navigate(route, {replace:true})
     }
 
     const handleSubmit = async (e) => {
@@ -35,7 +34,6 @@ const LoginForm = () => {
         var authApi = new AuthApi();
         var apiResult = await authApi.login(objInstance);
         var loginResult = apiResult.parse();
-        
         if (!loginResult.isSuccess) {
             processErrors(loginResult);
         }
@@ -47,7 +45,7 @@ const LoginForm = () => {
     return (
         <div className="wrapper">
             <form>
-                <h1>LogIn</h1>
+                <h1>Log in</h1>
                 <div className="input-box">
                     <input type="text" placeholder="username" required value={userName} onChange={(e) => setUsername(e.target.value)}/>
                     {errors?.username ? plateError(errors.username) : null}

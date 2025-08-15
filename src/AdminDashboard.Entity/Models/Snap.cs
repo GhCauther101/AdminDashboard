@@ -2,9 +2,11 @@
 
 public class Snap : IEntity
 {
-    public int ClientsCount { get; set; }
-    
-    public int PaymentsCount { get; set; }
+    public int ClientCount { get; set; }
 
-    public decimal PaymentsTotalBill { get; set; }
+    public int PaymentCount { get; set; }
+
+    public decimal TotalBill { get; set; }
+
+    public decimal AverageBillStage { get; set; }
 }

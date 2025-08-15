@@ -1,11 +1,14 @@
-﻿using AdminDashboard.Entity.Event.Base;
-using AdminDashboard.Entity.Event.Command;
+﻿using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
 
 namespace AdminDashboard.Contracts.Repository;
 
 public interface IPaymentRepository : IRepository
 {
+    public int PaymentsCount { get; }
+
+    public decimal TotalBill { get; }
+
     public Task<PaymentQueryResult> Get(PaymentQueryParameters<Guid> queryParameters);
 
     public Task<QueryPagerResult> GetPager();

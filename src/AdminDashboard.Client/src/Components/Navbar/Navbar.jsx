@@ -2,19 +2,25 @@ import React, { useEffect, useState } from 'react';
 import "./navbar.css"
 
 const Navbar = () => {
-
   const [logged, setLoggedStatus] = useState(false);
 
   useEffect(() => {
-    var status = localStorage.getItem('loggedIn');
+    var status = sessionStorage.getItem('loggedIn');
     setLoggedStatus(status);
 
     const checkLoginStatus = () => {
-       setLoggedStatus(localStorage.getItem('loggedIn') === true);
+      var loggedIn = sessionStorage.getItem('loggedIn');
+
+      if (!loggedIn || loggedIn === 'false'){
+        setLoggedStatus(false);
+      } else {
+        setLoggedStatus(true);
+      }
     };
 
     window.addEventListener('storage', checkLoginStatus);
-  })
+    window.dispatchEvent(new Event("storage"));
+  }, [])
 
   return (
     <div>
@@ -36,10 +42,10 @@ const Navbar = () => {
                   </>
                 ) : (
                   <>
-                    <a href="/register">Sign up</a>
+                    <a href="/register">Register</a>
                     <a href="/login">Sign in</a>
                   </>
-              )}       
+              )}
             </div>
         </nav>
     </div>

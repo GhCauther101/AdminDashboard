@@ -102,6 +102,13 @@ public class AuthenticationController : ControllerBase
         return Ok("Logged out.");
     }
 
+    [HttpGet(ApiRoutes.AccountRoutes.GetStatus)]
+    public async Task<IActionResult> GetStatus()
+    {
+        var tokenExistence = Request.Cookies.ContainsKey("jwt");
+        return Ok(tokenExistence);
+    }
+
     [ValidateModel]
     [Authorize(Roles = RoleScopes.UserScope)]
     [HttpPut(ApiRoutes.AccountRoutes.UpdateClient)]

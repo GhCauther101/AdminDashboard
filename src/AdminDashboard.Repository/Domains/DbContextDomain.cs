@@ -2,5 +2,5 @@
 
 public enum DbContextDomain
 {
-    IDENTITY, REPOSITORY, EVENT
+    IDENTITY
 }

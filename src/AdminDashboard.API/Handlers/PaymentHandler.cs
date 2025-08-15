@@ -119,7 +119,6 @@ public class PaymentHandler :
         {
             var queryParameters = new PaymentQueryParameters<Guid>(QueryParameterFunctionality.GET_ALL);
             var clientQueryResult = await _repositoryManager.PaymentRepository.Get(queryParameters);
-            
             return clientQueryResult;
         }
         catch (Exception ex)

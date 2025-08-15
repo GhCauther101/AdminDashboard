@@ -1,18 +1,17 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import RegisterForm from "../Forms/Client/RegisterForm";
 
 function AuthRouter( { children } ) {
-    var token = localStorage.getItem("loggedIn");
-    var location = useLocation();
+    var loggedIn = sessionStorage.getItem('loggedIn');
+    var location = useLocation()
 
-    var route = location.pathname;
-    debugger  
-    if (!token) {
-        localStorage.setItem('cachedPath', route);
+    sessionStorage.setItem('locRoute', location.pathname);
+
+    if (!loggedIn || loggedIn === 'false') {
         return <RegisterForm/>;
     }
 
-    return children;
+    return children;    
 }
 
 export default AuthRouter;

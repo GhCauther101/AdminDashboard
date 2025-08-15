@@ -1,5 +1,5 @@
 .pageContainer {
-    margin: 10% 0%;
+    margin: 6% 0%;
     padding: 10px;
     display: flex;
     justify-content: center;
@@ -21,9 +21,12 @@
 
 .listContainer {
     margin: 20px 0px 20px 0px;
-    min-height: 200px;
-    max-height: 200px;
     background-color: #fff;
+}
+
+.tableArea {
+    height: 250px;
+    overflow-y: scroll;
 }
 
 .listHeader {
@@ -45,9 +48,26 @@
 }
 
 .listItem p {
+    width: 100%;
     margin: 0px 10px;
     font-size: 18px;
     font-weight: 500;
+}
+
+.entityTable {
+    width: 100%;
+    display: table;
+    border-collapse: collapse;
+}
+
+.row {
+    display: table-row;
+}
+
+.row p {
+    display: table-cell;
+    padding: 8px;
+    border: 1px solid #ccc;
 }
 
 .actionContainer {
@@ -58,8 +78,7 @@
 
 .actionContainer button {
     margin: 5px;
-    padding: 5px 19px;  
-    /* width: 200px; */
+    padding: 5px 19px;
     height: 25px;
     font-size: 16px;
     font-weight: 700;

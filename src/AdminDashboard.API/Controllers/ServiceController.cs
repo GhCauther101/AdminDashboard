@@ -1,16 +1,22 @@
-﻿using AdminDashboard.API.Routes;
+﻿using AdminDashboard.API.Reuqests.Payment;
+using AdminDashboard.API.Routes;
 using AdminDashboard.API.Scopes;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminDashboard.API.Controllers;
 
-public class StructureController : ControllerBase
+public class ServiceController : ControllerBase
 {
-    public StructureController()
-    {}
+    private readonly IMediator _mediator;
 
-    [Authorize]
+    public ServiceController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    [Authorize(Roles = RoleScopes.UserScope)]
     [HttpGet(ApiRoutes.ServiceRoutes.GetClientStructure)]
     public IActionResult GetClientStructure()
     {
@@ -32,5 +38,15 @@ public class StructureController : ControllerBase
         };
 
         return Ok(paymentDisplayProps);
+    }
+
+    [Authorize(Roles = RoleScopes.UserScope)]
+    [HttpGet(ApiRoutes.ServiceRoutes.GetSnap)]
+    public async Task<IActionResult> GetSnap()
+    {
+        var snaprequest = new ServiceGetSnap();
+        var snapResult = await _mediator.Send(snaprequest);
+        
+        return Ok(snapResult);
     }
 }

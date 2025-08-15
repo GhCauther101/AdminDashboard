@@ -38,8 +38,7 @@ const RegisterForm = () => {
 
         if (!registerResult.isSuccess) {
             processErrors(registerResult);
-        } 
-        else {
+        } else {
             moveNext();
         }
     };

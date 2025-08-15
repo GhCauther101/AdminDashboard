@@ -20,7 +20,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #ccc;
+  background: transparent;
   border-radius: 10px;
 }
 

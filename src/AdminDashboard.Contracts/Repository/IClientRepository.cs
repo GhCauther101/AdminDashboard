@@ -5,6 +5,8 @@ namespace AdminDashboard.Contracts.Repository;
 
 public interface IClientRepository : IRepository
 {
+    public int ClientsCount { get; }
+
     public Task<ClientQueryResult> Get(ClientQueryParameters<string> queryParameters);
 
     public Task<QueryPagerResult> GetPager();

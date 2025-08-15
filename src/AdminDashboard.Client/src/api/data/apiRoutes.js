@@ -10,6 +10,7 @@ class ApiRoutes {
         'register' : `/authentication/register`,
         'login' : `/authentication/login`,
         'logout' : `/authentication/logout`,
+        'getStatus': '/authentication/getStatus',
         'getRoles' : `/authentication/getRoles`,
         'update' : `/authentication/update`,
         'delete' : `/authentication/delete/{clientId}`

@@ -20,18 +20,17 @@ const LogoutForm = () => {
     }
 
     const moveNext = () => {
-        localStorage.setItem('loggedIn', false);
+        sessionStorage.setItem('loggedIn', false);
         window.dispatchEvent(new Event("storage"));
         navigate('/login');
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         var authApi = new AuthApi();
         var apiResult = await authApi.logout();
         var loginResult = apiResult.parse();
-        
+
         if (!loginResult.isSuccess) {
             processErrors(loginResult);
         }
@@ -43,13 +42,13 @@ const LogoutForm = () => {
     return (
         <div className="wrapper">
             <form>
-                <h1>LogOut</h1>
+                <h1>Log out</h1>
                 <div className="content">
                     <p>Would yoou like tou log out ?</p>
                 </div>
                 <div className="formButtonArea">
                     <button onClick={moveBack}>Close</button>
-                    <button onClick={handleSubmit}>Logout</button>
+                    <button onClick={handleSubmit}>Log out</button>
                     {errors?.general ? plateError(errors.general) : null}
                 </div>
             </form>

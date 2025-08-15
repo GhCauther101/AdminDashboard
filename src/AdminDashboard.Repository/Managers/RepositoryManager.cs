@@ -10,7 +10,6 @@ public class RepositoryManager : IRepositoryManager
 
     private IClientRepository _clientRepository;
     private IPaymentRepository _paymentRepository;
-    private IEventRepository _eventRepository;
 
     public RepositoryManager(DbContextBus dbContextBus)
     {
@@ -36,17 +35,6 @@ public class RepositoryManager : IRepositoryManager
                 _paymentRepository = new PaymentRepository(_dbContextBus);
 
             return _paymentRepository;
-        }
-    }
-
-    public IEventRepository EventRepository
-    {
-        get
-        {
-            if (_eventRepository == null)
-                _eventRepository = new EventRepository(_dbContextBus);
-
-            return _eventRepository;
         }
     }
 

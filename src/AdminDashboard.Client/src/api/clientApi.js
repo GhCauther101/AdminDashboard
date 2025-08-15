@@ -74,12 +74,12 @@ class ClientApi {
         return result;
     }
 
-    updateClient = async (updateClient) => {        
+    updateClient = async (updateClient) => {
         var route = ApiRoutes.accountRoutes.update;
         var result = new ApiResult();
 
         const api = ApiResolver.resolveApi();
-        await api.put(route, updateClient)
+        await api.put(route, updateClien)
             .then(data => 
             {
                 var status = data.status;

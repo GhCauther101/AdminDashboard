@@ -11,6 +11,8 @@ import PaymentTable from './Components/Tables/PaymentTable';
 import PaymentForm from './Components/Forms/Payment/PaymentForm';
 import PaymentDisplay from './Components/Displays/Payment/PaymentDisplay';
 import HomePage from './Components/Pages/home/HomePage.jsx';
+import AuthRouter from './Components/AuthRouter/AuthRouter.jsx';
+
 import './App.css';
 
 function App() {
@@ -19,17 +21,17 @@ function App() {
       <BrowserRouter>
           <Navbar/>
           <Routes>
-              <Route path="/" element={<HomePage/>} />
-              <Route path="clients" element={<ClientTable/>} />
-              <Route path="client" element={<ClientDisplay/>} />
-              <Route path="clientEdit" element={<EditClientForm/>} />
-              <Route path="newClient" element={<CreateClientForm/>} />
-              <Route path="payments" element={<PaymentTable/>} />
-              <Route path="payment" element={<PaymentDisplay/>} />
-              <Route path="newPayment" element={<PaymentForm/>} />            
-              <Route path="logout" element={<LogoutForm/>} />
-              <Route path="login" element={<LoginForm/>} />
-              <Route path="register" element={<RegisterForm/>} />
+            <Route path="/" element={<AuthRouter><HomePage/></AuthRouter>} />
+            <Route path="clients" element={<AuthRouter><ClientTable/></AuthRouter>} />
+            <Route path="client" element={<AuthRouter><ClientDisplay/></AuthRouter>} />
+            <Route path="clientEdit" element={<AuthRouter><EditClientForm/></AuthRouter>} />
+            <Route path="newClient" element={<AuthRouter><CreateClientForm/></AuthRouter>} />
+            <Route path="payments" element={<AuthRouter><PaymentTable/></AuthRouter>} />
+            <Route path="payment" element={<AuthRouter><PaymentDisplay/></AuthRouter>} />
+            <Route path="newPayment" element={<AuthRouter><PaymentForm/></AuthRouter>} />
+            <Route path="logout" element={<LogoutForm/>} />
+            <Route path="login" element={<LoginForm/>} />
+            <Route path="register" element={<RegisterForm/>} />
           </Routes>
       </BrowserRouter>
     </div>
