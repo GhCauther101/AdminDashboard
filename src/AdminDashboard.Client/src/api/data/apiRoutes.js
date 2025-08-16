@@ -1,9 +1,13 @@
 class ApiRoutes {
     static base = `/api`
     
+    static serviceRoute = {
+        'snap' : '/service/snap'
+    }
+
     static modelStructureRoute = {
-        'client' : `/structure/clientDisplay`,
-        'payment' : `/structure/paymentDisplay`
+        'client' : `/service/clientDisplay`,
+        'payment' : `/service/paymentDisplay`
     }
 
     static accountRoutes = {

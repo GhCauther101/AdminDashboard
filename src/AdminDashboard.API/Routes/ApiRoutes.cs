@@ -4,7 +4,7 @@ public static class ApiRoutes
 {
     public static class ServiceRoutes
     {
-        private const string controllerBase = "/structure";
+        private const string controllerBase = "/service";
 
         public const string GetClientStructure = controllerBase + "/clientDisplay";
 

@@ -8,5 +8,5 @@ public class Snap : IEntity
 
     public decimal TotalBill { get; set; }
 
-    public decimal AverageBillStage { get; set; }
+    public decimal AverageBill { get; set; }
 }

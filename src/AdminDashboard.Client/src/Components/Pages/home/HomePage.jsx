@@ -4,16 +4,35 @@ import ClientApi from '../../../api/clientApi';
 import PaymentApi from '../../../api/paymentApi';
 
 import './HomePage.css';
+import ServiceApi from '../../../api/serviceApi';
 
 const HomePage = () => {
     const navigate = useNavigate();
 
-    const [headerData, setHeaderData] = useState();
+    const [clientCount, setClientCount] = useState();
+    const [paymentCount, setPaymentCount] = useState();
+    const [totalBill, setTotalBill] = useState();
+    const [averageBill, setAverageBill] = useState();
     const [recentPayments, setRecentPayments] = useState([]);
     const [topClients, setTopClients] = useState([]);
 
     function performItemCreation(route) {
         navigate(route, { state: null });
+    }
+
+    async function getSnap() {
+        var serviceApi = new ServiceApi();
+        var snapResult = await serviceApi.getSnap();
+        var parsedResult = snapResult.parse();
+    
+        if (parsedResult.isSuccess) {
+            var snap = parsedResult.data.entity;
+
+            setClientCount(snap.clientCount ?? '-');
+            setPaymentCount(snap.paymentCount ?? '-');
+            setTotalBill(snap.totalBill ?? '-');
+            setAverageBill(snap.averageBill ?? '-');
+        }
     }
 
     async function getLastPayments() {
@@ -37,17 +56,17 @@ const HomePage = () => {
     }
 
     useEffect(() => {
-        var loggedIn = sessionStorage.getItem('loggedIn');
-                
+        getSnap();
         getLastPayments();
         getVolumedCLients();
     }, []);
 
     return (<div className="pageContainer">
         <div className="counterContainer">
-            <span>Clients: 12</span>
-            <span>Payments: 12</span>
-            <span>Avg: 12</span>
+            <span>Clients: {clientCount ?? ''}</span>
+            <span>Payments: {paymentCount ?? ''}</span>
+            <span>Total bill: {totalBill ?? ''}</span>
+            <span>Avg: {averageBill ?? ''}</span>
         </div>
         <div className="listContainer">
             <div className='listHeader'>

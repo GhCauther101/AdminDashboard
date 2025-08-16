@@ -24,9 +24,9 @@ public class ServiceHandler :
         var clientsCount = _repoManager.ClientRepository.ClientsCount;
         var paymentsCount = _repoManager.PaymentRepository.PaymentsCount;
         var paymentsBill = _repoManager.PaymentRepository.TotalBill;
-        var averageBill = paymentsBill / paymentsCount;
+        var averageBill = Math.Round(paymentsBill / paymentsCount, 2);
 
-        var snap = new Snap {ClientCount = clientsCount, PaymentCount = paymentsCount, TotalBill = paymentsBill, AverageBillStage = averageBill };
+        var snap = new Snap {ClientCount = clientsCount, PaymentCount = paymentsCount, TotalBill = paymentsBill, AverageBill = averageBill };
         return Task.FromResult(new SnapQueryResult(true, snap));
     }
 }
