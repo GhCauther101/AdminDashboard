@@ -9,7 +9,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using AdminDashboard.Entity.Models;
 
-namespace AdminDashboard.API.Services;
+namespace AdminDashboard.API.Extenssion;
 
 public static class ServiceExtenssion
 {

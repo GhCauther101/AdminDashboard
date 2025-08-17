@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package AdminDashboard.CurrencyExchange;
+option csharp_namespace = "AdminDashboard.ExchangeService";
+
+service CurrencyExchangeService {
+  rpc GetList (CurrencyListRequest) returns (CurrencyListReply);
+  rpc ConvertCurrency (ExchangeRequest) returns (ExchangeReply);
+  rpc RateCurrency (RateRequest) returns (RateReply);
+}
+
+message CurrencyListRequest {}
+
+message CurrencyRow {
+	string code = 1;
+	string title = 2;
+}
+
+message CurrencyListReply {
+  repeated CurrencyRow currencyCodes = 1;
+}
+
+message ExchangeRequest {
+  string baseCode = 1;
+  string targetCode = 2;
+}
+
+message ExchangeReply {
+  string baseCode = 1;
+  string targetCode = 2;
+  double conversionRate = 3;
+}
+
+message RateRequest {
+  string rateCode = 1;
+}
+
+message RateReply {
+  string rateCode = 1;
+  map<string, double> conversionRates = 2;
+}

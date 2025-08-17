@@ -1,5 +1,5 @@
 using AdminDashboard.API.Middleware;
-using AdminDashboard.API.Services;
+using AdminDashboard.API.Extenssion;
 using AdminDashboard.API.Validation;
 using Microsoft.AspNetCore.Mvc;
 
