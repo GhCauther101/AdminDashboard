@@ -10,7 +10,7 @@ public class CurrencyService : CurrencyExchangeService.CurrencyExchangeServiceBa
     private readonly ExchangeRateApiService _exchangeService;
 
     public CurrencyService(
-        ILogger<CurrencyService> logger, 
+        ILogger<CurrencyService> logger,
         ExchangeRateApiService exchangeService)
     {
         _logger = logger;

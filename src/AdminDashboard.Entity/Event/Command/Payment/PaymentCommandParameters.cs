@@ -1,5 +1,4 @@
-﻿using AdminDashboard.Entity.Event.Command.Common;
-using AdminDashboard.Entity.Models;
+﻿using AdminDashboard.Entity.Models;
 
 namespace AdminDashboard.Entity.Event.Command;
 

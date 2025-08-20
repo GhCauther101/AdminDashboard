@@ -1,5 +1,4 @@
 ﻿using AdminDashboard.Entity.Event.Base;
-using AdminDashboard.Entity.Event.Querying.Common;
 
 namespace AdminDashboard.Entity.Event.Querying;
 

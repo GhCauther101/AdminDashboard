@@ -80,6 +80,8 @@ public static class ApiRoutes
 
         public const string ControllerBase = controllerBase;
 
+        public const string GetServiceStatus = controllerBase + "/getStatus";
+
         public const string GetCurrencyList = controllerBase + "/getCurrencyList";
 
         public const string GetCurrencyRate = controllerBase + "/getRate/{currencyCode}";

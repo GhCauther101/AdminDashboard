@@ -117,7 +117,7 @@ public static class ServiceExtenssion
             var httpClientFactory = builder.GetService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient("CurrencyServiceTransport");
 
-            var remoteClient = new RemoteClient(httpClient);
+            var remoteClient = new RemoteClient(httpClientFactory);
             return remoteClient;
         });
     }

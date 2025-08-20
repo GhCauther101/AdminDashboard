@@ -1,5 +1,4 @@
-﻿using AdminDashboard.Entity.Event.Querying.Common;
-using AdminDashboard.Entity.Models;
+﻿using AdminDashboard.Entity.Models;
 
 namespace AdminDashboard.Entity.Event.Querying;
 

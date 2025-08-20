@@ -4,4 +4,4 @@ using MediatR;
 
 namespace AdminDashboard.API.Reuqests.Currency;
 
-public record CurrencyGetListRequest() : IRequest<CurrencyWebReply<CurrencyCodesReply>>;
+public record CurrencyGetPairRequest(string BaseCode, string TargetCode) : IRequest<CurrencyWebReply<CurrencyPairReply>>;

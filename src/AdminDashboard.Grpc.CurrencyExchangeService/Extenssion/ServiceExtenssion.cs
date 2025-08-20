@@ -11,6 +11,22 @@ public static class ServiceExtenssion
         app.MapGrpcService<CurrencyService>();
     }
 
+    public static void ConfigureCors(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", builder =>
+                builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+
+            options.AddPolicy("AllowWebApp", builder =>
+                builder.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .WithOrigins("http://localhost:55085"));
+        });
+    }
+   
     public static void AddTransport(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpClient("ExchangeApiClient", client =>

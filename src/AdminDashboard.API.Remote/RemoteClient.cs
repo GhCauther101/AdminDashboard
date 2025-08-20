@@ -1,22 +1,44 @@
 ﻿using AdminDashboard.API.Remote.Services;
 using AdminDashboard.ExchangeService;
 using AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI.Models.Reply;
+using System.Net;
 
 namespace AdminDashboard.API.Remote;
 
 public class RemoteClient
 {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public RemoteClient(HttpClient httpClient)
+    public RemoteClient(IHttpClientFactory httpClientFactory)
     {
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
+    }
+
+    public async Task<ServiceStatusReply> GetServiceAliveStatus()
+    {
+        try
+        {
+            using (var _httpClient = _httpClientFactory.CreateClient("CurrencyServiceTransport"))
+            {
+                var response = await _httpClient.GetAsync("/");
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                    return new ServiceStatusReply { IsAlive = true };
+                else
+                    return new ServiceStatusReply { IsAlive = true };
+            }
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 
     public async Task<CurrencyCodesReply> GetCurrencyListAsync()
     {
         var currencyListRequest = new CurrencyListRequest();
 
+        using (var _httpClient = _httpClientFactory.CreateClient("CurrencyServiceTransport"))
         using (var client = new CurrencyServiceClient(_httpClient.BaseAddress))
         {
             var exchangeService = client.ExchangeService;
@@ -35,6 +57,7 @@ public class RemoteClient
         var currencyRateRequest = new RateRequest();
         currencyRateRequest.RateCode = rateCode;
 
+        using (var _httpClient = _httpClientFactory.CreateClient("CurrencyServiceTransport"))
         using (var client = new CurrencyServiceClient(_httpClient.BaseAddress))
         {
             var exchangeService = client.ExchangeService;
@@ -55,6 +78,7 @@ public class RemoteClient
         pairRequest.BaseCode = baseCode;
         pairRequest.TargetCode = targetCode;
 
+        using (var _httpClient = _httpClientFactory.CreateClient("CurrencyServiceTransport"))
         using (var client = new CurrencyServiceClient(_httpClient.BaseAddress))
         {
             var exchangeService = client.ExchangeService;

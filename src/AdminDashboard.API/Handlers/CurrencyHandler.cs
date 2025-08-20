@@ -6,7 +6,8 @@ using MediatR;
 
 namespace AdminDashboard.API.Handlers;
 
-public class CurrencyHandler : 
+public class CurrencyHandler :
+    IRequestHandler<ServiceGetStatusRequest, CurrencyWebReply<ServiceStatusReply>>,
     IRequestHandler<CurrencyGetListRequest, CurrencyWebReply<CurrencyCodesReply>>,
     IRequestHandler<CurrencyGetRateRequest, CurrencyWebReply<CurrencyRateReply>>,
     IRequestHandler<CurrencyGetPairRequest, CurrencyWebReply<CurrencyPairReply>>
@@ -16,6 +17,19 @@ public class CurrencyHandler :
     public CurrencyHandler(RemoteClient remoteClient)
     {
         _remoteClient = remoteClient;        
+    }
+
+    public async Task<CurrencyWebReply<ServiceStatusReply>> Handle(ServiceGetStatusRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var reply = await _remoteClient.GetServiceAliveStatus();
+            return new CurrencyWebReply<ServiceStatusReply>(true, reply);
+        }
+        catch (Exception ex)
+        {
+            return new CurrencyWebReply<ServiceStatusReply>(false, ex);
+        }
     }
 
     public async Task<CurrencyWebReply<CurrencyCodesReply>> Handle(CurrencyGetListRequest request, CancellationToken cancellationToken)

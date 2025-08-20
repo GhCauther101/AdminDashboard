@@ -1,6 +1,8 @@
 ﻿using AdminDashboard.API.Reuqests.Currency;
 using AdminDashboard.API.Routes;
+using AdminDashboard.API.Scopes;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminDashboard.API.Controllers;
@@ -16,6 +18,19 @@ public class CurrencyController : ControllerBase
         _mediator = mediator;    
     }
 
+    [Authorize(Roles = RoleScopes.UserScope)]
+    [HttpGet(ApiRoutes.CurrencyRoutes.GetServiceStatus)]
+    public async Task<IActionResult> GetServiceStatus()
+    {
+        var currencyListRequest = new ServiceGetStatusRequest();
+        var reply = await _mediator.Send(currencyListRequest);
+
+        if (reply.IsSuccess)
+            return Ok(reply.Data);
+        else return BadRequest();
+    }
+
+    [Authorize(Roles = RoleScopes.UserScope)]
     [HttpGet(ApiRoutes.CurrencyRoutes.GetCurrencyList)]
     public async Task<IActionResult> GetCurrencyList()
     {
@@ -27,6 +42,7 @@ public class CurrencyController : ControllerBase
         else return BadRequest();
     }
 
+    [Authorize(Roles = RoleScopes.UserScope)]
     [HttpGet(ApiRoutes.CurrencyRoutes.GetCurrencyRate)]
     public async Task<IActionResult> GetCurrencyRate(string currencyCode)
     {
@@ -38,6 +54,7 @@ public class CurrencyController : ControllerBase
         else return BadRequest();
     }
 
+    [Authorize(Roles = RoleScopes.UserScope)]
     [HttpGet(ApiRoutes.CurrencyRoutes.GetPairRate)]
     public async Task<IActionResult> GetPairRate(string baseCode, string targetCode)
     {
