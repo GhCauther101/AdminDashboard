@@ -1,24 +1,23 @@
-﻿using AdminDashBoard.ExchangeService.Sdk.ExchangeRateAPI.Models.Reply;
-using AdminDashBoard.ExchangeService.Sdk.ExchangeRateAPI.Models.Request;
-using AdminDashBoard.ExchangeService.Sdk.ExchangeRateAPI.Models.Response;
-using AdminDashBoard.ExchangeService.Sdk.ExchangeRateAPI.Routes;
+﻿using AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI.Models.Reply;
+using AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI.Models.Request;
+using AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI.Models.Response;
+using AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI.Routes;
 using System.Net;
 using System.Text.Json;
 
-namespace AdminDashBoard.ExchangeService.Sdk.ExchangeRateAPI;
+namespace AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI;
 
 public class ExchangeRateApiService
 {
-    private readonly HttpClient httpClient;
-
+    private readonly HttpClient _httpClient;
     public ExchangeRateApiService(HttpClient client)
     {
-        httpClient = client;
+        _httpClient = client;
     }
 
-    public async Task<CurrencyListReply> GetCurrencyCodes()
+    public async Task<CurrencyCodesReply> GetCurrencyCodes()
     {
-        var response = await httpClient.GetAsync(ApiRoutes.CurrencyService.GetCurrencyList);
+        var response = await _httpClient.GetAsync(SdkApiRoutes.CurrencyService.GetCurrencyList);
 
         if (response.StatusCode != HttpStatusCode.OK)
             throw new Exception("Could not retrieve currency list.");
@@ -26,15 +25,15 @@ public class ExchangeRateApiService
         string responseBody = await response.Content.ReadAsStringAsync();
         using var data = JsonSerializer.Deserialize<CurrencyListResponse>(responseBody);
 
-        var reply = new CurrencyListReply();
+        var reply = new CurrencyCodesReply();
         reply.SupportedCodes = data.SupportedCodes;
         return reply;
     }
 
     public async Task<CurrencyRateReply> GetCurrencyRate(CurrencyRateRequest currencyRateRequest)
     {
-        var rateRoute = ApiRoutes.CurrencyService.GetCurrencyList.Replace("#code", currencyRateRequest.RateCode.ToUpper());
-        var response = await httpClient.GetAsync(rateRoute);
+        var rateRoute = SdkApiRoutes.CurrencyService.GetCurrencyRate.Replace("#code", currencyRateRequest.RateCode.ToUpper());
+        var response = await _httpClient.GetAsync(rateRoute);
 
         if (response.StatusCode != HttpStatusCode.OK)
             throw new Exception("Could not retrieve currency list.");
@@ -50,10 +49,10 @@ public class ExchangeRateApiService
 
     public async Task<CurrencyPairReply> GetCurrencyPairRate(CurrencyPairRequest currencyPairRequest)
     {
-        var pairRoute = ApiRoutes.CurrencyService.GetPair.Replace("#base", currencyPairRequest.BaseCode.ToUpper());
+        var pairRoute = SdkApiRoutes.CurrencyService.GetPair.Replace("#base", currencyPairRequest.BaseCode.ToUpper());
         pairRoute = pairRoute.Replace("#target", currencyPairRequest.TargetCode.ToUpper());
 
-        var response = await httpClient.GetAsync(pairRoute);
+        var response = await _httpClient.GetAsync(pairRoute);
 
         if (response.StatusCode != HttpStatusCode.OK)
             throw new Exception("Could not retrieve currency list.");

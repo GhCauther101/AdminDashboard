@@ -18,6 +18,6 @@ public class SnapQueryResult : QueryResult<Snap>
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
         base.TriggerClusterId = Guid.NewGuid();
-        base.Entity = snap;
+        Entity = snap;
     }
 }

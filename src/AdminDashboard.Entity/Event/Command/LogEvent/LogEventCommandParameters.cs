@@ -1,17 +1,18 @@
 ﻿using AdminDashboard.Entity.Event.Base;
+using AdminDashboard.Entity.Event.Command.Common;
 
 namespace AdminDashboard.Entity.Event.Command;
 
-public class TriggerEventCommandParameters : CommandParameters<TriggerEvent>
+public class LogEventCommandParameters : CommandParameters<TriggerEvent>
 {
-    public TriggerEventCommandParameters()
+    public LogEventCommandParameters()
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
         base.TriggerClusterId = Guid.NewGuid();
     }
 
-    public TriggerEventCommandParameters(
+    public LogEventCommandParameters(
         CommandType command,
         bool isSingle,
         TriggerEvent data = default,
@@ -20,9 +21,9 @@ public class TriggerEventCommandParameters : CommandParameters<TriggerEvent>
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
         base.TriggerClusterId = Guid.NewGuid();
-        base.Command = command;
-        base.IsSingle = isSingle;
-        base.Data = data;
-        base.DataCollection = dataCollection;
+        Command = command;
+        IsSingle = isSingle;
+        Data = data;
+        DataCollection = dataCollection;
     }
 }

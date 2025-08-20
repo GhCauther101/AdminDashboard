@@ -6,6 +6,8 @@ public static class ApiRoutes
     {
         private const string controllerBase = "/service";
 
+        public const string ControllerBase = controllerBase;
+
         public const string GetClientStructure = controllerBase + "/clientDisplay";
 
         public const string GetPaymentStructure = controllerBase + "/paymentDisplay";
@@ -70,5 +72,18 @@ public static class ApiRoutes
         public const string GetHistory = controllerBase + "/getHistory/{clientId}";
 
         public const string GetPager = controllerBase + "/getPager";
+    }
+
+    public static class CurrencyRoutes
+    {
+        private const string controllerBase = "/currency";
+
+        public const string ControllerBase = controllerBase;
+
+        public const string GetCurrencyList = controllerBase + "/getCurrencyList";
+
+        public const string GetCurrencyRate = controllerBase + "/getRate/{currencyCode}";
+
+        public const string GetPairRate = controllerBase + "/pair/{baseCode}/{targetCode}";
     }
 }

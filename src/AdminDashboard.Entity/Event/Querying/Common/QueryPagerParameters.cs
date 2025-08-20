@@ -1,4 +1,4 @@
-﻿namespace AdminDashboard.Entity.Event.Querying;
+﻿namespace AdminDashboard.Entity.Event.Querying.Common;
 
 public class QueryPagerParameters : QueryParameters<int>
 {

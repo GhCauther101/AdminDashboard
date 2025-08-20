@@ -2,7 +2,7 @@
 
 public static class ApiRoutes
 {
-    public static class CurrencyService
+    public static class CurrencyServiceRoutes
     {
         public const string GetCurrencyList = "/codes";
         public const string GetCurrencyRate = "/latest/#code";

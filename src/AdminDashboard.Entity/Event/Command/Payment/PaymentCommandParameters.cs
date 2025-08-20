@@ -1,4 +1,5 @@
-﻿using AdminDashboard.Entity.Models;
+﻿using AdminDashboard.Entity.Event.Command.Common;
+using AdminDashboard.Entity.Models;
 
 namespace AdminDashboard.Entity.Event.Command;
 
@@ -20,9 +21,9 @@ public class PaymentCommandParameters : CommandParameters<Payment>
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
         base.TriggerClusterId = Guid.NewGuid();
-        base.Command = command;
-        base.IsSingle = isSingle;
-        base.Data = data;
-        base.DataCollection = dataCollection;
+        Command = command;
+        IsSingle = isSingle;
+        Data = data;
+        DataCollection = dataCollection;
     }
 }

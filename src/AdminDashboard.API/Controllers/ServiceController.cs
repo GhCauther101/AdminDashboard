@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdminDashboard.API.Controllers;
 
+[ApiController]
+[Route(ApiRoutes.ServiceRoutes.ControllerBase)]
 public class ServiceController : ControllerBase
 {
     private readonly IMediator _mediator;

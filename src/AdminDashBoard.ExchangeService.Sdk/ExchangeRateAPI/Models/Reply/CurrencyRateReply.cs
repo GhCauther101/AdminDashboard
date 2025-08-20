@@ -1,4 +1,4 @@
-﻿namespace AdminDashBoard.ExchangeService.Sdk.ExchangeRateAPI.Models.Reply;
+﻿namespace AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI.Models.Reply;
 
 public class CurrencyRateReply
 {

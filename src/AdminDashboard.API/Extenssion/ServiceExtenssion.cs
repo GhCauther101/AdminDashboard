@@ -1,13 +1,14 @@
-﻿using AdminDashboard.Repository.Context;
-using AdminDashboard.Repository.Managers;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
+﻿using AdminDashboard.API.Remote;
 using AdminDashboard.Entity.Models;
+using AdminDashboard.Repository.Context;
+using AdminDashboard.Repository.Managers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.Text;
 
 namespace AdminDashboard.API.Extenssion;
 
@@ -98,6 +99,27 @@ public static class ServiceExtenssion
         });
 
         services.AddAuthorization();
+    }
+
+    public static void AddTransport(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHttpClient("CurrencyServiceTransport", client =>
+        {
+            var serviceAddress = configuration.GetSection("CurrencyServiceLink").Value.ToString();
+            client.BaseAddress = new Uri(serviceAddress);
+        });
+    }
+
+    public static void ConfigureRemoteClient(this IServiceCollection service, IConfiguration configuration)
+    {
+        service.AddTransient<RemoteClient>(builder =>
+        {
+            var httpClientFactory = builder.GetService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient("CurrencyServiceTransport");
+
+            var remoteClient = new RemoteClient(httpClient);
+            return remoteClient;
+        });
     }
 
     public static void ConfigureApplication(this IServiceCollection services)

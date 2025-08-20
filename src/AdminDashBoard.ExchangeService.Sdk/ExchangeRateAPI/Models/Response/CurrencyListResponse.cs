@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace AdminDashBoard.ExchangeService.Sdk.ExchangeRateAPI.Models.Response;
+namespace AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI.Models.Response;
 
 public class CurrencyListResponse : IDisposable
 {

@@ -1,17 +1,18 @@
 ﻿using AdminDashboard.Entity.Event.Base;
+using AdminDashboard.Entity.Event.Querying.Common;
 
 namespace AdminDashboard.Entity.Event.Querying;
 
-public class TriggerEventQueryResult : QueryResult<TriggerEvent>
+public class LogEventQueryResult : QueryResult<TriggerEvent>
 {
-    public TriggerEventQueryResult()
+    public LogEventQueryResult()
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
         base.TriggerClusterId = Guid.NewGuid();
     }
 
-    public TriggerEventQueryResult(
+    public LogEventQueryResult(
         bool isSuccess,
         TriggerEvent triggerEvent = null,
         IEnumerable<TriggerEvent> range = null,
@@ -20,8 +21,8 @@ public class TriggerEventQueryResult : QueryResult<TriggerEvent>
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
         base.TriggerClusterId = Guid.NewGuid();
-        base.Entity = triggerEvent;
-        this.Range = range;
-        this.Exception = exception;
+        Entity = triggerEvent;
+        Range = range;
+        Exception = exception;
     }
 }

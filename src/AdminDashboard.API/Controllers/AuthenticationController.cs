@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AdminDashboard.API.Controllers;
 
 [ApiController]
-[Route("api/authentication")]
+[Route(ApiRoutes.AccountRoutes.ControllerBase)]
 public class AuthenticationController : ControllerBase
 {
     private readonly UserManager<Client> _userManager;

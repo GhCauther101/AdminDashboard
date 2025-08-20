@@ -1,6 +1,6 @@
 ﻿using AdminDashboard.ExchangeService.Services;
-using AdminDashBoard.ExchangeService.Sdk.ExchangeRateAPI;
-using System.Net.Http;
+using AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI;
+using AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI.Routes;
 
 namespace AdminDashboard.ExchangeService.Extenssion;
 
@@ -11,22 +11,23 @@ public static class ServiceExtenssion
         app.MapGrpcService<CurrencyService>();
     }
 
-    public static void AddHttpClient(this IServiceCollection services)
+    public static void AddTransport(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient("ExchangeApiClient", client => 
+        services.AddHttpClient("ExchangeApiClient", client =>
         {
-            var baseAddress = AdminDashBoard.ExchangeService.Sdk.ExchangeRateAPI.Routes.ApiRoutes.CurrencyService.BaseAddress;
+            var apiKey = configuration.GetSection("exchangerApiKey").Value.ToString();
+            var baseAddress = SdkApiRoutes.CurrencyService.BaseAddress.Replace("API-KEY", apiKey);
             client.BaseAddress = new Uri(baseAddress);
         });
     }
 
-    public static void AddExchanger(this IServiceCollection services, IConfiguration configuration)
+    public static void AddExchanger(this IServiceCollection services)
     {
         services.AddTransient<ExchangeRateApiService>(builder => 
         { 
-            var httpClient = builder.GetService<HttpClient>();
-            var apiKey = configuration.GetSection("exchangerApiKey").ToString();
-
+            var httpClientFactory = builder.GetService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient("ExchangeApiClient");
+            
             var exchanger = new ExchangeRateApiService(httpClient);
             return exchanger;
         });

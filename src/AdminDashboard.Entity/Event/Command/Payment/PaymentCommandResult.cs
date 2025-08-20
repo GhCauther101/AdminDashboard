@@ -1,4 +1,5 @@
-﻿using AdminDashboard.Entity.Models;
+﻿using AdminDashboard.Entity.Event.Command.Common;
+using AdminDashboard.Entity.Models;
 
 namespace AdminDashboard.Entity.Event.Command;
 
@@ -16,8 +17,8 @@ public class PaymentCommandResult : CommandResult<Payment>
         this.Id = Guid.NewGuid();
         this.TriggerTime = DateTime.Now;
         this.TriggerClusterId = Guid.NewGuid();
-        this.Command = command;
-        this.IsSuccess = isSuccess;
-        this.Exception = ex;
+        Command = command;
+        IsSuccess = isSuccess;
+        Exception = ex;
     }
 }

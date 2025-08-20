@@ -1,7 +1,7 @@
 ﻿using AdminDashboard.Entity.Event.Base;
 using System.Text.Json.Serialization;
 
-namespace AdminDashboard.Entity.Event.Command;
+namespace AdminDashboard.Entity.Event.Command.Common;
 
 public class CommandResult<T> : TriggerEvent
 {

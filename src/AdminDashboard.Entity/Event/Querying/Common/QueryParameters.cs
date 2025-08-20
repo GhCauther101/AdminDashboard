@@ -1,7 +1,7 @@
 ﻿using AdminDashboard.Entity.Event.Base;
 using System.Text.Json.Serialization;
 
-namespace AdminDashboard.Entity.Event.Querying;
+namespace AdminDashboard.Entity.Event.Querying.Common;
 
 public class QueryParameters<T> : TriggerEvent
 {
@@ -46,7 +46,7 @@ public class QueryParameters<T> : TriggerEvent
             QueryParameterFunctionality.GET_ALL => true,
             QueryParameterFunctionality.GET_VOLUMED => true,
             QueryParameterFunctionality.LAST => true,
-            QueryParameterFunctionality.PAGE => (RangeStart > 0) && (RangeWidth > 0),
+            QueryParameterFunctionality.PAGE => RangeStart > 0 && RangeWidth > 0,
             QueryParameterFunctionality.SINGLE => isSingleEnabled(),
             QueryParameterFunctionality.GROUP => isGroupEnabled()
         };

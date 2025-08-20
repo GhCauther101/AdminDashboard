@@ -1,22 +1,23 @@
 ﻿using AdminDashboard.Entity.Event.Base;
+using AdminDashboard.Entity.Event.Command.Common;
 
 namespace AdminDashboard.Entity.Event.Command;
 
-public class TriggerEventCommandResult : CommandResult<TriggerEvent>
+public class LogEventCommandResult : CommandResult<TriggerEvent>
 {
-    public TriggerEventCommandResult()
+    public LogEventCommandResult()
     {
         this.Id = Guid.NewGuid();
         this.TriggerTime = DateTime.Now;
         this.TriggerClusterId = Guid.NewGuid();
     }
 
-    public TriggerEventCommandResult(CommandType command, bool isSuccess)
+    public LogEventCommandResult(CommandType command, bool isSuccess)
     {
         this.Id = Guid.NewGuid();
         this.TriggerTime = DateTime.Now;
         this.TriggerClusterId = Guid.NewGuid();
-        this.Command = command;
-        this.IsSuccess = isSuccess;
+        Command = command;
+        IsSuccess = isSuccess;
     }
 }

@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AdminDashboard.API.Remote\AdminDashboard.API.Remote.csproj" />
     <ProjectReference Include="..\AdminDashboard.Repository\AdminDashboard.Repository.csproj" />
   </ItemGroup>
 

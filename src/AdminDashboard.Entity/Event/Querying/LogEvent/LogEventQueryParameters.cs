@@ -1,15 +1,17 @@
-﻿namespace AdminDashboard.Entity.Event.Querying;
+﻿using AdminDashboard.Entity.Event.Querying.Common;
 
-public class TriggerEventQueryParameters : QueryParameters<int>
+namespace AdminDashboard.Entity.Event.Querying;
+
+public class LogEventQueryParameters : QueryParameters<int>
 {
-    public TriggerEventQueryParameters()
+    public LogEventQueryParameters()
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
         base.TriggerClusterId = Guid.NewGuid();
     }
 
-    public TriggerEventQueryParameters(
+    public LogEventQueryParameters(
         QueryParameterFunctionality functionality,
         int rangeStart = 0,
         int rangeWidth = 0,
@@ -19,10 +21,10 @@ public class TriggerEventQueryParameters : QueryParameters<int>
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
         base.TriggerClusterId = Guid.NewGuid();
-        base.Functionality = functionality;
-        base.RangeStart = rangeStart;
-        base.RangeWidth = rangeWidth;
-        base.EntityId = entityId;
-        base.EntitiesGroup = entitiesGroup;
+        Functionality = functionality;
+        RangeStart = rangeStart;
+        RangeWidth = rangeWidth;
+        EntityId = entityId;
+        EntitiesGroup = entitiesGroup;
     }
 }

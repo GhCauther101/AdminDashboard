@@ -1,4 +1,4 @@
-﻿using AdminDashboard.Entity.Event.Querying;
+﻿using AdminDashboard.Entity.Event.Querying.Common;
 using MediatR;
 
 namespace AdminDashboard.API.Reuqests.Client;

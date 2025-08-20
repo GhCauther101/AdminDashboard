@@ -1,8 +1,5 @@
-using AdminDashBoard.ExchangeService.Sdk.ExchangeRateAPI;
-using AdminDashBoard.ExchangeService.Sdk.ExchangeRateAPI.Models.Request;
-using Google.Protobuf;
-using Google.Protobuf.Collections;
-using Google.Protobuf.Reflection;
+using AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI;
+using AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI.Models.Request;
 using Grpc.Core;
 
 namespace AdminDashboard.ExchangeService.Services;
@@ -41,19 +38,6 @@ public class CurrencyService : CurrencyExchangeService.CurrencyExchangeServiceBa
         return reply;
     }
 
-    public override async Task<ExchangeReply> ConvertCurrency(ExchangeRequest request, ServerCallContext context)
-    {
-        var currencyPairReuqest = new CurrencyPairRequest(request.BaseCode, request.TargetCode);
-        var exchangeReply = await _exchangeService.GetCurrencyPairRate(currencyPairReuqest);
-        var reply = new ExchangeReply();
-
-        reply.BaseCode = exchangeReply.BaseCode;
-        reply.TargetCode = exchangeReply.TargetCode;
-        reply.ConversionRate = exchangeReply.ConversionRate;
-
-        return reply;
-    }
-
     public override async Task<RateReply> RateCurrency(RateRequest request, ServerCallContext context)
     {
         var currencyRateReuqest = new CurrencyRateRequest(request.RateCode);
@@ -66,6 +50,19 @@ public class CurrencyService : CurrencyExchangeService.CurrencyExchangeServiceBa
         {
             reply.ConversionRates.Add(conversionRate.Key, conversionRate.Value);
         }
+
+        return reply;
+    }
+
+    public override async Task<ExchangeReply> GetPairRate(ExchangeRequest request, ServerCallContext context)
+    {
+        var currencyPairReuqest = new CurrencyPairRequest(request.BaseCode, request.TargetCode);
+        var exchangeReply = await _exchangeService.GetCurrencyPairRate(currencyPairReuqest);
+        var reply = new ExchangeReply();
+
+        reply.BaseCode = exchangeReply.BaseCode;
+        reply.TargetCode = exchangeReply.TargetCode;
+        reply.ConversionRate = exchangeReply.ConversionRate;
 
         return reply;
     }

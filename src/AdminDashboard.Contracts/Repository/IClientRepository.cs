@@ -1,5 +1,6 @@
 ﻿using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;
+using AdminDashboard.Entity.Event.Querying.Common;
 
 namespace AdminDashboard.Contracts.Repository;
 
