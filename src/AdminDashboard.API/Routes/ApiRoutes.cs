@@ -12,6 +12,8 @@ public static class ApiRoutes
 
         public const string GetPaymentStructure = controllerBase + "/paymentDisplay";
 
+        public const string GetCurrencyStructure = controllerBase + "/currencyDisplay";
+
         public const string GetSnap = controllerBase + "/snap";
     }
 

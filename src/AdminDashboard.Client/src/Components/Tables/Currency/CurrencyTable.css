@@ -1,0 +1,65 @@
+.baseContainer {
+    top: 7%;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+}
+
+.baseSelectArea {
+    position: relative;
+}
+
+.baseTitle {
+    font-size: 20px;
+    margin: 5px 10px;
+}
+
+.baseRange {
+    display: flex;
+    justify-content: space-between;
+}
+
+.baseRange select {
+    margin: 10px;
+    height: 40px;
+}
+
+.baseRange button {
+    margin: 10px;
+    width: 150px;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: 700;
+    background-color: #aaaaaa;
+}
+
+.baseRange button:active {
+    background-color: #ccc;
+}
+
+.baseRange button:hover {
+    background-color: #cbcbcb;
+}
+
+.relateArea {
+    position: relative;
+}
+
+.relateTitle {
+    font-size: 20px;
+    margin: 10px;
+}
+
+.relateTable {
+    display: flex;
+    justify-content: center;
+}
+
+table {
+    margin: 10px;
+    width: 96%;
+    top: 0;
+}

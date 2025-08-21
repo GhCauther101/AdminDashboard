@@ -1,0 +1,93 @@
+.wrapper {
+    width: 420px;
+    background-color: #595959;
+    color: #fff;
+}
+
+.headerBox{
+    width: 100%;
+    font-size: 36px;
+    display: flex;
+}
+
+.headerBox .icon {
+    margin: 0 15px;
+}
+
+.headerBox .icon :hover {
+    color: rgb(163, 163, 163);
+    cursor: pointer;
+}
+
+.displayBox {
+    width: 100%;
+    display: flex;
+    margin: 10 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+
+.hdrPrgContainer {
+    display: flex;
+    justify-content: left;
+}
+
+.hdrPrgContainer p {
+    margin: 0px 10px;
+    text-align: left;
+}
+
+.inputBox .hdrPrgContainer{
+    margin: 5px 70px;
+    font-size: 26px;
+}
+
+.inputBox .val{
+    margin: 10px 90px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.inputBox .val :hover{
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.inputBox .val p {
+    margin: 0px 10px;
+}
+
+.idBox {
+    margin: 0px 3px 10px 60px;
+    font-size: 14px;
+}
+
+.paymentsContainer .hdrPrgContainer{
+    margin: 10px 70px;
+    font-size: 26px;
+}
+
+.paymentsList {
+    margin: 10px 70px;
+    max-height: 150px;
+    overflow-y: scroll;
+    background: #8f8f8f;
+    padding: 2px;
+    border-radius: 5px;
+}
+
+.paymentRow {
+    display: flex;
+    justify-content: space-between;
+    margin: 2px 10px;
+    font-size: 20px;
+}
+
+.titleCLientId {
+    font-size: 16px;
+}
+
+p {
+    cursor: default;
+}

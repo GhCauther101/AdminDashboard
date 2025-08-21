@@ -7,7 +7,7 @@ import { ImArrowRight } from "react-icons/im";
 import { ImArrowLeft } from "react-icons/im";
 import { MdEmail } from "react-icons/md";
 
-import "../display.css";
+import "./ClientDisplay.css";
 import PaymentApi from "../../../api/paymentApi";
 
 const ClientDisplay = () => {

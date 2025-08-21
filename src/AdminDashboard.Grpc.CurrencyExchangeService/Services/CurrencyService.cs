@@ -30,8 +30,7 @@ public class CurrencyService : CurrencyExchangeService.CurrencyExchangeServiceBa
          
             var currencyRowItem = new CurrencyRow();
             currencyRowItem.Code = code;
-            currencyRowItem.Title = title;
-            
+            currencyRowItem.Title = title;            
             reply.CurrencyCodes.Add(currencyRowItem);
         }
 

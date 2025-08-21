@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ModelStructureApi from "../../api/modelStructureApi.js";
-import PaymentApi from "../../api/paymentApi.js";
+import ModelStructureApi from "../../../api/modelStructureApi.js";
+import PaymentApi from "../../../api/paymentApi.js";
 
 import "./table.css"
 

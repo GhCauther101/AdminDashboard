@@ -41,13 +41,25 @@ public class ServiceController : ControllerBase
 
         return Ok(paymentDisplayProps);
     }
+    
+    [Authorize(Roles = RoleScopes.UserScope)]
+    [HttpGet(ApiRoutes.ServiceRoutes.GetCurrencyStructure)]
+    public IActionResult GetCurrencyTableStructure()
+    {
+        var currencyTableProps = new string[]
+        {
+            "", "code", "country", "rate"
+        };
+
+        return Ok(currencyTableProps);
+    }
 
     [Authorize(Roles = RoleScopes.UserScope)]
     [HttpGet(ApiRoutes.ServiceRoutes.GetSnap)]
     public async Task<IActionResult> GetSnap()
     {
-        var snaprequest = new ServiceGetSnap();
-        var snapResult = await _mediator.Send(snaprequest);
+        var snapRequest = new ServiceGetSnap();
+        var snapResult = await _mediator.Send(snapRequest);
         
         return Ok(snapResult);
     }

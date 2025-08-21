@@ -43,12 +43,10 @@ public class QueryParameters<T> : TriggerEvent
 
         bool result = Functionality switch
         {
-            QueryParameterFunctionality.GET_ALL => true,
-            QueryParameterFunctionality.GET_VOLUMED => true,
-            QueryParameterFunctionality.LAST => true,
             QueryParameterFunctionality.PAGE => RangeStart > 0 && RangeWidth > 0,
             QueryParameterFunctionality.SINGLE => isSingleEnabled(),
-            QueryParameterFunctionality.GROUP => isGroupEnabled()
+            QueryParameterFunctionality.GROUP => isGroupEnabled(),
+            _ => true
         };
 
         return result;

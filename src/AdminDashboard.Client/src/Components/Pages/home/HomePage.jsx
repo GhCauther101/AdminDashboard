@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ClientApi from '../../../api/clientApi';
 import PaymentApi from '../../../api/paymentApi';
+import ServiceApi from '../../../api/serviceApi';
 
 import './HomePage.css';
-import ServiceApi from '../../../api/serviceApi';
 
 const HomePage = () => {
     const navigate = useNavigate();

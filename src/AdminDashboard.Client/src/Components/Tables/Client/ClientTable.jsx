@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ModelStructureApi from "../../api/modelStructureApi.js";
-import ClientApi from "../../api/clientApi.js";
-import Popup from "../Popups/Popup.jsx";
+import ModelStructureApi from "../../../api/modelStructureApi.js";
+import ClientApi from "../../../api/clientApi.js";
+import Popup from "../../Popups/Popup.jsx";
 
 import "./table.css";
 

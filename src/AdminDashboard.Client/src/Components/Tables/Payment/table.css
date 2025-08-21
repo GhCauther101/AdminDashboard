@@ -1,0 +1,94 @@
+.headerArea {
+    display:flex;
+    width: 90vw;
+    left: 0;
+    margin: 60px 60px 60px 60px;
+}
+
+.tableWrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+table {
+    position: absolute;
+    margin: 10px;
+    border-collapse: collapse;
+    flex-direction: column;
+    top: 100px;
+    width: 90%;
+}
+
+th, td {
+    text-align: center;
+    border-bottom: 1px solid #DDD;
+}
+
+table th {
+    color: #DDD;
+    background-color: #222;
+}
+
+table, th, td {
+    border-bottom: 1px solid;
+    padding: 6px 8px;
+}
+
+tr:hover {
+    background-color: #838383;
+}
+
+.tableServiceButton {
+    border-radius: 15px;
+    border: 0;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    width: 100px;
+    height: 20px;
+    margin: 5px 10px;
+}
+
+.tableServiceButton:hover {
+    box-shadow:  0 12px 16px 0 #00000057;
+}
+
+.tableServiceButton:focus {
+    outline: none;
+}
+
+.headerLabel {
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 800em;
+    vertical-align:middle;
+    padding: 5px 0px;
+}
+
+.tableCreateButton {
+    float: right;
+    justify-content: space-between;
+    background-color: #5cfc00e7;
+}
+
+.tableEditButton {
+    background-color: #fc6f03;
+}
+
+.tableEditButton:active {
+    background-color: #ff7d19;
+}
+
+.tableDeleteButton {
+    background-color: #ff2f00;
+}
+
+.tableDeleteButton:active {
+    background-color: #ff4319;
+}
+
+.tableRow:hover {
+    cursor:pointer;
+}

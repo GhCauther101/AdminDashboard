@@ -1,10 +1,10 @@
 import { useNavigate, useLocation} from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { FaMoneyBillAlt } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 
-import "../display.css";
+import "./PaymentDisplay.css";
 
 const PaymentDisplay = () => {
     const navigate = useNavigate();

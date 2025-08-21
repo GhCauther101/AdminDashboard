@@ -7,7 +7,8 @@ class ApiRoutes {
 
     static modelStructureRoute = {
         'client' : `/service/clientDisplay`,
-        'payment' : `/service/paymentDisplay`
+        'payment' : `/service/paymentDisplay`,
+        'currency' : '/service/currencyDisplay'
     }
 
     static accountRoutes = {
@@ -34,6 +35,13 @@ class ApiRoutes {
         'getSingle' : `/payments/getSingle/{paymentId}`,
         'getLast' : `/payments/getLast/{width}`,
         'getHistory': `/payments/getHistory/{clientId}`
+    }
+
+    static currencyRoute = {
+        'getStatus' : '/currency/getStatus',
+        'getCurrencyList' : '/currency/getCurrencyList',
+        'getCurrencyRate' : '/currency/getRate/{currencyCode}',
+        'getPairRate' : '/currency/pair/{baseCode}/{targetCode}'
     }
 }
 
