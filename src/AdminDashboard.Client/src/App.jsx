@@ -13,6 +13,7 @@ import PaymentDisplay from './Components/Displays/Payment/PaymentDisplay';
 import CurrencyTable from './Components/Tables/Currency/CurrencyTable.jsx';
 import HomePage from './Components/Pages/home/HomePage.jsx';
 import AuthRouter from './Components/AuthRouter/AuthRouter.jsx';
+import PairCurrencyDisplay from './Components/Displays/Currency/PairCurrencyDisplay.jsx';
 
 import './App.css';
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="payment" element={<AuthRouter><PaymentDisplay/></AuthRouter>} />
             <Route path="newPayment" element={<AuthRouter><PaymentForm/></AuthRouter>} />
             <Route path="currency" element={<AuthRouter><CurrencyTable/></AuthRouter>} />
+            <Route path="currencyConvert" element={<AuthRouter><PairCurrencyDisplay/></AuthRouter>} />
             <Route path="logout" element={<LogoutForm/>} />
             <Route path="login" element={<LoginForm/>} />
             <Route path="register" element={<RegisterForm/>} />

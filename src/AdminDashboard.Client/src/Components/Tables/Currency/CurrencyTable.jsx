@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { replace, useNavigate } from 'react-router-dom';
 import ModelStructureApi from '../../../api/modelStructureApi';
 import CurrencyApi from '../../../api/currencyApi';
 import CurrencyFlag from 'react-currency-flags';
@@ -6,7 +7,8 @@ import CurrencyFlag from 'react-currency-flags';
 import './CurrencyTable.css'
 
 const CurrencyTable = () => {
-    const [hasColumns, setHasColumns] = useState(false)
+    const navigate = useNavigate();
+    const [hasColumns, setHasColumns] = useState(false);
     const [columns, setColumns] = useState([]);
     const [currencyList, setCurrencyList] = useState([]);
     const [currentCurrency, setCurrentCurrency] = useState();
@@ -53,7 +55,7 @@ const CurrencyTable = () => {
         data.supportedCodes.map((priced, i) => {
             resultCodes[i] = [priced[0], priced[1], undefined]
         });
-        // debugger
+
         setCurrencyList(resultCodes);
     }
 
@@ -84,6 +86,10 @@ const CurrencyTable = () => {
         });
 
         setCurrencyList(currencies);
+    }
+
+    async function pairConvert() {
+        navigate('/currencyConvert', { replace: true })
     }
 
     function displayColumns() {
@@ -120,6 +126,7 @@ const CurrencyTable = () => {
                     {currencyList.map(([code, title]) => { return <option key={code} value={code}>{code} {title}</option> } )}
                 </select>
                 <button className="convertButton" onClick={rateCurrency}>Rate</button>
+                <button className="convertButton" onClick={pairConvert}>Convert</button>
             </div>
         </div>
 
