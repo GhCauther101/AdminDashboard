@@ -10,8 +10,8 @@ services:
     environment:
       - ConnectionString__pgConnection=Host=db;Port=5432;Database=AdminDashboard;Username=admin;Password=secret
       - JwtSettings__Key=msdafndsfnopnweoiunb8vsalkmdfv90fq3fiqw
-      - ENV ASPNETCORE_URLS http://+:8080
       - EXCHANGE_SERVICE_URL=exchange_service:5001
+      - ENV ASPNETCORE_URLS https://+:8080
     depends_on:
       - db
       - exchange_service

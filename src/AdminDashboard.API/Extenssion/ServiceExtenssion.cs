@@ -1,19 +1,56 @@
 ﻿using AdminDashboard.API.Remote;
+using AdminDashboard.API.Validation;
 using AdminDashboard.Entity.Models;
 using AdminDashboard.Repository.Context;
 using AdminDashboard.Repository.Managers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace AdminDashboard.API.Extenssion;
 
 public static class ServiceExtenssion
 {
+    public static void ResolveServiceEndpoints(this IWebHostBuilder webHostBuilder, IConfiguration configuration)
+    {
+        var servicePort = int.Parse(configuration.GetSection("ServicePort").Value.ToString());
+        var healthPort = int.Parse(configuration.GetSection("HealthPort").Value.ToString());
+        var certPath = configuration["ASPNETCORE_Kestrel:Certificates:Default:Path"];
+        var certPassword = configuration["ASPNETCORE_Kestrel:Certificates:Default:Password"];
+
+        webHostBuilder.ConfigureKestrel(options =>
+        {
+            options.ListenAnyIP(servicePort, listenOptions =>
+            {
+                listenOptions.UseHttps(certPath, certPassword);
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+
+            options.ListenAnyIP(healthPort, listenOptions =>
+            {
+                listenOptions.UseHttps(certPath, certPassword);
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+
+            var cert = new X509Certificate2(certPath, certPassword);
+
+            options.ConfigureHttpsDefaults(h =>
+            {
+                h.ClientCertificateMode = ClientCertificateMode.AllowCertificate;
+                h.CheckCertificateRevocation = false;
+                h.ServerCertificate = cert;
+            });
+        });
+    }
+    
     public static void ConfigureCors(this IServiceCollection services)
     {
         services.AddCors(options =>
@@ -125,6 +162,19 @@ public static class ServiceExtenssion
     {
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+    }
+
+    public static void ConfigureModelValidation(this IServiceCollection services)
+    {
+        services.AddControllers(options =>
+        {
+            options.Filters.Add<ValidateModelAttribute>();
+        });
+        
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
     }
 
     public static void ConfigureSwaggerGen(this IServiceCollection services)

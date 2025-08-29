@@ -1,42 +1,37 @@
 using AdminDashboard.API.Middleware;
 using AdminDashboard.API.Extenssion;
-using AdminDashboard.API.Validation;
-using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
-var config = builder.Configuration;
+var configuration = builder.Configuration;
 
-builder.Services.ConfigureDatabaseContext(config);
-builder.Services.ConfigureIdentity();
-builder.Services.ConfigureJWT(config);
-builder.Services.AddTransport(config);
-builder.Services.ConfigureRemoteClient(config);
+//configure app 
+builder.Services.ConfigureDatabaseContext(configuration);
 builder.Services.ConfigureApplication();
+builder.Services.ConfigureModelValidation();
 
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<ValidateModelAttribute>();
-});
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-    options.SuppressModelStateInvalidFilter = true;
-});
-
+//configure web host
+builder.WebHost.ResolveServiceEndpoints(configuration);
 builder.Services.ConfigureCors();
-builder.Services.AddHttpClient();
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(configuration);
+builder.Services.AddTransport(configuration);
+builder.Services.ConfigureRemoteClient(configuration);
+
+//configure api test utils
 builder.Services.AddMvc();
 builder.Services.AddOpenApi();
 builder.Services.ConfigureSwaggerGen();
 
 var app = builder.Build();
-app.Services.TryMigrateDatabase(config);
+
+app.Services.TryMigrateDatabase(configuration);
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-app.UseCors("AllowWebApp");
+app.UseCors("CorsPolicy");
 app.UseRouting();
 app.UseHttpsRedirection();
 app.UseMiddleware<RequestBrokerMiddleware>();
