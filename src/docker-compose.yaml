@@ -1,0 +1,67 @@
+name: admin_dashboard
+
+services:
+  api:
+    container_name: api
+    image: admin_daashboard.api
+    build: 
+      context: .
+      dockerfile: AdminDashboard.API/Dockerfile
+    environment:
+      - ConnectionString__pgConnection=Host=db;Port=5432;Database=AdminDashboard;Username=admin;Password=secret
+      - JwtSettings__Key=msdafndsfnopnweoiunb8vsalkmdfv90fq3fiqw
+      - ENV ASPNETCORE_URLS http://+:8080
+      - EXCHANGE_SERVICE_URL=exchange_service:5001
+    depends_on:
+      - db
+      - exchange_service
+    restart: always
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./certs:/certs:ro
+
+  exchange_service:
+    container_name: exchange_service
+    image: admin_daashboard.exchange_service
+    build:
+      context: .
+      dockerfile: AdminDashboard.ExchangeService/Dockerfile
+    environment:
+      - ExchangerApiKey=b61d3945455dea839d0998c1
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=ex_service
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/certs/http-cert.pfx
+    ports:
+      - '5000:5000'
+      - '5001:5001'
+    volumes:
+      - ./certs:/certs:ro
+
+  db:
+    container_name: db
+    image: postgres:16
+    environment:
+      - POSTGRES_DB=AdminDashboard
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=secret
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    ports: 
+      - "8082:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: qweqwe@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: test123
+    volumes:      
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  postgres_data:
+  pgadmin_data:

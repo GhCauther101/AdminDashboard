@@ -8,10 +8,12 @@ namespace AdminDashboard.API.Remote;
 public class RemoteClient
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly string _baseAddress;
 
-    public RemoteClient(IHttpClientFactory httpClientFactory)
+    public RemoteClient(IHttpClientFactory httpClientFactory, string baseAddress)
     {
         _httpClientFactory = httpClientFactory;
+        _baseAddress = baseAddress;
     }
 
     public async Task<ServiceStatusReply> GetServiceAliveStatus()
@@ -25,7 +27,7 @@ public class RemoteClient
                 if (response.StatusCode == HttpStatusCode.OK)
                     return new ServiceStatusReply { IsAlive = true };
                 else
-                    return new ServiceStatusReply { IsAlive = true };
+                    return new ServiceStatusReply { IsAlive = false };
             }
         }
         catch (Exception ex)
@@ -36,60 +38,77 @@ public class RemoteClient
 
     public async Task<CurrencyCodesReply> GetCurrencyListAsync()
     {
-        var currencyListRequest = new CurrencyListRequest();
-
-        using (var _httpClient = _httpClientFactory.CreateClient("CurrencyServiceTransport"))
-        using (var client = new CurrencyServiceClient(_httpClient.BaseAddress))
+        try
         {
-            var exchangeService = client.ExchangeService;
-            var reply = await exchangeService.GetListAsync(currencyListRequest);
+            var currencyListRequest = new CurrencyListRequest();
 
-            return new CurrencyCodesReply
+            using (var client = new CurrencyServiceClient(_baseAddress))
             {
-                SupportedCodes = reply.CurrencyCodes
-                    .Select(x => new[] { x.Code, x.Title })
-            };
+                var exchangeService = client.ExchangeService;
+                var reply = await exchangeService.GetListAsync(currencyListRequest);
+
+                return new CurrencyCodesReply
+                {
+                    SupportedCodes = reply.CurrencyCodes
+                        .Select(x => new[] { x.Code, x.Title })
+                };
+            }
         }
+        catch (Exception ex) {
+            throw ex;
+        }        
     }
 
     public async Task<CurrencyRateReply> GetCurrencyRateAsync(string rateCode)
     {
-        var currencyRateRequest = new RateRequest();
-        currencyRateRequest.RateCode = rateCode;
-
-        using (var _httpClient = _httpClientFactory.CreateClient("CurrencyServiceTransport"))
-        using (var client = new CurrencyServiceClient(_httpClient.BaseAddress))
+        try 
         {
-            var exchangeService = client.ExchangeService;
-            var reply = await exchangeService.RateCurrencyAsync(currencyRateRequest);
+            var currencyRateRequest = new RateRequest();
+            currencyRateRequest.RateCode = rateCode;
 
-            return new CurrencyRateReply
+            using (var client = new CurrencyServiceClient(_baseAddress))
             {
-                RateCode = reply.RateCode,
-                ConversionRates = reply.ConversionRates
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
-            };
+                var exchangeService = client.ExchangeService;
+                var reply = await exchangeService.RateCurrencyAsync(currencyRateRequest);
+
+                return new CurrencyRateReply
+                {
+                    RateCode = reply.RateCode,
+                    ConversionRates = reply.ConversionRates
+                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            throw ex;
         }
     }
 
     public async Task<CurrencyPairReply> GetPairRateAsync(string baseCode, string targetCode)
     {
-        var pairRequest = new ExchangeRequest();
-        pairRequest.BaseCode = baseCode;
-        pairRequest.TargetCode = targetCode;
-
-        using (var _httpClient = _httpClientFactory.CreateClient("CurrencyServiceTransport"))
-        using (var client = new CurrencyServiceClient(_httpClient.BaseAddress))
+        try 
         {
-            var exchangeService = client.ExchangeService;
-            var reply = await exchangeService.GetPairRateAsync(pairRequest);
+            var pairRequest = new ExchangeRequest();
+            pairRequest.BaseCode = baseCode;
+            pairRequest.TargetCode = targetCode;
 
-            return new CurrencyPairReply
+            using (var client = new CurrencyServiceClient(_baseAddress))
             {
-                BaseCode = reply.BaseCode,
-                TargetCode = reply.TargetCode,
-                ConversionRate = reply.ConversionRate
-            };
+                var exchangeService = client.ExchangeService;
+                var reply = await exchangeService.GetPairRateAsync(pairRequest);
+
+                return new CurrencyPairReply
+                {
+                    BaseCode = reply.BaseCode,
+                    TargetCode = reply.TargetCode,
+                    ConversionRate = reply.ConversionRate
+                };
+            }
+        }
+        catch(Exception ex)
+        {
+            throw ex;
         }
     }
 }

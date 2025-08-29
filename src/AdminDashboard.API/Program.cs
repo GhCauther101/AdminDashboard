@@ -29,8 +29,8 @@ builder.Services.AddOpenApi();
 builder.Services.ConfigureSwaggerGen();
 
 var app = builder.Build();
+app.Services.TryMigrateDatabase(config);
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

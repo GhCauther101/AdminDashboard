@@ -10,6 +10,7 @@ namespace AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI;
 public class ExchangeRateApiService
 {
     private readonly HttpClient _httpClient;
+
     public ExchangeRateApiService(HttpClient client)
     {
         _httpClient = client;
@@ -63,7 +64,7 @@ public class ExchangeRateApiService
         var reply = new CurrencyPairReply();
         reply.BaseCode = currencyPairRequest.BaseCode;
         reply.TargetCode = currencyPairRequest.TargetCode;
-        reply.ConversionRate = (double)data.ConversionRate;
+        reply.ConversionRate = (double)data.ConversionRate;        
         return reply;
     }
 }

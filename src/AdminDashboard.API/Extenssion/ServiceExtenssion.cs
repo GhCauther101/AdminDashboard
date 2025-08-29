@@ -33,12 +33,10 @@ public static class ServiceExtenssion
     public static void ConfigureDatabaseContext(this IServiceCollection services, IConfiguration configuration)
     {
         var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-        services.AddDbContext<RepositoryContext>(opts => {
-            opts.UseNpgsql(configuration.GetConnectionString("pgConnection"), b => b.MigrationsAssembly(assemblyName));
-        });
+        var connectionString = configuration.GetConnectionString("pgConnection");
 
         services.AddDbContext<IdentityContext>(opts => {
-            opts.UseNpgsql(configuration.GetConnectionString("pgConnection"), b => b.MigrationsAssembly(assemblyName));
+            opts.UseNpgsql(connectionString, b => b.MigrationsAssembly(assemblyName));
         });
 
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -64,7 +62,7 @@ public static class ServiceExtenssion
         builder.AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
     }
 
-    public static void ConfigureJWT(this IServiceCollection services, IConfiguration config) 
+    public static void ConfigureJWT(this IServiceCollection services, IConfiguration config)
     {
         services.AddAuthentication(options =>
         {
@@ -103,10 +101,13 @@ public static class ServiceExtenssion
 
     public static void AddTransport(this IServiceCollection services, IConfiguration configuration)
     {
+        var serviceAddress = configuration.GetSection("CurrencyServiceDefaultLink").Value.ToString().ResolveServiceUrl(configuration);
+
         services.AddHttpClient("CurrencyServiceTransport", client =>
         {
-            var serviceAddress = configuration.GetSection("CurrencyServiceLink").Value.ToString();
             client.BaseAddress = new Uri(serviceAddress);
+            client.DefaultRequestVersion = new Version(2, 0);
+            client.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
         });
     }
 
@@ -114,11 +115,9 @@ public static class ServiceExtenssion
     {
         service.AddTransient<RemoteClient>(builder =>
         {
+            var serviceAddress = configuration.GetSection("CurrencyServiceDefaultLink").Value.ToString().ResolveServiceUrl(configuration);
             var httpClientFactory = builder.GetService<IHttpClientFactory>();
-            var httpClient = httpClientFactory.CreateClient("CurrencyServiceTransport");
-
-            var remoteClient = new RemoteClient(httpClientFactory);
-            return remoteClient;
+            return new RemoteClient(httpClientFactory, serviceAddress);
         });
     }
 
@@ -134,7 +133,6 @@ public static class ServiceExtenssion
         services.AddSwaggerGen(s =>
         {
             s.SwaggerDoc("v1", new OpenApiInfo { Title = "MapZter API", Version = "v1" });
-
             s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
@@ -143,8 +141,7 @@ public static class ServiceExtenssion
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
             });
-
-            s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            s.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
                     new OpenApiSecurityScheme
@@ -160,5 +157,20 @@ public static class ServiceExtenssion
                 }
             });
         });
+    }
+
+    public static void TryMigrateDatabase(this IServiceProvider serviceProvider, IConfiguration configuration)
+    {
+        var deployType = configuration.GetSection("DbDeployType").Value.ToString();
+
+        if (deployType.Equals("container"))
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var identityDb = scope.ServiceProvider.GetRequiredService<IdentityContext>();
+                identityDb.Database.Migrate();
+                identityDb.Database.EnsureCreated();
+            }
+        }
     }
 }

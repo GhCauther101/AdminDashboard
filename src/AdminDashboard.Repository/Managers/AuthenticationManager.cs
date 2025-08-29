@@ -20,7 +20,7 @@ public class AuthenticationManager : IAuthenticationManager
 
     private Client user;
 
-    private string[] roles = { "admin", "manager", "user" };
+    private string[] _roles = { "admin", "manager", "user" };
     
     public AuthenticationManager(
         UserManager<Client> userManager,
@@ -35,14 +35,11 @@ public class AuthenticationManager : IAuthenticationManager
         SeedRoles().Wait();
     }
 
-    public string[] Roles () 
-    {
-        return roles; 
-    }
+    public string[] Roles => _roles;
 
     private async Task SeedRoles()
     {
-        foreach (var role in roles)
+        foreach (var role in _roles)
         {
             if (!await _roleManager.RoleExistsAsync(role))
                 await _roleManager.CreateAsync(new IdentityRole(role));
@@ -64,15 +61,18 @@ public class AuthenticationManager : IAuthenticationManager
             client.UserName = clientUpdate.UserName;
             client.NormalizedUserName = clientUpdate.UserName.ToUpper();
         }
+        
         if (clientUpdate.Email != String.Empty)
         {
             client.Email = clientUpdate.Email;
             client.NormalizedEmail = clientUpdate.Email.ToUpper();
         }
+
         if (clientUpdate.Password != String.Empty)
         {
             client.Password = clientUpdate.Password;
         }
+
         return client;
     }
 
@@ -114,6 +114,7 @@ public class AuthenticationManager : IAuthenticationManager
         };
 
         var roles = await _userManager.GetRolesAsync(user);
+
         foreach (var role in roles)
             claims.Add(new Claim(ClaimTypes.Role, role));
 
@@ -122,8 +123,6 @@ public class AuthenticationManager : IAuthenticationManager
 
     private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
     {
-        var jwtSettings = _configuration.GetSection("JwtSettings");
-
         var tokenOptions = new JwtSecurityToken
         (
             issuer: _jwtSettings.Issuer,
