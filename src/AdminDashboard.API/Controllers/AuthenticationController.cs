@@ -87,8 +87,7 @@ public class AuthenticationController : ControllerBase
         Response.Cookies.Append("jwt", token, new CookieOptions
         {
             HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict
+            Secure = true
         });
 
         return Ok("Logged in.");

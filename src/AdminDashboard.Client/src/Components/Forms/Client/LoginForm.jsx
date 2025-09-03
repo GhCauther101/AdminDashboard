@@ -34,6 +34,7 @@ const LoginForm = () => {
         var authApi = new AuthApi();
         var apiResult = await authApi.login(objInstance);
         var loginResult = apiResult.parse();
+        
         if (!loginResult.isSuccess) {
             processErrors(loginResult);
         }

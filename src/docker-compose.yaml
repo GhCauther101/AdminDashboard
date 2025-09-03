@@ -1,6 +1,20 @@
 name: admin_dashboard
 
 services:
+  web:
+    container_name: web_client
+    image: admin_daashboard.web_client
+    build: 
+      context: .
+      dockerfile: AdminDashboard.Client/Dockerfile
+    depends_on:
+      - api
+    restart: always
+    ports:
+      - '8000:3000'
+    volumes:
+      - ../certs:/certs:ro
+
   api:
     container_name: api
     image: admin_daashboard.api
@@ -10,6 +24,8 @@ services:
     environment:
       - ConnectionString__pgConnection=Host=db;Port=5432;Database=AdminDashboard;Username=admin;Password=secret
       - JwtSettings__Key=msdafndsfnopnweoiunb8vsalkmdfv90fq3fiqw
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=ex_service
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/certs/http-cert.pfx
       - EXCHANGE_SERVICE_URL=exchange_service:5001
       - ENV ASPNETCORE_URLS https://+:8080
     depends_on:
@@ -17,9 +33,10 @@ services:
       - exchange_service
     restart: always
     ports:
-      - '8080:8080'
+      - '9000:8000'
+      - '9090:8080'
     volumes:
-      - ./certs:/certs:ro
+      - ../certs:/certs:ro
 
   exchange_service:
     container_name: exchange_service
@@ -31,11 +48,12 @@ services:
       - ExchangerApiKey=b61d3945455dea839d0998c1
       - ASPNETCORE_Kestrel__Certificates__Default__Password=ex_service
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/certs/http-cert.pfx
+    restart: always
     ports:
       - '5000:5000'
       - '5001:5001'
     volumes:
-      - ./certs:/certs:ro
+      - ../certs:/certs:ro
 
   db:
     container_name: db
@@ -59,7 +77,7 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: qweqwe@gmail.com
       PGADMIN_DEFAULT_PASSWORD: test123
-    volumes:      
+    volumes:
       - pgadmin_data:/var/lib/pgadmin
 
 volumes:

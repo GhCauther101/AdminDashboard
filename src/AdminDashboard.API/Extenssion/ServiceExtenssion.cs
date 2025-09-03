@@ -21,20 +21,20 @@ public static class ServiceExtenssion
 {
     public static void ResolveServiceEndpoints(this IWebHostBuilder webHostBuilder, IConfiguration configuration)
     {
-        var servicePort = int.Parse(configuration.GetSection("ServicePort").Value.ToString());
-        var healthPort = int.Parse(configuration.GetSection("HealthPort").Value.ToString());
+        var firstPort = int.Parse(configuration.GetSection("FirstPort").Value.ToString());
+        var secondPort = int.Parse(configuration.GetSection("SecondPort").Value.ToString());
         var certPath = configuration["ASPNETCORE_Kestrel:Certificates:Default:Path"];
         var certPassword = configuration["ASPNETCORE_Kestrel:Certificates:Default:Password"];
 
         webHostBuilder.ConfigureKestrel(options =>
         {
-            options.ListenAnyIP(servicePort, listenOptions =>
+            options.ListenAnyIP(firstPort, listenOptions =>
             {
                 listenOptions.UseHttps(certPath, certPassword);
                 listenOptions.Protocols = HttpProtocols.Http2;
             });
 
-            options.ListenAnyIP(healthPort, listenOptions =>
+            options.ListenAnyIP(secondPort, listenOptions =>
             {
                 listenOptions.UseHttps(certPath, certPassword);
                 listenOptions.Protocols = HttpProtocols.Http2;
@@ -56,14 +56,10 @@ public static class ServiceExtenssion
         services.AddCors(options =>
         {
             options.AddPolicy("CorsPolicy", builder =>
-                builder.AllowAnyOrigin()
+                builder.WithOrigins("https://localhost:8000", "https://localhost:3000")
                     .AllowAnyHeader()
-                    .AllowAnyMethod());
-
-            options.AddPolicy("AllowWebApp", builder =>
-                builder.AllowAnyHeader()
                     .AllowAnyMethod()
-                    .WithOrigins("http://localhost:55085"));
+                    .AllowCredentials());
         });
     }
 

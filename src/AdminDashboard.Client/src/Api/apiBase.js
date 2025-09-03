@@ -7,11 +7,13 @@ class ApiResolver {
     static defaultHeadersSet = {
         "Accept": "aplication/json",
         "Content-Type": "application/json",
-        "Access-Control-AllowOrigin": "*"
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true"
     }
-
-    static resolveApi (url=ApiRoutes.base, headers=this.defaultHeadersSet) {
-        this.apiInstance = axios.create({ baseURL: url, headers: headers, withCredentials: true});
+    
+    static resolveApi (headers=this.defaultHeadersSet) {
+        var api = 'https://localhost:9000'
+        this.apiInstance = axios.create({ baseURL: api, headers: headers, withCredentials: true });
         this.apiInstance.interceptors.request.use(
             (config) => {
                 console.log(`[Request] ${JSON.stringify(config, null, 2)} ${config.url}`, config.data);
@@ -32,7 +34,7 @@ class ApiResolver {
                 if (error.response) {
                     console.error(`[Response Error] ${error.response.status} ${error.config.url}`, error.response.data);
                 } else {
-                    console.error('[Response Error]', error.message);
+                    console.error('[Response Error]', error);
                 }
                 return Promise.reject(error);
             }

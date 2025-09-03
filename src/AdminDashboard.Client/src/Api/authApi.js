@@ -9,14 +9,14 @@ class AuthApi {
         
         const api = ApiResolver.resolveApi();
         await api.post(route, objInstance)
-            .then(data => 
+            .then(data =>
             {
                 var status = data.status;
                 var success = status === 201;
                 var data = data.data;
                 result.define(success, status, data);
             })
-            .catch(er => 
+            .catch(er =>
             {
                 var success = false;
                 var status = er.request.status;

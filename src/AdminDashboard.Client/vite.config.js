@@ -3,35 +3,12 @@ import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react'
 import fs from 'fs';
 import path from 'path';
-import child_process from 'child_process';
-import { env } from 'process';
 
-const baseFolder = env.APPDATA !== undefined && env.APPDATA !== '' ? `${env.APPDATA}/ASP.NET/https` : `${env.HOME}/.aspnet/https`;
-const certificateName = "reactapp1.client";
-const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
-const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
+const certsFolder = '../../certs'
+const certificateName = "server";
+const certFilePath = path.join(certsFolder, `${certificateName}.pem`);
+const keyFilePath = path.join(certsFolder, `${certificateName}.key`);
 
-if (!fs.existsSync(baseFolder)) {
-    fs.mkdirSync(baseFolder, { recursive: true });
-}
-
-if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
-    if (0 !== child_process.spawnSync('dotnet', [
-        'dev-certs',
-        'https',
-        '--export-path',
-        certFilePath,
-        '--format',
-        'Pem',
-        '--no-password',
-    ], { stdio: 'inherit', }).status) {
-        throw new Error("Could not create certificate.");
-    }
-}
-
-const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` : env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:7166';
-
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -42,14 +19,15 @@ export default defineConfig({
   server: {
     proxy: {
         '/api': {
-            target: "https://localhost:7003",
+            target: 'https://localhost:9000',
             secure: false,
-            changeOrigin: true,
+            changeOrigin: false,
             rewrite: (path) => path.replace(/^\/api/, '')
         }
     },
-    host: "127.0.0.1",
-    port: 8000,
+    host: true,
+    strictPort: true,
+    port: 3000,
     https: {
         key: fs.readFileSync(keyFilePath),
         cert: fs.readFileSync(certFilePath),

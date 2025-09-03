@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using AdminDashboard.Entity.Json;
 
 namespace AdminDashboard.API.Middleware;
 
@@ -39,6 +40,7 @@ public class RequestBrokerMiddleware
         Console.WriteLine($"Connection remote port: {context.Connection.RemotePort}");
 
         Console.WriteLine($"Response status: {context.Response.StatusCode}");
+        Console.WriteLine($"Response cookie: {context.Response.Cookies.ToJsonContent()}");
         await _next.Invoke(context);
     }
 }
