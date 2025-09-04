@@ -23,21 +23,23 @@ public static class ServiceExtenssion
     {
         var firstPort = int.Parse(configuration.GetSection("FirstPort").Value.ToString());
         var secondPort = int.Parse(configuration.GetSection("SecondPort").Value.ToString());
-        var certPath = configuration["ASPNETCORE_Kestrel:Certificates:Default:Path"];
-        var certPassword = configuration["ASPNETCORE_Kestrel:Certificates:Default:Password"];
+
+        var certCredentials = configuration.ResolveCertificateCreadentials();
+        string certPath = certCredentials.Path;
+        string certPassword = certCredentials.Password;
 
         webHostBuilder.ConfigureKestrel(options =>
         {
             options.ListenAnyIP(firstPort, listenOptions =>
             {
                 listenOptions.UseHttps(certPath, certPassword);
-                listenOptions.Protocols = HttpProtocols.Http2;
+                listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
             });
 
             options.ListenAnyIP(secondPort, listenOptions =>
             {
                 listenOptions.UseHttps(certPath, certPassword);
-                listenOptions.Protocols = HttpProtocols.Http2;
+                listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
             });
 
             var cert = new X509Certificate2(certPath, certPassword);
@@ -134,7 +136,7 @@ public static class ServiceExtenssion
 
     public static void AddTransport(this IServiceCollection services, IConfiguration configuration)
     {
-        var serviceAddress = configuration.GetSection("CurrencyServiceDefaultLink").Value.ToString().ResolveServiceUrl(configuration);
+        var serviceAddress = configuration.GetSection("CurrencyServiceLink").Value.ToString().ResolveServiceUrl(configuration);
 
         services.AddHttpClient("CurrencyServiceTransport", client =>
         {
@@ -207,7 +209,7 @@ public static class ServiceExtenssion
 
     public static void TryMigrateDatabase(this IServiceProvider serviceProvider, IConfiguration configuration)
     {
-        var deployType = configuration.GetSection("DbDeployType").Value.ToString();
+        var deployType = configuration.GetSection("DeployType").Value.ToString();
 
         if (deployType.Equals("container"))
         {

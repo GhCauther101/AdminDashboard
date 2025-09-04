@@ -14,8 +14,10 @@ public static class ServiceExtenssion
     {
         var servicePort = int.Parse(configuration.GetSection("ServicePort").Value.ToString());
         var healthPort = int.Parse(configuration.GetSection("HealthPort").Value.ToString());
-        var certPath = configuration["ASPNETCORE_Kestrel:Certificates:Default:Path"];
-        var certPassword = configuration["ASPNETCORE_Kestrel:Certificates:Default:Password"];
+
+        var certCredentials = configuration.ResolveCertificateCreadentials();
+        string certPath = certCredentials.Path;
+        string certPassword = certCredentials.Password;
 
         webHostBuilder.ConfigureKestrel(options =>
         {

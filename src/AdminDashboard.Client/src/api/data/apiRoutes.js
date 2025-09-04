@@ -1,4 +1,6 @@
 class ApiRoutes {
+    static apiGatewayUri = `${import.meta.env.VITE_API_GATE1}`
+
     static base = `/api`
     
     static serviceRoute = {

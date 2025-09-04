@@ -13,7 +13,7 @@ services:
     ports:
       - '8000:3000'
     volumes:
-      - ../certs:/certs:ro
+      - ./certs:/certs:ro
 
   api:
     container_name: api
@@ -36,7 +36,7 @@ services:
       - '9000:8000'
       - '9090:8080'
     volumes:
-      - ../certs:/certs:ro
+      - ./certs:/certs:ro
 
   exchange_service:
     container_name: exchange_service
@@ -53,7 +53,7 @@ services:
       - '5000:5000'
       - '5001:5001'
     volumes:
-      - ../certs:/certs:ro
+      - ./certs:/certs:ro
 
   db:
     container_name: db

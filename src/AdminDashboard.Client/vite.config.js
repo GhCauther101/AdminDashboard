@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 import fs from 'fs';
 import path from 'path';
 
-const certsFolder = '../../certs'
+const certsFolder = '../certs'
 const certificateName = "server";
 const certFilePath = path.join(certsFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(certsFolder, `${certificateName}.key`);

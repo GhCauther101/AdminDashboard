@@ -1,15 +1,7 @@
-namespace AdminDashboard.API.Extenssion;
+﻿namespace AdminDashboard.ExchangeService.Extenssion;
+
 public static class UtilsExtenssion
 {
-    public static string ResolveServiceUrl(this string serviceUrl, IConfiguration configuration)
-    {
-        if (String.IsNullOrEmpty(serviceUrl) && String.IsNullOrWhiteSpace(serviceUrl))
-            return configuration.GetSection("CurrencyServiceLink").Value.ToString();
-        else if (serviceUrl.Equals("container"))
-            return configuration.GetSection("EXCHANGE_SERVICE_URL").Value.ToString();
-        return serviceUrl;
-    }
-
     public static CertCredentials ResolveCertificateCreadentials(this IConfiguration configuration)
     {
         var deployType = configuration.GetSection("DeployType").Value.ToString();

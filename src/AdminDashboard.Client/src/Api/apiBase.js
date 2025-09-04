@@ -7,13 +7,12 @@ class ApiResolver {
     static defaultHeadersSet = {
         "Accept": "aplication/json",
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": "https://localhost:8000, https://localhost:9000",
         "Access-Control-Allow-Credentials": "true"
     }
     
     static resolveApi (headers=this.defaultHeadersSet) {
-        var api = 'https://localhost:9000'
-        this.apiInstance = axios.create({ baseURL: api, headers: headers, withCredentials: true });
+        this.apiInstance = axios.create({ baseURL: ApiRoutes.apiGatewayUri, headers: headers, withCredentials: true });
         this.apiInstance.interceptors.request.use(
             (config) => {
                 console.log(`[Request] ${JSON.stringify(config, null, 2)} ${config.url}`, config.data);
