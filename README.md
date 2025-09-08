@@ -6,7 +6,7 @@ AdminDashboard - client and payment record system designed with ASP.NET Core & R
 - ASP.NET Core Web API gateway
 - CQRS bus comand/query domain separation
 - ASP.NET Core Identity based authentication
-- Zero out build ExchangeRate-API SDK
+- Built from scratch ExchangeRate-API SDK
 - PostgreSQL database support
 - Docker deploy support
 - HTTPS (TLS) support for API gateway and services communication (also for gRPC services)
@@ -19,12 +19,12 @@ AdminDashboard - client and payment record system designed with ASP.NET Core & R
 
 
 # Deploy
-There are two ways to deploy AdminDashboard on local machine:
+There are two ways to deploy AdminDashboard:
 - Local machine based deploy
 - Docker based deploy
 
 ## 1) Local machine deployment
-### ⚠️ Technica installation requirements 
+### ⚠️ Technical requirements 
 Before deploying app on your machine make sure the technical requirements are been complyed:
 
 - Windows: [.NET 9.0](https://dotnet.microsoft.com/en-us/download/dotnet/9.0), [Git Bash](https://git-scm.com/downloads)
@@ -37,7 +37,7 @@ Before deploying app on your machine make sure the technical requirements are be
 3. Copy executable from `out` folder to your deployment environment. (local machine, Azure, AWS, Google Cloud, self hosted cloud, etc)
 
 ## 2) Docker deployment
-### ⚠️ Technica installation requirements 
+### ⚠️ Technical requirements 
 Before deploying app in Docker containers make sure that [Docker](https://www.docker.com/) installed on your machine:
 
 1. Clone git repository: `git clone https://github.com/ggghosthat31/AdminDashboard`

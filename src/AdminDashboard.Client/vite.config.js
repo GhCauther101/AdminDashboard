@@ -9,6 +9,8 @@ const certificateName = "server";
 const certFilePath = path.join(certsFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(certsFolder, `${certificateName}.key`);
 
+// const apiGateURI = import.meta.env.VITE_API_GATE1 || process.env.VITE_API_GATE1 || "https://localhost:9000";
+
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -19,7 +21,7 @@ export default defineConfig({
   server: {
     proxy: {
         '/api': {
-            target: 'https://localhost:9000',
+            target: process.env.VITE_API_GATE1,
             secure: false,
             changeOrigin: false,
             rewrite: (path) => path.replace(/^\/api/, '')
