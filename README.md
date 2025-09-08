@@ -9,7 +9,7 @@ AdminDashboard - client and payment record system designed with ASP.NET Core & R
 - Docker deploy support
 - HTTPS (TLS) support for API gateway and services communication (also for gRPC services)
 - PostgreSQL database support
-- Built from scratch [ExchangeRate-API SDK](https://www.exchangerate-api.com/)
+- Built from scratch [ExchangeRate-API](https://www.exchangerate-api.com/) SDK
 
 ## Frontend
 - Backend API gateway data and client support
