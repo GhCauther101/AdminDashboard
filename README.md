@@ -36,6 +36,8 @@ Before deploying app on your machine make sure the technical requirements are be
 
 3. Copy executable from `out` folder to your deployment environment. (local machine, Azure, AWS, Google Cloud, self hosted cloud, etc)
 
+4. To visit web app open `https://localhost:8000`. App working only with HTTS protocol.
+
 ## 2) Docker deployment
 ### ⚠️ Technical requirements 
 Before deploying app in Docker containers make sure that [Docker](https://www.docker.com/) installed on your machine:
@@ -43,3 +45,5 @@ Before deploying app in Docker containers make sure that [Docker](https://www.do
 1. Clone git repository: `git clone https://github.com/ggghosthat31/AdminDashboard`
 
 2. Launch `build/docker_deploy.sh` script to build images and run docker container.
+
+3. To visit web app open `https://localhost:8000`. App working only with HTTS protocol.
