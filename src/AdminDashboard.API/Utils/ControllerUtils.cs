@@ -5,7 +5,7 @@ namespace AdminDashboard.API.Utils;
 
 public static class ControllerUtils
 {
-    public static IDictionary<string, IEnumerable<string>> DefineIdentityErrors (this IEnumerable<IdentityError> errors)
+    public static IDictionary<string, IEnumerable<string>> DefineIdentityErrors(this IEnumerable<IdentityError> errors)
     {
         var resultErrors = new Dictionary<string, IEnumerable<string>>();
 
@@ -34,7 +34,7 @@ public static class ControllerUtils
         return resultErrors;
     }
 
-    public static IDictionary<string, IEnumerable<string>> DefineUnauthorizedErrorDictionary ()
+    public static IDictionary<string, IEnumerable<string>> DefineUnauthorizedErrorDictionary()
     {
         var resultDictionary = new Dictionary<string, IEnumerable<string>>();
         resultDictionary["general"] = new string[] { "Unauthorized." };

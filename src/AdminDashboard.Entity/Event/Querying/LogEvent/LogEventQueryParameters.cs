@@ -8,7 +8,6 @@ public class LogEventQueryParameters : QueryParameters<int>
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
-        base.TriggerClusterId = Guid.NewGuid();
     }
 
     public LogEventQueryParameters(
@@ -20,7 +19,6 @@ public class LogEventQueryParameters : QueryParameters<int>
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
-        base.TriggerClusterId = Guid.NewGuid();
         Functionality = functionality;
         RangeStart = rangeStart;
         RangeWidth = rangeWidth;

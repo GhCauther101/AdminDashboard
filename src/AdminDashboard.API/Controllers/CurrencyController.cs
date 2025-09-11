@@ -1,4 +1,4 @@
-﻿using AdminDashboard.API.Reuqests.Currency;
+﻿using AdminDashboard.API.Requests.Currency;
 using AdminDashboard.API.Routes;
 using AdminDashboard.API.Scopes;
 using MediatR;

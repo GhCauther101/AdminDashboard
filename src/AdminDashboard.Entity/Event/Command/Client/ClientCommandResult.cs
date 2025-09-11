@@ -9,14 +9,12 @@ public class ClientCommandResult : CommandResult<Client>
     {
         this.Id = Guid.NewGuid();
         this.TriggerTime = DateTime.Now;
-        this.TriggerClusterId = Guid.NewGuid();
     }
 
     public ClientCommandResult(CommandType command, bool isSuccess, Exception exception = null)
     {
         this.Id = Guid.NewGuid();
         this.TriggerTime = DateTime.Now;
-        this.TriggerClusterId = Guid.NewGuid();
         Command = command;
         IsSuccess = isSuccess;
         Exception = exception;

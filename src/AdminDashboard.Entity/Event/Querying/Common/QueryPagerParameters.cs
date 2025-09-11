@@ -6,6 +6,5 @@ public class QueryPagerParameters : QueryParameters<int>
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
-        base.TriggerClusterId = Guid.NewGuid();
     }
 }

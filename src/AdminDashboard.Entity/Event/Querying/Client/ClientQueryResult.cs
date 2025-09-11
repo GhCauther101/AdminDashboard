@@ -8,7 +8,6 @@ public class ClientQueryResult : QueryResult<Client>
     {
         Id = Guid.NewGuid();
         TriggerTime = DateTime.Now;
-        TriggerClusterId = Guid.NewGuid();
     }
 
     public ClientQueryResult(
@@ -19,7 +18,6 @@ public class ClientQueryResult : QueryResult<Client>
     {
         Id = Guid.NewGuid();
         TriggerTime = DateTime.Now;
-        TriggerClusterId = Guid.NewGuid();
         Entity = client;
         Range = range;
         Exception = exception;

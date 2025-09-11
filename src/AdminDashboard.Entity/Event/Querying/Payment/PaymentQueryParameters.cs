@@ -8,7 +8,6 @@ public class PaymentQueryParameters<T> : QueryParameters<T>
     {
         Id = Guid.NewGuid();
         TriggerTime = DateTime.Now;
-        TriggerClusterId = Guid.NewGuid();
     }
 
     public PaymentQueryParameters(
@@ -21,7 +20,6 @@ public class PaymentQueryParameters<T> : QueryParameters<T>
     {
         Id = Guid.NewGuid();
         TriggerTime = DateTime.Now;
-        TriggerClusterId = Guid.NewGuid();
         Functionality = functionality;
         RangeStart = rangeStart;
         RangeWidth = rangeWidth;

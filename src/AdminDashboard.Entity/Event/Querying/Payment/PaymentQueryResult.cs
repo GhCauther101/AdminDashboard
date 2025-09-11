@@ -8,7 +8,6 @@ public class PaymentQueryResult : QueryResult<Payment>
     {
         Id = Guid.NewGuid();
         TriggerTime = DateTime.Now;
-        TriggerClusterId = Guid.NewGuid();
     }
 
     public PaymentQueryResult(
@@ -19,7 +18,6 @@ public class PaymentQueryResult : QueryResult<Payment>
     {
         Id = Guid.NewGuid();
         TriggerTime = DateTime.Now;
-        TriggerClusterId = Guid.NewGuid();
         Entity = payment;
         Range = range;
         Exception = exception;

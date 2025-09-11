@@ -13,23 +13,23 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
     public PaymentRepository(IDbContextBus dbContextBus) : base(dbContextBus)
     { }
 
-    public int PaymentsCount => base.GetDbContext(DbContextDomain.IDENTITY).Set<Payment>().Count();
+    public int PaymentsCount => base.GetDbContext().Set<Payment>().Count();
 
-    public decimal TotalBill => base.GetDbContext(DbContextDomain.IDENTITY).Set<Payment>().Sum(p => p.Bill);
+    public decimal TotalBill => base.GetDbContext().Set<Payment>().Sum(p => p.Bill);
 
     public void CreatePayment(PaymentCommandParameters commandParameters)
     {
-        Create(commandParameters.Data, DbContextDomain.IDENTITY);
+        Create(commandParameters.Data);
     }
     
     public void UpdatePayment(PaymentCommandParameters commandParameters)
     {
-        Update(commandParameters.Data, DbContextDomain.IDENTITY);
+        Update(commandParameters.Data);
     }
 
     public void DeletePayment(PaymentCommandParameters commandParameters)
     {
-        Delete(commandParameters.Data, DbContextDomain.IDENTITY);
+        Delete(commandParameters.Data);
     }    
 
     public async Task<PaymentQueryResult> Get(PaymentQueryParameters<Guid> queryParameters)
@@ -42,7 +42,7 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
         switch (queryParameters.Functionality)
         {
             case QueryParameterFunctionality.GET_ALL:
-                var allClients = await FindAll(DbContextDomain.IDENTITY, false)
+                var allClients = await FindAll(false)
                     .OrderByDescending(x => x.ProcessTime)
                     .SelectPayments()
                     .ToListAsync();
@@ -56,7 +56,7 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                 };
                 break;
             case QueryParameterFunctionality.PAGE:
-                var clientPage = await FindAll(DbContextDomain.IDENTITY, false)
+                var clientPage = await FindAll(false)
                     .OrderByDescending(x => x.ProcessTime)
                     .Skip((queryParameters.RangeStart - 1) * queryParameters.RangeWidth)
                     .Take(queryParameters.RangeWidth)
@@ -72,7 +72,7 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                 };
                 break;
             case QueryParameterFunctionality.SINGLE:
-                var entity = await FindByCondition(entity => entity.PaymentId.Equals(queryParameters.EntityId), DbContextDomain.IDENTITY, false)
+                var entity = await FindByCondition(entity => entity.PaymentId.Equals(queryParameters.EntityId), false)
                     .SelectPayments()
                     .SingleOrDefaultAsync();
 
@@ -85,7 +85,7 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                 };
                 break;
             case QueryParameterFunctionality.CLIENT_HISTORY:
-                var historyList = await FindByCondition(entity => entity.SourceClientId.Equals(queryParameters.EntityId.ToString()) || entity.DestinationClientId.Equals(queryParameters.EntityId.ToString()), DbContextDomain.IDENTITY, false)
+                var historyList = await FindByCondition(entity => entity.SourceClientId.Equals(queryParameters.EntityId.ToString()) || entity.DestinationClientId.Equals(queryParameters.EntityId.ToString()), false)
                     .OrderByDescending(e =>e.ProcessTime)
                     .SelectPayments()
                     .ToListAsync();
@@ -99,7 +99,7 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
                 };
                 break;
             case QueryParameterFunctionality.LAST:
-                var lastPayment = await FindAll(DbContextDomain.IDENTITY, false)
+                var lastPayment = await FindAll(false)
                     .OrderByDescending(e => e.ProcessTime)
                     .Take(queryParameters.LastWidth)
                     .SelectPayments()
@@ -120,7 +120,7 @@ public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
 
     public async Task<QueryPagerResult> GetPager()
     {
-        var pager = GetRepositoryPager(DbContextDomain.IDENTITY);
+        var pager = GetRepositoryPager();
         return new QueryPagerResult(true, pager);
     }
 }

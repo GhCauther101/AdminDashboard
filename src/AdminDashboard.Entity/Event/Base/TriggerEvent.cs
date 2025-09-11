@@ -8,8 +8,6 @@ public class TriggerEvent : IEntity
     public Guid Id { get; set; }
     
     public DateTime TriggerTime { get; set; }
-    
-    public Guid TriggerClusterId { get; set; }
 
     protected EventEntry Snap(bool indented = false)
     {

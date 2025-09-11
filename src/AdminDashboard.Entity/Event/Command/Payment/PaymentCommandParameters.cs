@@ -8,7 +8,6 @@ public class PaymentCommandParameters : CommandParameters<Payment>
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
-        base.TriggerClusterId = Guid.NewGuid();
     }
 
     public PaymentCommandParameters(
@@ -19,7 +18,6 @@ public class PaymentCommandParameters : CommandParameters<Payment>
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
-        base.TriggerClusterId = Guid.NewGuid();
         Command = command;
         IsSingle = isSingle;
         Data = data;

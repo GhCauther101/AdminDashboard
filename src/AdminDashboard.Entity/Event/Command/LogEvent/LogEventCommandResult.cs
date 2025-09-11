@@ -9,14 +9,12 @@ public class LogEventCommandResult : CommandResult<TriggerEvent>
     {
         this.Id = Guid.NewGuid();
         this.TriggerTime = DateTime.Now;
-        this.TriggerClusterId = Guid.NewGuid();
     }
 
     public LogEventCommandResult(CommandType command, bool isSuccess)
     {
         this.Id = Guid.NewGuid();
         this.TriggerTime = DateTime.Now;
-        this.TriggerClusterId = Guid.NewGuid();
         Command = command;
         IsSuccess = isSuccess;
     }

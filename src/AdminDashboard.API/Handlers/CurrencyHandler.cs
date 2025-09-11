@@ -1,5 +1,5 @@
 ﻿using AdminDashboard.API.Remote;
-using AdminDashboard.API.Reuqests.Currency;
+using AdminDashboard.API.Requests.Currency;
 using AdminDashboard.Entity.Event.Querying;
 using AdminDashboard.ExchangeService.Sdk.ExchangeRateAPI.Models.Reply;
 using MediatR;

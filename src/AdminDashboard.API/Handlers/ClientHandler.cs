@@ -1,4 +1,4 @@
-using AdminDashboard.API.Reuqests.Client;
+using AdminDashboard.API.Requests.Client;
 using AdminDashboard.Entity.Dto;
 using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying;

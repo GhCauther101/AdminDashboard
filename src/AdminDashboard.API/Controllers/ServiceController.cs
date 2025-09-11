@@ -1,4 +1,4 @@
-﻿using AdminDashboard.API.Reuqests.Payment;
+﻿using AdminDashboard.API.Requests.Payment;
 using AdminDashboard.API.Routes;
 using AdminDashboard.API.Scopes;
 using MediatR;

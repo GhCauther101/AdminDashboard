@@ -14,21 +14,21 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
     public ClientRepository(IDbContextBus dbContextBus) : base(dbContextBus)
     {}
 
-    public int ClientsCount => base.GetDbContext(DbContextDomain.IDENTITY).Set<Client>().Count();
+    public int ClientsCount => base.GetDbContext().Set<Client>().Count();
 
     public void CreateClient(ClientCommandParameters commandParameters)
     {
-        Create(commandParameters.Data, DbContextDomain.IDENTITY);
+        Create(commandParameters.Data);
     }
 
     public void UpdateClient(ClientCommandParameters commandParameters)
     {
-        Update(commandParameters.Data, DbContextDomain.IDENTITY);
+        Update(commandParameters.Data);
     }
 
     public void DeleteClient(ClientCommandParameters commandParameters)
     {
-        Delete(commandParameters.Data, DbContextDomain.IDENTITY);
+        Delete(commandParameters.Data);
     }
 
     public async Task<ClientQueryResult> Get(ClientQueryParameters<string> queryParameters)
@@ -43,7 +43,7 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
         switch (queryParameters.Functionality)
         {
             case QueryParameterFunctionality.GET_ALL:
-                var allClients = await FindAll(DbContextDomain.IDENTITY, false)
+                var allClients = await FindAll(false)
                     .OrderBy(c => c.UserName)
                     .AsNoTracking()
                     .ToListAsync();
@@ -55,7 +55,7 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
                 };
                 break;
             case QueryParameterFunctionality.PAGE:
-                var clientPage = await FindAll(DbContextDomain.IDENTITY, false)
+                var clientPage = await FindAll(false)
                     .OrderBy(c => c.Id)
                     .Skip((queryParameters.RangeStart - 1) * queryParameters.RangeWidth)
                     .Take(queryParameters.RangeWidth)
@@ -69,7 +69,7 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
                 };
                 break;
             case QueryParameterFunctionality.SINGLE:
-                var entity = await FindByCondition(entity => entity.Id.Equals(queryParameters.EntityId.ToString()), DbContextDomain.IDENTITY, false)
+                var entity = await FindByCondition(entity => entity.Id.Equals(queryParameters.EntityId.ToString()), false)
                     .Include(c => c.SentPayments)
                     .Include(c => c.RecievedPayments)
                     .AsNoTracking()
@@ -82,7 +82,7 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
                 };
                 break;
             case QueryParameterFunctionality.GET_VOLUMED:
-                var volumedClients = await FindAll(DbContextDomain.IDENTITY, false)
+                var volumedClients = await FindAll(false)
                     .Include(c => c.SentPayments)
                     .Include(c => c.RecievedPayments)
                     .Select(c => new { PaymentSum = c.SumPayments(), ClientEntity = c })
@@ -101,7 +101,7 @@ public class ClientRepository : RepositoryBase<Client>, IClientRepository
 
     public async Task<QueryPagerResult> GetPager()
     {
-        var pager = GetRepositoryPager(DbContextDomain.IDENTITY);
+        var pager = GetRepositoryPager();
         return new QueryPagerResult(true, pager:pager);
     }
 }

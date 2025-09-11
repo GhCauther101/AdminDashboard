@@ -8,7 +8,6 @@ public class LogEventCommandParameters : CommandParameters<TriggerEvent>
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
-        base.TriggerClusterId = Guid.NewGuid();
     }
 
     public LogEventCommandParameters(
@@ -19,7 +18,6 @@ public class LogEventCommandParameters : CommandParameters<TriggerEvent>
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
-        base.TriggerClusterId = Guid.NewGuid();
         Command = command;
         IsSingle = isSingle;
         Data = data;

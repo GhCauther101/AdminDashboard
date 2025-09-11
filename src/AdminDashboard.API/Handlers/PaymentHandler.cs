@@ -1,4 +1,4 @@
-﻿using AdminDashboard.API.Reuqests.Payment;
+﻿using AdminDashboard.API.Requests.Payment;
 using AdminDashboard.Entity.Event.Command;
 using AdminDashboard.Entity.Event.Querying.Common;
 using AdminDashboard.Entity.Event.Querying;

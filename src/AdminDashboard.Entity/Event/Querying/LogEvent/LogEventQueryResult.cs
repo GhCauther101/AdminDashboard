@@ -8,7 +8,6 @@ public class LogEventQueryResult : QueryResult<TriggerEvent>
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
-        base.TriggerClusterId = Guid.NewGuid();
     }
 
     public LogEventQueryResult(
@@ -19,7 +18,6 @@ public class LogEventQueryResult : QueryResult<TriggerEvent>
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
-        base.TriggerClusterId = Guid.NewGuid();
         Entity = triggerEvent;
         Range = range;
         Exception = exception;

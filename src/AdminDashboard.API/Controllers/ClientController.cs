@@ -1,4 +1,4 @@
-﻿using AdminDashboard.API.Reuqests.Client;
+﻿using AdminDashboard.API.Requests.Client;
 using AdminDashboard.Entity.Json;
 using AdminDashboard.API.Routes;
 using MediatR;

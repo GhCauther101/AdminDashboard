@@ -8,7 +8,6 @@ public class QueryPagerResult : QueryResult<QueryPager>
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
-        base.TriggerClusterId = Guid.NewGuid();
     }
 
     public QueryPagerResult(
@@ -18,7 +17,6 @@ public class QueryPagerResult : QueryResult<QueryPager>
     {
         base.Id = Guid.NewGuid();
         base.TriggerTime = DateTime.Now;
-        base.TriggerClusterId = Guid.NewGuid();
         IsSuccess = isSuccess;
         Entity = pager;
         Exception = exception;

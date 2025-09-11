@@ -1,6 +1,6 @@
 ﻿namespace AdminDashboard.Repository.Domains;
 
-public enum DbContextDomain
+public enum RepositoryDomain
 {
     IDENTITY
 }

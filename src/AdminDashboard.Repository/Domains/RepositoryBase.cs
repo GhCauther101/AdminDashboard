@@ -1,4 +1,5 @@
 ﻿using AdminDashboard.Contracts.Repository;
+using AdminDashboard.Entity.Event.Querying.Common;
 using AdminDashboard.Entity.Models;
 using AdminDashboard.Repository.Context;
 using Microsoft.EntityFrameworkCore;
@@ -16,19 +17,16 @@ public class RepositoryBase<T> where T : class
         _dbContextBus = dbContextBus as DbContextBus;
     }
 
-    public DbContext GetDbContext(DbContextDomain domain)
+    public DbContext GetDbContext()
     {
-        return domain switch
-        {
-            DbContextDomain.IDENTITY => (DbContext)_dbContextBus.IdentityContextInstance
-        };
+        return _dbContextBus.IdentityContextInstance;
     }
 
-    protected QueryPager GetRepositoryPager(DbContextDomain domain)
+    protected QueryPager GetRepositoryPager()
     {
-        var context = GetDbContext(DbContextDomain.IDENTITY);
+        var context = GetDbContext();
         var totalCount = context.Set<T>().Count();
-        var width = DbContextConfigHelper.PagerWidth;
+        var width = DbContextConfig.PagerWidth;
 
         var process = (double)(totalCount / width);
         var pageCount = (int)Math.Ceiling(process);
@@ -36,33 +34,33 @@ public class RepositoryBase<T> where T : class
         return new QueryPager( totalCount, pageCount );
     }
 
-    protected IQueryable<T> FindAll(DbContextDomain domain, bool trackChanges)
+    protected IQueryable<T> FindAll(bool trackChanges)
     {
-        var repository = GetDbContext(domain);
+        var repository = GetDbContext();
         return !trackChanges ? repository.Set<T>().AsNoTracking() : repository.Set<T>();
     }
 
-    public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, DbContextDomain domain, bool trackChanges)
+    public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges)
     {
-        var repository = GetDbContext(domain);
+        var repository = GetDbContext();
         return !trackChanges ? repository.Set<T>().Where(expression).AsNoTracking() : repository.Set<T>().Where(expression);
     }
 
-    public void Create(T entity, DbContextDomain domain)
+    public void Create(T entity)
     {
-        var repository = GetDbContext(domain);
+        var repository = GetDbContext();
         repository.Set<T>().Add(entity);
     }
 
-    public void Update(T entity, DbContextDomain domain)
+    public void Update(T entity)
     {
-        var repository = GetDbContext(domain);
+        var repository = GetDbContext();
         repository.Set<T>().Update(entity);
     }
 
-    public void Delete(T entity, DbContextDomain domain)
+    public void Delete(T entity)
     {
-        var repository = GetDbContext(domain);
+        var repository = GetDbContext();
         repository.Set<T>().Remove(entity);
     }
 }
