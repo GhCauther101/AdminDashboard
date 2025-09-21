@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package stream;
+
+option go_package = "AdminDashboard.StockService/api/gen/stream";
+
+service StockStreamService {
+  rpc StockService(StockStreamRequest) returns (stream StockStreamResponse);
+}
+
+message StockStreamRequest {
+  string symbol = 1;
+}
+
+message StockStreamResponse {
+  string ev = 1;
+  string sym = 2;
+  int64 v = 3;
+  double av = 4;
+  double op = 5;
+  double vw = 6;
+  double o = 7;
+  double c = 8;
+  double h = 9;
+  double l = 10;
+  double a = 11;
+  int64 z = 12;
+  int64 s = 13;
+  int64 e = 14;
+  bool otc = 15;
+}
