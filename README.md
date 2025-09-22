@@ -1,5 +1,5 @@
 # AdminDashboard
-AdminDashboard - client and payment record system designed with ASP.NET Core & React Framework. Usefull to make record of taken payments. Allow to observe and convert currency rates of different countries with [ExchangeRate API](https://www.exchangerate-api.com/).
+AdminDashboard - client and payment management system designed with ASP.NET Core & React Framework. Usefull to make record of taken payments. Allow to observe and convert currency rates of different countries with [ExchangeRate API](https://www.exchangerate-api.com/).
 
 ![Login](/assets/img/1.png)
 
